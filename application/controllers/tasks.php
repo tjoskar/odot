@@ -6,32 +6,33 @@ class Tasks_Controller extends Base_Controller {
 
 	public function get_index()
 	{
+
 		$data = array(
+			'tasks' => 
 			array(
-				'id' => 3,
-				'list_id' => 1,
-				'title' => 'Buy milk',
-				'time' => '1200000000',
-				),
-			array(
-				'id' => 4,
-				'list_id' => 1,
-				'title' => 'Buy milk',
-				'time' => '1200000000',
-				),
-			array(
-				'id' => 5,
-				'list_id' => 1,
-				'title' => 'Buy milk',
-				'time' => '1200000000',
-				),
-			array(
-				'id' => 6,
-				'list_id' => 1,
-				'title' => 'Buy milk',
-				'time' => '1200000000',
-				),
-			);
+				array(
+					'title' => 'Kill all jews',
+					),
+				array(
+					'title' => 'Create a porn site',
+					),
+				array(
+					'title' => 'Learn Ember',
+					),
+				array(
+					'title' => 'Learn Laravel',
+					),
+				array(
+					'title' => 'Update dropbox',
+					),
+				array(
+					'title' => 'Update dropbox',
+					),
+				array(
+					'title' => 'Update dropbox',
+					)
+
+			));
 
 		return Response::json($data);
 	}

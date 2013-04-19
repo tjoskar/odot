@@ -39,6 +39,7 @@
 Route::get('/', 'home.index');
 Route::controller('home');
 Route::controller('tasks');
+Route::controller('lists');
 
 /*
 |--------------------------------------------------------------------------

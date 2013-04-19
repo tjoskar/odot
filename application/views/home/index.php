@@ -146,15 +146,15 @@
 
 </head>
 <body>
+<script type="text/x-handlebars" id="lists">
     <div class="container">
         <div class="loggo">ODOT</div>
         <div class="left-list">
             <ul>
-                <li>To day</li>
-                <li>Work</li>
-                <li>School</li>
-                <li>Blandat</li>
-            </ul>
+                {{#each model}}
+                    <li> {{title}} </li>
+                {{/each}}
+            <ul>
             <form class="add-list">
                 <input class="add-list" placeholder="Add list...">
             </form>
@@ -165,25 +165,25 @@
                 <button class="flat add-task-button">Add task</button>
             </form>
             <ul>
-                <li><input type="checkbox" name="complete" value="1">Kill all jews</li>
-                <li>Create a porn site</li>
-                <li>Learn Ember</li>
-                <li>Learn Laravel</li>
-                <li>Update dropbox</li>
-                <li>Learn Laravel</li>
-                <li>Learn Laravel</li>
-                <li>Learn Laravel</li>
+                {{outlet}}
             </ul>
 
         </div>
     </div>
+</script>
+
+<script type="text/x-handlebars" id="tasks">
+    {{#each model}}
+        <li> {{title}} </li>
+    {{/each}}
+</script>
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-{{ HTML::script('js/libs/jquery-1.9.1.js') }}
-{{ HTML::script('js/libs/handlebars-1.0.0-rc.3.js') }}
-{{ HTML::script('js/libs/ember-1.0.0-rc.2.js') }}
-
-{{ HTML::script('js/app.js') }}
+<?php echo HTML::script('js/libs/jquery-1.9.1.js') ?>
+<?php echo HTML::script('js/libs/handlebars-1.0.0-rc.3.js') ?>
+<?php echo HTML::script('js/libs/ember-1.0.0-rc.2.js') ?>
+<?php echo HTML::script('js/libs/ember-data.js') ?>
+<?php echo HTML::script('js/app.js') ?>
 
 </body>
 </html>
