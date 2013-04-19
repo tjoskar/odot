@@ -11,19 +11,23 @@ class Lists_Controller extends Base_Controller {
 			array(
 				array(
 					'title' => 'To day',
-					'owner' => 'Oskar'
+					'owner' => 'Oskar',
+					'id' => 1
 					),
 				array(
 					'title' => 'Work',
-					'owner' => 'Jonas'
+					'owner' => 'Jonas',
+					'id' => 2
 					),
 				array(
 					'title' => 'School',
-					'owner' => 'Oskar'
+					'owner' => 'Oskar',
+					'id' => 3
 					),
 				array(
 					'title' => 'Blandat',
-					'owner' => 'Oskar'
+					'owner' => 'Oskar',
+					'id' => 4
 					)
 			));
 

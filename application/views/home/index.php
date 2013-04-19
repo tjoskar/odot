@@ -137,6 +137,9 @@
         color: rgb(117, 117, 117);
         font-size: 16px;
     }
+    a {
+        text-decoration: none;
+    }
         
 </style>
 
@@ -152,7 +155,7 @@
         <div class="left-list">
             <ul>
                 {{#each model}}
-                    <li> {{title}} </li>
+                    <li> {{#linkTo 'list' this}} {{title}} {{/linkTo}} </li>
                 {{/each}}
             <ul>
             <form class="add-list">

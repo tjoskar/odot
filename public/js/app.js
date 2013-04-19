@@ -8,9 +8,11 @@ App.Store = DS.Store.extend({
 });
 
 App.Router.map(function() {
+  
 	this.resource('lists', function() {
-		this.resource('tasks', { path: ':lists_id' });
-	});
+    this.resource('list', { path: ':lists_id' });
+    });
+  //this.route("list", {path:"/list"});
 });
 
 App.IndexRoute = Ember.Route.extend({
@@ -25,7 +27,7 @@ App.ListsRoute = Ember.Route.extend({
   }
 });
 
-App.TasksRoute = Ember.Route.extend({
+App.ListRoute = Ember.Route.extend({
   model: function() {
     return App.Task.find();
   }
@@ -34,6 +36,7 @@ App.TasksRoute = Ember.Route.extend({
 App.List = DS.Model.extend({
   title: DS.attr('string'),
   owner: DS.attr('string')
+  //id: DS.attr('id')
 });
 
 App.Task = DS.Model.extend({
