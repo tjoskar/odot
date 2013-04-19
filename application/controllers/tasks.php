@@ -6,8 +6,14 @@ class Tasks_Controller extends Base_Controller {
 
 	public function get_index()
 	{
+		$tasks = Item::all();
 
-		$data = array(
+		foreach ($tasks as $task)
+		{
+		     echo $task->name;
+		}
+
+		/*$data = array(
 			'tasks' => 
 			array(
 				array(
@@ -34,7 +40,8 @@ class Tasks_Controller extends Base_Controller {
 
 			));
 
-		return Response::json($data);
+		return Response::json($data);*/
+		return '';
 	}
 
 }

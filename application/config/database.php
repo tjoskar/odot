@@ -70,7 +70,8 @@ return array(
 		'mysql' => array(
 			'driver'   => 'mysql',
 			'host'     => '127.0.0.1',
-			'database' => 'database',
+			'port'     => '8889',
+			'database' => 'odot',
 			'username' => 'root',
 			'password' => 'root',
 			'charset'  => 'utf8',

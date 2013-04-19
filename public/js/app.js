@@ -8,17 +8,23 @@ App.Store = DS.Store.extend({
 });
 
 App.Router.map(function() {
+<<<<<<< HEAD
   
 	this.resource('lists', function() {
     this.resource('list', { path: ':lists_id' });
     });
   //this.route("list", {path:"/list"});
+=======
+	this.resource('', function() {
+		this.resource('tasks', { path: ':lists_id' });
+	});
+>>>>>>> Create item model
 });
 
 App.IndexRoute = Ember.Route.extend({
-  redirect: function() {
-    this.transitionTo('lists');
-  }
+	model: function() {
+		return App.List.find();
+	}
 });
 
 App.ListsRoute = Ember.Route.extend({
