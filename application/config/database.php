@@ -69,11 +69,11 @@ return array(
 
 		'mysql' => array(
 			'driver'   => 'mysql',
-			'host'     => '127.0.0.1',
-			'port'     => '8889',
+			'host'     => 'summer.oskarkarlsson.nu',
+			//'port'     => '8889',
 			'database' => 'odot',
-			'username' => 'root',
-			'password' => 'root',
+			'username' => 'odot',
+			'password' => 'juswaC7DRE',
 			'charset'  => 'utf8',
 			'prefix'   => '',
 		),
