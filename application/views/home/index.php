@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <title>ODOT</title>
 <link href='http://fonts.googleapis.com/css?family=Snippet|Cagliostro' rel='stylesheet' type='text/css'>
@@ -154,31 +154,35 @@
         <div class="loggo">ODOT</div>
         <div class="left-list">
             <ul>
-                {{#each model}}
-                    <li> {{#linkTo 'list' this}} {{title}} {{/linkTo}} </li>
+            {{#if model.content}}
+                {{#each list in model}}
+                    <li> {{#linkTo 'list' list}} {{list.title}} {{/linkTo}} </li>
                 {{/each}}
+            {{else}}
+                <li> :( </li>
+            {{/if}}
             <ul>
             <form class="add-list">
                 <input class="add-list" placeholder="Add list...">
             </form>
         </div>
         <div class="main-container">
-            <form class="add-task">
-                <input class="add-task" placeholder="Add task...">
-                <button class="flat add-task-button">Add task</button>
-            </form>
-            <ul>
-                {{outlet}}
-            </ul>
-
+            {{outlet}}
         </div>
     </div>
 </script>
 
-<script type="text/x-handlebars" id="tasks">
-    {{#each model}}
-        <li> {{title}} </li>
-    {{/each}}
+<script type="text/x-handlebars" id="lists/index">
+    <h2>Please, select a list to the left</h2>
+</script>
+
+<script type="text/x-handlebars" id="list">
+
+        {{#each model}}
+            <li> {{id}} - {{title}} </li>
+        {{/each}}
+    
+        <li> :( </li>
 </script>
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>

@@ -38,7 +38,9 @@
 });*/
 Route::get('/', 'home.index');
 Route::controller('home');
-Route::controller('tasks');
+Route::get('items/(:num)', 'items@index');
+Route::controller('items');
+Route::get('lists/(:num)', 'lists@index');
 Route::controller('lists');
 
 /*
