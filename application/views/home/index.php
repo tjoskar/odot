@@ -41,7 +41,6 @@
 <?php echo HTML::script('js/libs/underscore.js') ?>
 <?php echo HTML::script('js/libs/jquery-1.9.1.js') ?>
 <?php echo HTML::script('js/libs/backbone.js') ?>
-
 <?php echo HTML::script('js/app.js') ?>
 
 </body>

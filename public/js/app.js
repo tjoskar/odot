@@ -27,7 +27,7 @@ App.Models.List = Backbone.Model.extend({
 App.Views.List = Backbone.View.extend({
   tagName: 'li',
   className: 'list',
-  template: _.template("<%= title %>  {{title}}"),
+  template: _.template("<%= title %>"),
 
   render: function() {
     this.$el.html( this.template( this.model.toJSON() ));
@@ -77,7 +77,10 @@ App.Router = Backbone.Router.extend({
     'lists': 'lists'
   },
   index: function() {
-    $(document.body).append('index');
+    //$(document.body).append('index');
+    appRouter.navigate("/lists", true);
+
+
   },
   list: function(id) {
     id = (typeof id !== 'undefined') ? id : 0;
@@ -93,10 +96,9 @@ App.Router = Backbone.Router.extend({
       var listsView = new App.Views.Lists({ collection: lists });
       listsView.showAllLists();
     });
-
     //vent.trigger('lists:show');
   }
 });
 
-new App.Router();
+var appRouter = new App.Router();
 Backbone.history.start();
