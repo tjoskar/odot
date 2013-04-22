@@ -7,7 +7,6 @@ var App = {
 
 var vent = _.extend({}, Backbone.Events);
 
-
 App.Models.List = Backbone.Model.extend({
   defaults: {
     title: 'No title'
@@ -26,8 +25,7 @@ App.Models.List = Backbone.Model.extend({
 
 App.Views.List = Backbone.View.extend({
   tagName: 'li',
-  className: 'list',
-  template: _.template("<%= title %>  {{title}}"),
+  template: _.template("<%= title %>"),
 
   render: function() {
     this.$el.html( this.template( this.model.toJSON() ));
@@ -44,11 +42,11 @@ App.Views.Lists = Backbone.View.extend({
   },
 
   render: function() {
-    console.log(this.collection);
     this.collection.each(function(list) {
       var listView = new App.Views.List({ model: list });
       this.$el.append( listView.render().$el );
     }, this);
+
     return this;
   },
 

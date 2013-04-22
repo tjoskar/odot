@@ -2,7 +2,7 @@
 
 class Lists extends Eloquent {
 
-	public static $table = 'list';
+	public static $table = 'lists';
 
 }
 
