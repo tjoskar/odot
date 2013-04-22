@@ -7,10 +7,13 @@ var App = {
 
 var vent = _.extend({}, Backbone.Events);
 
+
 App.Models.List = Backbone.Model.extend({
   defaults: {
     title: 'No title'
   },
+
+  urlRoot: '/list',
 
   validate: function(arg) {
     if (!arg.title) {
@@ -23,17 +26,6 @@ App.Models.List = Backbone.Model.extend({
   }
 });
 
-App.Views.List = Backbone.View.extend({
-  tagName: 'li',
-  className: 'list',
-  template: _.template("<%= title %>"),
-
-  render: function() {
-    this.$el.html( this.template( this.model.toJSON() ));
-    return this;
-  }
-});
-
 App.Views.Lists = Backbone.View.extend({
   tagName: 'ul',
 
@@ -43,25 +35,48 @@ App.Views.Lists = Backbone.View.extend({
   },
 
   render: function() {
+    console.log(this.collection);
     this.collection.each(function(list) {
       var listView = new App.Views.List({ model: list });
       this.$el.append( listView.render().$el );
     }, this);
-
     return this;
   },
 
   showAllLists: function() {
-    $("#list-holder").append( this.render().el );
+    $("#lists-holder").append( this.render().el );
   },
 
   showList: function(id) {
+
     var list = this.collection.get(id);
     console.log(list);
     var listView = new App.Views.List({ model: list });
-
     $(document.body).append( listView.render().el );
   }
+
+});
+
+App.Views.List = Backbone.View.extend({
+  tagName: 'li',
+  className: 'list',
+  template: _.template("<%= title %>"),
+
+  render: function() {
+    this.$el.html( this.template( this.model.toJSON() ));
+    return this;
+  },
+
+  //Add event to capture click on a list (<li>)
+  events : {
+    "click" : "listClicked"
+  },
+  listClicked: function(event) {
+    var listId = this.model.id;
+    var list = new App.Models.List( {id: listId} );
+    console.log(list.fetch());
+  }
+
 });
 
 App.Collections.List = Backbone.Collection.extend({

@@ -12,15 +12,15 @@
 </head>
 <body>
     <div class="container">
-        <div class="loggo">ODOT</div>
+        <div class="logo">ODOT</div>
         <div class="left-list">
-            <div id="list-holder"></div>
+            <div id="lists-holder"></div>
             <form class="add-list">
                 <input class="add-list" placeholder="Add list...">
             </form>
         </div>
         <div class="main-container">
-            
+            <div id="items-holder"></div>
         </div>
     </div>
 
