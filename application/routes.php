@@ -36,12 +36,23 @@
 {
 	return View::make('home.index');
 });*/
+
 Route::get('/', 'home.index');
 Route::controller('home');
-Route::get('items/(:num)', 'items@index');
-Route::controller('items');
+
+Route::get('item/', 'item@index');
+Route::get('item/(:num)', 'item@index');
+Route::post('item/', 'item@index');
+Route::delete('item/(:num)', 'item@index');
+Route::controller('item');
+
+Route::get('lists/', 'lists@index');
 Route::get('lists/(:num)', 'lists@index');
+Route::post('lists/', 'lists@index');
+Route::delete('lists/(:num)', 'lists@index');
 Route::controller('lists');
+
+
 
 /*
 |--------------------------------------------------------------------------

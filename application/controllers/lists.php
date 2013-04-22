@@ -20,11 +20,11 @@ class Lists_Controller extends Base_Controller {
 		}
 		elseif ($list_id > 0)
 		{
-			$tasks = Lists::where('list_id', '=', $list_id);
-			if (is_array($tasks))
+			$items = Items::where('list_id', '=', $list_id)->get();
+			if (is_array($items))
 			{
-				foreach ($tasks as $task) {
-					array_push($output, $task->attributes);
+				foreach ($items as $item) {
+					array_push($output, $item->attributes);
 				}
 			}
 		}
