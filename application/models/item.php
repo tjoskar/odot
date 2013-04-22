@@ -2,7 +2,7 @@
 
 class Item extends Eloquent {
 
-	public static $table = 'task';
+	public static $table = 'item';
 
 }
 
