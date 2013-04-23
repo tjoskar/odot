@@ -1,0 +1,32 @@
+// Var
+@imgPath: '';
+@background: #f6f5f5;
+@lightGray: #e9ebef;
+@gray: #d2d1d2;
+@darkGray: rgb(75, 75, 75);
+@blue: #6cb7e7;
+
+// Functions
+.border-radius (@radius: 5px) {
+  border-radius: @radius;
+  -moz-border-radius: @radius;
+  -webkit-border-radius: @radius;
+}
+
+.box-shadow (@x: 0, @y: 0, @blur: 0, @color: #fff) {
+  box-shadow: @arguments;
+  -moz-box-shadow: @arguments;
+  -webkit-box-shadow: @arguments;
+}
+
+.text-shadow (@x: 1px, @y: -1px, @blur: 0, @color: #fff) {
+    text-shadow: @arguments;    
+}
+
+.ease-transition (@s: 0.5s) {
+    -webkit-transition: all @s ease-out;
+    -moz-transition: all @s ease-out;
+    -ms-transition: all @s ease-out;
+    -o-transition: all @s ease-out;
+    transition: all @s ease-out;
+}

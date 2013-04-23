@@ -3,7 +3,7 @@
 <head>
 <title>ODOT</title>
 <link href='http://fonts.googleapis.com/css?family=Snippet|Cagliostro' rel='stylesheet' type='text/css'>
-<?php echo HTML::style('css/style.css'); ?>
+<?php echo HTML::style('css/master.css'); ?>
 
 <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -16,6 +16,7 @@
         <div class="left-list">
 
             <div id="lists-holder"></div>
+
             <form class="add-list">
                 <input class="add-list" placeholder="Add list...">
             </form>
@@ -23,7 +24,14 @@
         </div>       
 
         <div class="main-container">
+
+            <form class="add-task">
+                <input class="add-task" placeholder="Add task...">
+                <button class="flat add-task-button">Add task</button>
+            </form>
+
             <div id="items-holder"></div>
+
         </div>
     </div>
     </div>
