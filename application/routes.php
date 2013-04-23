@@ -47,9 +47,9 @@ Route::delete('item/(:num)', 'item@index');
 Route::controller('item');
 
 Route::get('lists/', 'lists@index');
-Route::get('lists/(:num)', 'lists@index');
-Route::post('lists/', 'lists@index');
-Route::delete('lists/(:num)', 'lists@index');
+Route::get('list/(:num)', 'lists@list');
+Route::post('list/', 'lists@list');
+Route::delete('lists/(:num)', 'lists@list');
 Route::controller('lists');
 
 
