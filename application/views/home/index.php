@@ -11,17 +11,21 @@
 
 </head>
 <body>
-    <div class="container">
+    <div id="odotapp" class="container">
         <div class="logo">ODOT</div>
         <div class="left-list">
+
             <div id="lists-holder"></div>
-            <form class="add-list">
-                <input class="add-list" placeholder="Add list...">
-            </form>
+            <div id="add-list-holder">
+                <form class="add-list">
+                    <input class="add-list" placeholder="Add list...">
+                </form>
+            </div>
         </div>
         <div class="main-container">
             <div id="items-holder"></div>
         </div>
+    </div>
     </div>
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
