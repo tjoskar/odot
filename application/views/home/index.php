@@ -24,19 +24,6 @@
         </div>
     </div>
 
-<script type="text/x-handlebars" id="lists/index">
-    <h2>Please, select a list to the left</h2>
-</script>
-
-<script type="text/x-handlebars" id="list">
-
-        {{#each model}}
-            <li> {{id}} - {{title}} </li>
-        {{/each}}
-    
-        <li> :( </li>
-</script>
-
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <?php echo HTML::script('js/libs/underscore.js') ?>
 <?php echo HTML::script('js/libs/jquery-1.9.1.js') ?>
