@@ -84,9 +84,9 @@ App.Views.Lists = Backbone.View.extend({
 
 //View to handle the "add list" input form
 App.Views.AddListForm = Backbone.View.extend({
-  el: $('#add-list-holder'),
+  el: $('form.add-list'),
   events: {
-    "submit .add-list" : "addNewList"
+    "submit" : "addNewList"
   },
   addNewList: function(event) {
     event.preventDefault();

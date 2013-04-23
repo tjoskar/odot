@@ -16,12 +16,12 @@
         <div class="left-list">
 
             <div id="lists-holder"></div>
-            <div id="add-list-holder">
-                <form class="add-list">
-                    <input class="add-list" placeholder="Add list...">
-                </form>
-            </div>
-        </div>
+            <form class="add-list">
+                <input class="add-list" placeholder="Add list...">
+            </form>
+            
+        </div>       
+
         <div class="main-container">
             <div id="items-holder"></div>
         </div>
