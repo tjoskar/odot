@@ -13,7 +13,8 @@ var App = {
   Models: {},
   Collections: {},
   Views: {},
-  Router: {}
+  Router: {},
+  ListsView: {}
 };
 
 var vent = _.extend({}, Backbone.Events);
@@ -27,8 +28,7 @@ App.Models.List = Backbone.Model.extend({
   defaults: {
     title: '',
     owner: '',
-    order: 0,
-    items: {}
+    order: 0
   },
 
   urlRoot: '/list',
@@ -105,6 +105,7 @@ App.Views.Lists = Backbone.View.extend({
   },
 
   render: function() {
+    this.$el.empty();
     this.collection.each(function(list) {
       var listView = new App.Views.List({ model: list });
       this.$el.append( listView.render().$el );
@@ -173,7 +174,18 @@ App.Views.AddListForm = Backbone.View.extend({
 
   addNewList: function(event) {
     event.preventDefault();
-    console.log("HEJ");
+    var inputField = $(this.el).find('input');
+    var enteredText = inputField.val().trim();
+    var newList = new App.Models.List({title: enteredText});
+    
+    if (newList.isValid()) {
+      App.ListsView.collection.add(newList); //Add new list to collection
+      newList.save().then(function() {
+        //newList.id;
+        App.ListsView.showAllLists(); //Re-render lists
+        inputField.val(''); //Clear input field
+      });
+    }
   },
 
   initialize: function() {
@@ -207,10 +219,10 @@ App.Router = Backbone.Router.extend({
   },
 
   lists: function() {
-    var lists = new App.Collections.List();
-    lists.fetch().then(function() {
-      var listsView = new App.Views.Lists({ collection: lists });
-      listsView.showAllLists();
+    App.lists = new App.Collections.List();
+    App.lists.fetch().then(function() {
+      App.ListsView = new App.Views.Lists({ collection: App.lists });
+      App.ListsView.showAllLists();
     });
     //vent.trigger('lists:show');
   }
