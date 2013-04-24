@@ -197,20 +197,14 @@ a {
   -ms-transition: all 0.2s ease-out;
   -o-transition: all 0.2s ease-out;
   transition: all 0.2s ease-out;
-  display: inline-table;
   width: 350px;
-  /*&:hover {
-            background-color: @blue !important;
-            color: #fff;
-        }*/
-
+  display: inline-table;
+}
+.main-container li:hover {
+  background-color: #6cb7e7 !important;
+  color: #fff;
 }
 .main-container li:nth-child(even) {
-  background-color: #e9ebef;
-}
-.main-container li .sub-items {
-  position: absolute;
-  width: 740px;
   background-color: #e9ebef;
 }
 /* Form */

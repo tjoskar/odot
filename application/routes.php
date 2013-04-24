@@ -40,17 +40,19 @@
 Route::get('/', 'home.index');
 Route::controller('home');
 
-Route::get('item/', 'item@index');
+Route::get('item', 'item@index');
 Route::get('item/(:num)', 'item@index');
-Route::post('item/', 'item@index');
+Route::post('item', 'item@index');
 Route::delete('item/(:num)', 'item@index');
-Route::controller('item');
 
-Route::get('lists/', 'lists@index');
+
+Route::get('lists', 'lists@index');
 Route::get('list/(:num)', 'lists@list');
-Route::post('list/', 'lists@list');
+Route::post('list', 'lists@list');
 Route::delete('lists/(:num)', 'lists@list');
-Route::controller('lists');
+
+
+
 
 
 

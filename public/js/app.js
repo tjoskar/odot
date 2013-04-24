@@ -1,3 +1,12 @@
+/*
+GET /lists => all lists
+GET /list/:id => en lista and alla items
+POST/DELETE /list:id => skapar/tarbort lista
+ 
+POST /item/id => skapar item
+DELETE /item/id => tarbort item
+*/
+
 /**
     TODO:
     - Move out Models, Views, Controller.. to separate files
@@ -27,8 +36,7 @@ App.Models.List = Backbone.Model.extend({
   defaults: {
     title: '',
     owner: '',
-    order: 0,
-    items: {}
+    order: 0
   },
 
   urlRoot: '/list',
@@ -122,11 +130,11 @@ App.Views.Item = Backbone.View.extend({
   template: _.template(
     '<%= title %>' +
     '<% if( !_.isEmpty(sub_items) ) { %>' +
-      '<ul>' +
+      '<div class="sub-items"><ul>' +
         '<% _.each(sub_items, function(sub_item) { %>' +
-          '<li><%= sub_item.title %><li>' +
+          '<li><%= sub_item.title %></li>' +
         '<% }); %>' +
-      '</ul>' +
+      '</ul></div>' +
     '<% } %>'
     ),
 

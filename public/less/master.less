@@ -73,15 +73,21 @@ a {
         padding: 10px;
         font-family: Arial, Helvetica, sans-serif;
         .ease-transition(0.2s);
-        float: left;
+        display: inline-table;
         width: 350px;
 
-        &:hover {
+        /*&:hover {
             background-color: @blue !important;
             color: #fff;
-        }
+        }*/
 
         &:nth-child(even) {
+            background-color: @lightGray;
+        }
+
+        .sub-items {
+            position: absolute;
+            width: 740px;
             background-color: @lightGray;
         }
     }
