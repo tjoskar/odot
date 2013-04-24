@@ -97,6 +97,9 @@ class Lists_Controller extends Base_Controller {
 	{
 		return 'Hejs';
 		// Create a new list
+		$input = Input::json($as_array = true);
+		$response = ItemList::create($input);
+		return Response::json($response->to_array());
 	}
 
 	/**
