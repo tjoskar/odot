@@ -79,6 +79,7 @@ App.Views.List = Backbone.View.extend({
   template: _.template("<%= title %>"),
 
   render: function() {
+    console.log('List render()');
     this.$el.html( this.template( this.model.toJSON() ));
     return this;
   },
@@ -89,6 +90,11 @@ App.Views.List = Backbone.View.extend({
   },
 
   listClicked: function(event) {
+    
+    var listUrl = this.model.urlRoot + '/' + this.model.id;
+    appRouter.navigate(listUrl, {trigger: true});
+    
+    
     var list = new App.Models.List( {id: this.model.id} );
     list.fetch().then(function() {
 
@@ -99,8 +105,10 @@ App.Views.List = Backbone.View.extend({
         itemCollection.add( items[key] );
       }
       var itemsView = new App.Views.Items({ collection: itemCollection });
+      //appRouter.navigate('/list/' + modelId, true);
       itemsView.showAllItems();
     });
+    
     //console.log(list.fetch());
   }
 });
@@ -158,7 +166,7 @@ App.Views.Items = Backbone.View.extend({
   tagName: 'ul',
 
   render: function() {
-    console.log(this.collection);
+    //console.log(this.collection);
     this.collection.each(function(item) {
       var itemView = new App.Views.Item({ model: item });
       this.$el.append( itemView.render().$el );
@@ -168,6 +176,7 @@ App.Views.Items = Backbone.View.extend({
   },
 
   showAllItems: function() {
+    $("#items-holder").empty(); //Empty the item list
     $("#items-holder").append( this.render().el );
   }
 
@@ -198,7 +207,7 @@ App.Views.AddListForm = Backbone.View.extend({
   },
 
   initialize: function() {
-    console.log("initialize addListForm");
+    //console.log("initialize addListForm");
   }
 });
 
