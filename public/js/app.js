@@ -125,7 +125,7 @@ App.Views.Item = Backbone.View.extend({
     '<% if( !_.isEmpty(sub_items) ) { %>' +
       '<ul>' +
         '<% _.each(sub_items, function(sub_item) { %>' +
-          '<li><%= sub_item.title %><li>' +
+          '<li><%= sub_item.title %></li>' +
         '<% }); %>' +
       '</ul>' +
     '<% } %>'
