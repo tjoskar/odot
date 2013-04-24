@@ -130,7 +130,7 @@ App.Views.Lists = Backbone.View.extend({
 App.Views.Item = Backbone.View.extend({
   tagName: 'li',
   template: _.template(
-    '<%= title %>' +
+    '<h3><%= title %></h3>' +
     '<% if( !_.isEmpty(sub_items) ) { %>' +
       '<div class="sub-items"><ul>' +
         '<% _.each(sub_items, function(sub_item) { %>' +
