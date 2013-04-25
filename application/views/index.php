@@ -40,7 +40,17 @@
 <?php echo HTML::script('js/libs/underscore.js') ?>
 <?php echo HTML::script('js/libs/jquery-1.9.1.js') ?>
 <?php echo HTML::script('js/libs/backbone.js') ?>
+
 <?php echo HTML::script('js/app.js') ?>
+<?php echo HTML::script('js/models/list.js') ?>
+<?php echo HTML::script('js/models/item.js') ?>
+<?php echo HTML::script('js/views/lists.js') ?>
+<?php echo HTML::script('js/views/addListForm.js') ?>
+<?php echo HTML::script('js/views/list.js') ?>
+<?php echo HTML::script('js/views/items.js') ?>
+<?php echo HTML::script('js/views/item.js') ?>
+<?php echo HTML::script('js/routes.js') ?>
+<?php echo HTML::script('js/home.js') ?>
 
 </body>
 </html>
