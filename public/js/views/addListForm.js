@@ -20,6 +20,7 @@ App.Views.AddListForm = Backbone.View.extend({
       app.listsView.collection.add(newList); //Add new list to collection
       newList.save().then(function() {
         //newList.id;
+        console.log('event');
         app.listsView.showAllLists(); //Re-render lists
         inputField.val(''); //Clear input field
       });

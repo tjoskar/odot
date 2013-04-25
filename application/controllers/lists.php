@@ -95,7 +95,6 @@ class Lists_Controller extends Base_Controller {
 	 */
 	public function post_list()
 	{
-		return 'Hejs';
 		// Create a new list
 		$input = Input::json($as_array = true);
 		$response = ItemList::create($input);

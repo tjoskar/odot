@@ -66,6 +66,8 @@
 <?php echo HTML::script('js/views/list.js') ?>
 <?php echo HTML::script('js/views/items.js') ?>
 <?php echo HTML::script('js/views/item.js') ?>
+<?php echo HTML::script('js/views/subitems.js') ?>
+<?php echo HTML::script('js/views/subitem.js') ?>
 <?php echo HTML::script('js/routes.js') ?>
 <?php echo HTML::script('js/home.js') ?>
 
