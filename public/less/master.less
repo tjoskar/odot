@@ -13,6 +13,9 @@ li {
 *:focus {
     outline: none;
 }
+.hide {
+    display: none;
+}
 
 /* Text */
 h2 {
@@ -97,6 +100,15 @@ p.item-description {
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#f6f5f5',GradientType=0 ); /* IE6-9 */
     }
 
+    input {
+        float: left;
+        padding: 10px;
+        border: 0;
+        font-size: 18px;
+        color: @darkBlue;;
+        width: 400px;
+    }
+
     ul {
         padding-top: 20px;
         margin-left: 150px;
@@ -125,6 +137,7 @@ p.item-description {
         }
 
         .sub-items {
+            padding-top: 7px;
             display: none;
             position: relative;
             width: 450px;
@@ -173,8 +186,9 @@ p.item-description {
                 padding: 10px;
                 width: 430px;
 
-                p {
-                   position: absolute; 
+                input {
+                    background-color: @lightGray;
+                    padding: 0;
                 }
 
                 .item-button-holder {

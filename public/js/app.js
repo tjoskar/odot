@@ -135,42 +135,102 @@ App.Views.Lists = Backbone.View.extend({
   }
 });
 
-App.Views.Item = Backbone.View.extend({
+App.Views.SubItem = Backbone.View.extend({
   tagName: 'li',
-  template: _.template(
-    '<h3><i class="icon-circle-blank"></i><%= title %></h3>' +
-    '<div class="item-button-holder"><i class="icon-cog"></i></div>' +
-    '<% if( !_.isEmpty(sub_items) ) { %>' +
-      '<div class="sub-items">' +
-        '<p class="item-description"><%= description %> </p>' +
-        '<ul>' +
-          '<% _.each(sub_items, function(sub_item) { %>' +
-            '<li>' +
-              '<p><%= sub_item.title %></p>' +
-              '<div class="item-button-holder"><i class="icon-cog"></i>' +
-            '</li>' +
-          '<% }); %>' +
-        '</ul>' +
-      '</div>' +
-    '<% } %>' +
-    '<div class="item-settings">' +
-
-    '</div>'
-    ),
+  template: _.template($('#subItem-template').html()),
 
   render: function() {
     this.$el.html( this.template( this.model.toJSON() ));
     return this;
+  }
+});
+
+App.Views.SubItems = Backbone.View.extend({
+  tagName: 'ul',
+
+  render: function() {
+    this.collection.each(function(subItem) {
+      var subItemView = new App.Views.SubItem({ model: subItem });
+      this.$el.append( subItemView.render().$el );
+    }, this);
+
+    return this;
+  }
+});
+
+App.Views.Item = Backbone.View.extend({
+  tagName: 'li',
+  template: _.template($('#item-template').html()),
+
+  clicks: 0,
+  DELAY: 200,
+  timer: null,
+  subItemsCollection: null,
+  subItemsView: null,
+
+  initialize: function(){
+    var subItems = this.model.get('sub_items');
+    this.subItemsCollection = new App.Collections.Item();
+    for(var key in subItems)
+    {
+      var subItemModel = new App.Models.Item(subItems[key]);
+      this.subItemsCollection.add(subItemModel);
+    }
+    this.subItemsView = new App.Views.SubItems({ collection: this.subItemsCollection });
+  },
+
+  render: function() {
+    this.$el.html( this.template( this.model.toJSON() ));
+    this.$el.find('.sub-items').html( this.subItemsView.render().el );
+    this.$input = this.$el.find('input');
+    return this;
   },
 
   events : {
-    "click h3" : "showSubitem",
-    "click .icon-cog" : "showItemSettings"
+    'click h3' : 'itemClick',
+    'click .icon-cog' : 'showItemSettings'
   },
 
-  showSubitem: function() {
+  itemClick: function() {
+    this.clicks++;
+
+    var that = this;
+
+    if (this.clicks == 1)
+    {
+      this.timer = setTimeout(function() {
+        that.showSubitems(true);
+        console.log('Singel');
+        that.clicks = 0;
+      }, this.DELAY);
+    }
+    else
+    {
+      clearTimeout(this.timer);
+      this.clicks = 0;
+      this.edit();
+      console.log('Double2');
+    }
+  },
+
+  edit: function() {
+      this.$input.removeClass('hide');
+      this.$el.find('h3, p').hide();
+      this.$input.focus();
+      this.showSubitems(false);
+  },
+
+  showSubitems: function(togle) {
     $(this.el).find('.item-settings').slideUp("slow");
-    $(this.el).find('.sub-items').slideToggle("slow");
+    if (togle)
+      $(this.el).find('.sub-items').slideToggle("slow");
+    else
+      $(this.el).find('.sub-items').slideDown("slow");
+  },
+
+  hideSubitems: function() {
+    $(this.el).find('.item-settings').slideUp("slow");
+    $(this.el).find('.sub-items').slideUp("slow");
   },
 
   showItemSettings: function() {

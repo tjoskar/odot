@@ -34,9 +34,26 @@
 
         </div>
     </div>
-    </div>
 
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+     <script type="text/template" id="item-template">
+        <h3> <lable><%= title %></lable> </h3>
+        <input class="hide" value="<%= title %>">
+        <div class="item-button-holder"> <i class="icon-cog"></i> </div>
+        <% if( !_.isEmpty(sub_items) ) { %>
+            <div class="sub-items">
+
+            </div>
+        <% } %>
+        <div class="item-settings">
+
+        </div>
+    </script>
+
+    <script type="text/template" id="subItem-template">
+        <p><%= title %></p>
+        <input class="hide" value="<%= title %>">
+    </script>
+
 <?php echo HTML::script('js/libs/underscore.js') ?>
 <?php echo HTML::script('js/libs/jquery-1.9.1.js') ?>
 <?php echo HTML::script('js/libs/backbone.js') ?>
