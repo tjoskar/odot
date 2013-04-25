@@ -1174,6 +1174,9 @@ li {
 *:focus {
   outline: none;
 }
+.hide {
+  display: none;
+}
 /* Text */
 h2 {
   font-family: 'Snippet', sans-serif;
@@ -1271,6 +1274,14 @@ p.item-description {
   /* IE6-9 */
 
 }
+.main-container input {
+  float: left;
+  padding: 10px;
+  border: 0;
+  font-size: 18px;
+  color: #2c3e50;
+  width: 400px;
+}
 .main-container ul {
   padding-top: 20px;
   margin-left: 150px;
@@ -1296,6 +1307,7 @@ p.item-description {
   height: 30px;
 }
 .main-container li .sub-items {
+  padding-top: 7px;
   display: none;
   position: relative;
   width: 450px;
@@ -1334,8 +1346,9 @@ p.item-description {
   padding: 10px;
   width: 430px;
 }
-.main-container li .sub-items li p {
-  position: absolute;
+.main-container li .sub-items li input {
+  background-color: #e9ebef;
+  padding: 0;
 }
 .main-container li .sub-items li .item-button-holder {
   float: right;
