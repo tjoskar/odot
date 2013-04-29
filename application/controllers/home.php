@@ -32,6 +32,7 @@ class Home_Controller extends Base_Controller {
 
 	public function action_index()
 	{
+		//return View::make('auth_index');
 		return View::make('index');
 	}
 
