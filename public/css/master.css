@@ -1186,15 +1186,13 @@ h3 {
   padding: 10px;
   font-size: 18px;
   color: #2c3e50;
-  width: 400px;
+  /*width: 400px;*/
+
   float: left;
+  cursor: pointer;
 }
 a {
   text-decoration: none;
-}
-p.item-description {
-  padding: 10px 0 0 10px;
-  color: #6cb7e7;
 }
 .icon-circle-blank {
   font-size: 12px;
@@ -1276,11 +1274,11 @@ p.item-description {
 }
 .main-container input {
   float: left;
-  padding: 10px;
+  padding: 8px 10px 10px 10px;
   border: 0;
-  font-size: 18px;
+  font-size: 16px;
   color: #2c3e50;
-  width: 400px;
+  width: 300px;
 }
 .main-container ul {
   padding-top: 20px;
@@ -1305,8 +1303,10 @@ p.item-description {
 .main-container li .item-button-holder {
   margin: 10px 0 0 0;
   height: 30px;
+  float: right;
 }
 .main-container li .sub-items {
+  float: left;
   padding-top: 7px;
   display: none;
   position: relative;
@@ -1337,6 +1337,13 @@ p.item-description {
   /* IE6-9 */
 
 }
+.main-container li .sub-items input {
+  background: transparent;
+  padding: 0;
+}
+.main-container li .sub-items input.add-sub-item {
+  padding: 10px;
+}
 .main-container li .sub-items ul {
   padding: 0;
   margin: 0;
@@ -1344,16 +1351,7 @@ p.item-description {
 }
 .main-container li .sub-items li {
   padding: 10px;
-  width: 430px;
-}
-.main-container li .sub-items li input {
-  background-color: #e9ebef;
-  padding: 0;
-}
-.main-container li .sub-items li .item-button-holder {
-  float: right;
-  margin: 0;
-  height: initial;
+  width: 428px;
 }
 /* Form */
 form.add-task {

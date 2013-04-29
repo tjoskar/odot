@@ -36,14 +36,19 @@
     </div>
 
      <script type="text/template" id="item-template">
-        <h3> <lable><%= title %></lable> </h3>
-        <input class="hide" value="<%= title %>">
-        <div class="item-button-holder"> <i class="icon-cog"></i> </div>
+        <div class="head-item">
+            <h3> <lable><%= title %></lable> </h3>
+            <input class="hide" value="<%= title %>">
+            <div class="item-button-holder"> <i class="icon-time"></i> <i class="icon-trash"></i> </div>
+        </div>
         <% if( !_.isEmpty(sub_items) ) { %>
             <div class="sub-items">
 
             </div>
         <% } %>
+        <div class="add-subItems">
+
+        </div>
         <div class="item-settings">
 
         </div>
@@ -68,6 +73,7 @@
 <?php echo HTML::script('js/views/item.js') ?>
 <?php echo HTML::script('js/views/subitems.js') ?>
 <?php echo HTML::script('js/views/subitem.js') ?>
+<?php echo HTML::script('js/views/addSubItemForm.js') ?>
 <?php echo HTML::script('js/routes.js') ?>
 <?php echo HTML::script('js/home.js') ?>
 

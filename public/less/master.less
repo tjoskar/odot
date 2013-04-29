@@ -26,15 +26,12 @@ h3 {
     padding: 10px;
     font-size: 18px;
     color: @darkBlue;
-    width: 400px;
+    /*width: 400px;*/
     float: left;
+    cursor: pointer;
 }
 a {
     text-decoration: none;
-}
-p.item-description {
-    padding: 10px 0 0 10px;
-    color: @blue;
 }
 .icon-circle-blank {
     font-size: 12px;
@@ -102,11 +99,11 @@ p.item-description {
 
     input {
         float: left;
-        padding: 10px;
+        padding: 8px 10px 10px 10px;
         border: 0;
-        font-size: 18px;
+        font-size: 16px;
         color: @darkBlue;;
-        width: 400px;
+        width: 300px;
     }
 
     ul {
@@ -125,6 +122,7 @@ p.item-description {
         .item-button-holder {
             margin: 10px 0 0 0;
             height: 30px;
+            float: right;
         }
 
         /*&:hover {
@@ -137,6 +135,7 @@ p.item-description {
         }
 
         .sub-items {
+            float: left;
             padding-top: 7px;
             display: none;
             position: relative;
@@ -176,6 +175,14 @@ p.item-description {
             //     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#f6f5f5',GradientType=0 ); /* IE6-9 */
             // }
 
+            input {
+                background: transparent;
+                padding: 0;
+            }
+            input.add-sub-item {
+                padding: 10px;
+            }
+
             ul {
                 padding: 0;
                 margin: 0;
@@ -184,18 +191,7 @@ p.item-description {
 
             li {
                 padding: 10px;
-                width: 430px;
-
-                input {
-                    background-color: @lightGray;
-                    padding: 0;
-                }
-
-                .item-button-holder {
-                    float: right;
-                    margin: 0;
-                    height: initial;
-                }
+                width: 428px;
             }
         }
     }
