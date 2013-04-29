@@ -13,14 +13,22 @@ App.Views.Item = Backbone.View.extend({
   subItemsView: null,
   addSubItemView: null,
 
-  initialize: function(){
-    this.addSubItemView = new App.Views.AddSubItemsForm({ model: {parentEl: this.$el} });      // Create a form to add sub items
+  events : {
+    'click h3' : 'itemClick',
+    'click .icon-cog' : 'showDeleteConfirm',
+    'blur input' : 'blur'
+  },
 
+  initialize: function(){
+    // Create a form to add sub items
+    this.addSubItemView = new App.Views.AddSubItemsForm({ model: {parent: this} });
+
+    // Add sub items
     var subItems = this.model.get('sub_items');                 // Get all sub items from the model
-    this.subItemsCollection = new App.Collections.Item();       // Create a collection for the sub items
+    this.subItemsCollection = new App.Collections.SubItem();    // Create a collection for the sub items
     for(var key in subItems)
     {
-      var subItemModel = new App.Models.Item(subItems[key]);
+      var subItemModel = new App.Models.SubItem(subItems[key]);
       this.subItemsCollection.add(subItemModel);
     }
     this.subItemsView = new App.Views.SubItems({ collection: this.subItemsCollection });
@@ -28,25 +36,24 @@ App.Views.Item = Backbone.View.extend({
 
   render: function() {
     this.$el.html( this.template( this.model.toJSON() ));
-    this.$el.find('.sub-items').prepend( this.subItemsView.render().el );
+    this.renderSubItems();
     this.addSubItemView.render();
-    this.$input = this.$el.find('input');
     return this;
   },
 
-  events : {
-    'click h3' : 'itemClick',
-    'click .icon-cog' : 'showDeleteConfirm',
-    'blur input' : 'blur'
+  renderSubItems: function() {
+    var subItemHTML = this.$el.find('.sub-items');
+    subItemHTML.append( this.subItemsView.render().el );
   },
 
   blur: function() {
     var that = this;
-    this.$input = this.$el.find('input');
+    this.$inputs = this.$el.find('input');
+    console.log();
 
     setTimeout(function() {
       var focus = false;
-        that.$input.each(function() {
+        that.$inputs.each(function() {
           if ($(this).is(':focus'))
           {
             focus = true;
@@ -55,8 +62,7 @@ App.Views.Item = Backbone.View.extend({
         });
         if (!focus)
         {
-          that.$el.find('h3, p').show();
-          that.$input.addClass('hide');
+          that.stopEdit();
         }
       }, 50);
   },
@@ -77,16 +83,23 @@ App.Views.Item = Backbone.View.extend({
     {
       clearTimeout(this.timer);
       this.clicks = 0;
-      this.edit();
+      this.startEdit();
     }
   },
 
-  edit: function() {
-      this.$input = this.$el.find('input');
-      this.$input.removeClass('hide');  // Show all inputs
-      this.$el.find('h3, p').hide();    // Hide the actual text
-      this.$input.first().focus();      // Set cursor at the first input feld
-      this.showSubitems(false);         // Show subitems
+  startEdit: function() {
+      this.$inputs = this.$el.find('input');
+      this.$inputs.removeClass('hide');  // Show all inputs
+      this.$el.find('h3, p').hide();     // Hide the actual text
+      this.addSubItemView.newInput();    // Add form for a new subitem
+      this.$inputs.first().focus();      // Set cursor at the first input feld
+      this.showSubitems(false);          // Show subitems
+  },
+
+  stopEdit: function() {
+      this.$el.find('h3, p').show();
+      this.$inputs.addClass('hide');
+      this.renderSubItems();
   },
 
   showSubitems: function(togle) {
@@ -97,7 +110,6 @@ App.Views.Item = Backbone.View.extend({
   },
 
   hideSubitems: function() {
-    $(this.el).find('.item-settings').slideUp("slow");
     $(this.el).find('.sub-items').slideUp("slow");
   },
 

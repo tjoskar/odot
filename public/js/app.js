@@ -34,3 +34,7 @@ var app = {
 };
 
 var vent = _.extend({}, Backbone.Events);
+
+var d = function(msg) {
+  console.log(msg);
+};

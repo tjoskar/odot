@@ -6,8 +6,9 @@ App.Views.Items = Backbone.View.extend({
   tagName: 'ul',
 
   render: function() {
-    //console.log(this.collection);
+    var listid = this.collection.listID;
     this.collection.each(function(item) {
+      item.listID = listid;
       var itemView = new App.Views.Item({ model: item });
       this.$el.append( itemView.render().$el );
     }, this);

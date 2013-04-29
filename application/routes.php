@@ -45,11 +45,14 @@ Route::get('item/(:num)', 'item@index');
 Route::post('item', 'item@index');
 Route::delete('item/(:num)', 'item@index');
 
-
 Route::get('lists', 'lists@index');
 Route::get('list/(:num)', 'lists@list');
 Route::post('list', 'lists@list');
 Route::delete('lists/(:num)', 'lists@list');
+
+Route::get('subitem', 'subitem@index');
+Route::post('subitem', 'subitem@index');
+Route::delete('subitem/(:num)', 'subitem@index');
 
 
 

@@ -5,42 +5,62 @@
 //View to handle "add sub items"
 App.Views.AddSubItemsForm = Backbone.View.extend({
   events: {
-    'focus input': 'inputChange'
+    'keypress': 'keypress'
   },
 
-  inputs: null,
-  parentEl: null,
+  input: null,
+  parent: null,
 
   initialize: function() {
-    this.parentEl = this.model.parentEl;
-    this.inputs = [];
-    this.newInput(true);
+    this.parent = this.model.parent;
+    //this.newInput(true);
   },
 
   render: function() {
-    this.parentEl.find('.sub-items').append( this.el );
+    this.parent.$el.find('.sub-items').append( this.el );
   },
 
-  inputChange: function() {
-    var inputs = this.$el.find('input');
-    var emptyInput = 0;               // Number of empty inputs
-    inputs.each(function() {
-      if( ! $(this).val() )
-      {
-        console.log('yes');
-        emptyInput++;
-      }
-    });
+  keypress: function(e) {
 
-    if(emptyInput <= 1)
-      this.newInput(false);
+    if (e.keyCode == 13 || e.keyCode == 9) // enter or tab
+    {
+      console.log('Add subitem');
+      var title = this.input.val();
+      console.log('Title: ' + title);
+      var newSubitem = new App.Models.SubItem({title: title, list_id: this.parent.model.listID, item_id: this.parent.model.id});
+      var that = this;
+
+      if (newSubitem)
+        newSubitem.save().then(function() {
+          that.parent.subItemsCollection.add(newSubitem);
+          //that.parent.renderSubItems();
+        });
+      this.newInput();
+    }
+
   },
+
+  // inputChange: function() {
+  //   var inputs = this.$el.find('input');
+  //   var emptyInput = 0;               // Number of empty inputs
+  //   inputs.each(function() {
+  //     if( ! $(this).val() )
+  //     {
+  //       console.log('yes');
+  //       emptyInput++;
+  //     }
+  //   });
+
+  //   if(emptyInput <= 1)
+  //     this.newInput(false);
+  // },
 
   newInput: function(hidden) {
     console.log('Add new input ');
-    var newInput = '<input class="add-sub-item" data-id="'+ this.inputs.length +'" placeholder="Add subitem...">';
+    this.input = $('<input class="add-sub-item" placeholder="Add subitem...">');
     if (hidden)
-      newInput = '<input class="add-sub-item hidden" data-id="'+ this.inputs.length +'" placeholder="Add subitem...">';
-    this.$el.append(newInput);
+      this.input = $('<input class="add-sub-item hidden" placeholder="Add subitem...">');
+    this.$el.append(this.input);
+    this.input.focus();
   }
 });

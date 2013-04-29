@@ -66,6 +66,7 @@
 <?php echo HTML::script('js/app.js') ?>
 <?php echo HTML::script('js/models/list.js') ?>
 <?php echo HTML::script('js/models/item.js') ?>
+<?php echo HTML::script('js/models/subitem.js') ?>
 <?php echo HTML::script('js/views/lists.js') ?>
 <?php echo HTML::script('js/views/addListForm.js') ?>
 <?php echo HTML::script('js/views/list.js') ?>

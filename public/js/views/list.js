@@ -24,12 +24,12 @@ App.Views.List = Backbone.View.extend({
 
   listClicked: function(event) {
     var listUrl = this.model.urlRoot + '/' + this.model.id;
-    app.router.navigate(listUrl, {trigger: true});  
+    app.router.navigate(listUrl, {trigger: true});
   },
 
   showList: function(listId) {
-    if (listId == this.model.id) {
-      //console.log('showList(' + listId + ')');
+    if (listId == this.model.id)
+    {
       var list = new App.Models.List( {id: listId} );
       list.fetch().then(function() {
 
@@ -39,8 +39,8 @@ App.Views.List = Backbone.View.extend({
         {
           itemCollection.add( items[key] );
         }
+        itemCollection.listID = listId;
         var itemsView = new App.Views.Items({ collection: itemCollection });
-        //appRouter.navigate('/list/' + modelId, true);
         itemsView.showAllItems();
       });
 
