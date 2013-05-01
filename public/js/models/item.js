@@ -5,6 +5,14 @@
 App.Models.Item = Backbone.Model.extend({
   defaults: {
     title: ''
+  },
+
+  urlRoot: '/item',
+
+  validate: function(arg) {
+    if (!arg.title) {
+      return 'Invalid title';
+    }
   }
 });
 

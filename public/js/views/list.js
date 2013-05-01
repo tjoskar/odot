@@ -40,8 +40,8 @@ App.Views.List = Backbone.View.extend({
           itemCollection.add( items[key] );
         }
         itemCollection.listID = listId;
-        var itemsView = new App.Views.Items({ collection: itemCollection });
-        itemsView.showAllItems();
+        app.itemsView = new App.Views.Items({ collection: itemCollection });
+        app.itemsView.showAllItems();
       });
 
       //Store the view id

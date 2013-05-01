@@ -12,7 +12,7 @@ App.Router = Backbone.Router.extend({
   index: function() {
 
     console.log('Route index');
-    //Go to last visited list      
+    //Go to last visited list
     var lastViewedListId = getLastVisitedListId();
     if (0 < lastViewedListId) {
       var lastViewedList = app.listsView.collection.get(lastViewedListId);
@@ -28,6 +28,8 @@ App.Router = Backbone.Router.extend({
 
     id = (typeof id !== 'undefined') ? id : 0;
 
+    app.currentListId = id;
+
     if (id > 0)
       vent.trigger('list:show', id);
     else
@@ -35,7 +37,7 @@ App.Router = Backbone.Router.extend({
   },
 
   lists: function() {
-    
+
     //vent.trigger('lists:show');
   }
 });
@@ -47,9 +49,9 @@ function getLastVisitedListId() {
   //Get local web storage
   if(typeof(Storage) !== "undefined") {
     if (typeof(localStorage.lastViewedListId) !== "undefined") {
-      
+
       console.log('Local storage: Last viewed list id = ' + localStorage.lastViewedListId);
-      
+
       //Return the last visited list id if list still exists
       var lastViewdList = app.listsView.collection.get(localStorage.lastViewedListId);
       if (typeof(lastViewdList) !== "undefined") {
@@ -64,7 +66,7 @@ function getLastVisitedListId() {
   }
 
   //Return the first list if at least one list exists
-  if (app.listsView.collection.isEmpty() == false) {
+  if (app.listsView.collection.isEmpty() === false) {
     var firstListModel = app.listsView.collection.models[0];
     return firstListModel.id;
   } else {

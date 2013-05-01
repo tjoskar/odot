@@ -20,8 +20,8 @@
             <form class="add-list">
                 <input class="add-list" placeholder="Add list...">
             </form>
-            
-        </div>       
+
+        </div>
 
         <div class="main-container">
 
@@ -37,15 +37,17 @@
 
      <script type="text/template" id="item-template">
         <div class="head-item">
-            <h3> <lable><%= title %></lable> </h3>
-            <input class="hide" value="<%= title %>">
+            <h3><%= title %></h3>
+            <input class="hide itemEdit" value="<%= title %>" data-id="<%= id %>">
             <div class="item-button-holder"> <i class="icon-time"></i> <i class="icon-trash"></i> </div>
         </div>
-        <% if( !_.isEmpty(sub_items) ) { %>
-            <div class="sub-items">
+        <% if( !_.isUndefined(sub_items) ) %>
+        <%  if ( !_.isEmpty(sub_items) ) %>
+        <%    { %>
+                <div class="sub-items">
 
-            </div>
-        <% } %>
+                </div>
+        <%    } %>
         <div class="add-subItems">
 
         </div>
@@ -56,7 +58,7 @@
 
     <script type="text/template" id="subItem-template">
         <p><%= title %></p>
-        <input class="hide" value="<%= title %>">
+        <input class="hide subItemEdit" value="<%= title %>" data-id="<%= id %>">
     </script>
 
 <?php echo HTML::script('js/libs/underscore.js') ?>
@@ -69,6 +71,7 @@
 <?php echo HTML::script('js/models/subitem.js') ?>
 <?php echo HTML::script('js/views/lists.js') ?>
 <?php echo HTML::script('js/views/addListForm.js') ?>
+<?php echo HTML::script('js/views/addItemForm.js') ?>
 <?php echo HTML::script('js/views/list.js') ?>
 <?php echo HTML::script('js/views/items.js') ?>
 <?php echo HTML::script('js/views/item.js') ?>

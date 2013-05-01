@@ -1175,7 +1175,7 @@ li {
   outline: none;
 }
 .hide {
-  display: none;
+  display: none !important;
 }
 /* Text */
 h2 {
@@ -1304,6 +1304,7 @@ a {
   margin: 10px 0 0 0;
   height: 30px;
   float: right;
+  display: none;
 }
 .main-container li .sub-items {
   float: left;
@@ -1320,6 +1321,8 @@ a {
 }
 .main-container li .sub-items input.add-sub-item {
   padding: 10px;
+  width: 430px;
+  border-bottom: 1px solid #ffffff;
 }
 .main-container li .sub-items ul {
   padding: 0;

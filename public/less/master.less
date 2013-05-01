@@ -14,7 +14,7 @@ li {
     outline: none;
 }
 .hide {
-    display: none;
+    display: none !important;
 }
 
 /* Text */
@@ -74,7 +74,7 @@ a {
 
         &:hover, &.active {
             background-color: #6cb7e7;
-            color: #fff;        
+            color: #fff;
         }
     }
 }
@@ -110,7 +110,7 @@ a {
         padding-top: 20px;
         margin-left: 150px;
     }
-    
+
     li {
         //padding: 10px;
         font-family: Arial, Helvetica, sans-serif;
@@ -123,6 +123,7 @@ a {
             margin: 10px 0 0 0;
             height: 30px;
             float: right;
+            display: none;
         }
 
         /*&:hover {
@@ -184,6 +185,8 @@ a {
             }
             input.add-sub-item {
                 padding: 10px;
+                width: 430px;
+                border-bottom: 1px solid #ffffff;
             }
 
             ul {

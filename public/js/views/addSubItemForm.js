@@ -8,6 +8,8 @@ App.Views.AddSubItemsForm = Backbone.View.extend({
     'keypress': 'keypress'
   },
 
+  //tagName: '',
+
   input: null,
   parent: null,
 
@@ -30,7 +32,7 @@ App.Views.AddSubItemsForm = Backbone.View.extend({
       var newSubitem = new App.Models.SubItem({title: title, list_id: this.parent.model.listID, item_id: this.parent.model.id});
       var that = this;
 
-      if (newSubitem)
+      if (newSubitem !== false)
         newSubitem.save().then(function() {
           that.parent.subItemsCollection.add(newSubitem);
           //that.parent.renderSubItems();
@@ -38,6 +40,10 @@ App.Views.AddSubItemsForm = Backbone.View.extend({
       this.newInput();
     }
 
+  },
+
+  stopEdit: function() {
+    this.$el.empty();
   },
 
   // inputChange: function() {
@@ -55,11 +61,9 @@ App.Views.AddSubItemsForm = Backbone.View.extend({
   //     this.newInput(false);
   // },
 
-  newInput: function(hidden) {
+  newInput: function() {
     console.log('Add new input ');
     this.input = $('<input class="add-sub-item" placeholder="Add subitem...">');
-    if (hidden)
-      this.input = $('<input class="add-sub-item hidden" placeholder="Add subitem...">');
     this.$el.append(this.input);
     this.input.focus();
   }

@@ -4,9 +4,9 @@ class Item extends Eloquent {
 
 	public static $table = 'items';
 
-    /*public function sub_items()
+    public function subItems()
     {
-        return $this->has_many('Sub_Item');
-    }*/
+        return $this->has_many('SubItem');
+    }
 
 }

@@ -43,6 +43,7 @@ Route::controller('home');
 Route::get('item', 'item@index');
 Route::get('item/(:num)', 'item@index');
 Route::post('item', 'item@index');
+Route::put('item/(:num)', 'item@index');
 Route::delete('item/(:num)', 'item@index');
 
 Route::get('lists', 'lists@index');
@@ -52,6 +53,7 @@ Route::delete('lists/(:num)', 'lists@list');
 
 Route::get('subitem', 'subitem@index');
 Route::post('subitem', 'subitem@index');
+Route::put('subitem/(:num)', 'subitem@index');
 Route::delete('subitem/(:num)', 'subitem@index');
 
 

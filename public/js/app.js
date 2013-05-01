@@ -2,7 +2,7 @@
 GET /lists => all lists
 GET /list/:id => en lista and alla items
 POST/DELETE /list:id => skapar/tarbort lista
- 
+
 POST /item/id => skapar item
 DELETE /item/id => tarbort item
 */
@@ -26,7 +26,9 @@ var App = {
 var app = {
   router: {},
   listsView: {},
-  listCollection: {},
+  listCollection: {},   // Do we need this? (== app.listView.collection)
+  itemsView: null,
+  currentListId: 0,
 
   saveLastViewedListId: function (listId) {
     localStorage.lastViewedListId = listId;
