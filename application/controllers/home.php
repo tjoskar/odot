@@ -30,10 +30,35 @@ class Home_Controller extends Base_Controller {
 	|
 	*/
 
-	public function action_index()
-	{
-		//return View::make('auth_index');
+	public function action_index() {
 		return View::make('index');
 	}
+	
+	public function action_get_login() {
+		return View::make('login');
+	}
 
+	public function action_post_login() {
+		$userdata = array(
+        	'username'      => Input::get('username'),
+        	'password'      => Input::get('password')
+	    );
+
+	    if ( Auth::attempt($userdata) )
+	    {
+	        // we are now logged in, go to home
+	        Redirect::to('');
+	        return true;
+	    }
+	    
+	    // auth failure! lets go back to the login
+	    return Redirect::to('login')->with('login_errors', true);
+        // pass any error notification you want
+        // i like to do it this way :)
+	}
+
+	public function action_get_logout() {
+		Auth::logout();
+    	return Redirect::to('login');
+	}
 }

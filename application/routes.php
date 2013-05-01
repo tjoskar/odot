@@ -31,14 +31,34 @@
 |		});
 |
 */
+/*
+Route::get('/', array('before' => 'auth', function() { }));
+//
 
-/*Route::get('/', function()
-{
-	return View::make('home.index');
-});*/
 
-Route::get('/', 'home.index');
+Route::get('login', function() {
+    return View::make('login');
+});
+*/
+/*Route::get('/', array('before' => 'auth', 'do' => function() { 
+	return View::make('home');
+}));
+*/
+//Route::get('/', 'home.index');
+//Route::get('/', 'home@index');
 Route::controller('home');
+Route::get('/', array('before' => 'auth', 'home@index'));
+Route::get('home', 'home@index');
+Route::get('login', 'home@get_login');
+Route::post('login', 'home@post_login');
+Route::get('logout', 'home@get_logout');
+
+/*
+Route::get('home', array('before' => 'auth', 'do' => function() {
+    return View::make('home.index');
+}));
+*/
+//Route::controller('home');
 
 Route::get('item', 'item@index');
 Route::get('item/(:num)', 'item@index');
@@ -77,13 +97,11 @@ Route::delete('subitem/(:num)', 'subitem@index');
 |
 */
 
-Event::listen('404', function()
-{
+Event::listen('404', function() {
 	return Response::error('404');
 });
 
-Event::listen('500', function($exception)
-{
+Event::listen('500', function($exception) {
 	return Response::error('500');
 });
 
@@ -115,22 +133,36 @@ Event::listen('500', function($exception)
 |
 */
 
-Route::filter('before', function()
-{
-	// Do stuff before every request to your application...
+//Route::filter('pattern: /*', 'auth');
+/*
+Route::filter('guest', function() {
+	if (Auth::check()) {
+		return Redirect::route('home')->with('flash-notice', 'You are already logged in!');
+	}
+});
+*/
+Route::filter('auth', function() {
+	if (Auth::guest()) { 
+		Session::put('redirect', URL::full());
+		return Redirect::to('login')->with('flash_error', 'You must be logged in to view this page!');
+	}
+	
+	if ($redirect = Session::get('redirect')) {
+        Session::forget('redirect');
+        return Redirect::to($redirect);
+    }
 });
 
-Route::filter('after', function($response)
-{
+Route::filter('before', function() {
+	// Do stuff before every request to your application...
+	
+});
+
+Route::filter('after', function($response) {
 	// Do stuff after every request to your application...
 });
 
-Route::filter('csrf', function()
-{
+Route::filter('csrf', function() {
 	if (Request::forged()) return Response::error('500');
 });
 
-Route::filter('auth', function()
-{
-	if (Auth::guest()) return Redirect::to('login');
-});
