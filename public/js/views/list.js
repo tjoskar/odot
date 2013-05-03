@@ -12,34 +12,36 @@ App.Views.List = Backbone.View.extend({
   },
 
   render: function() {
-    //console.log('List render()');
     this.$el.html( this.template( this.model.toJSON() ));
     return this;
   },
 
-  //Add event to capture click on a list (<li>)
+  // Add event to capture click on a list (<li>)
   events : {
     "click" : "listClicked"
   },
 
-  listClicked: function(event) {
+  listClicked: function(e) {
+    // Router user to a single list
     var listUrl = this.model.urlRoot + '/' + this.model.id;
     app.router.navigate(listUrl, {trigger: true});
   },
 
   showList: function(listId) {
-    if (listId == this.model.id)
+    // When the user clicks on a list, all list-view instance will get this function call
+    if (listId == this.model.id)                              // Check if the call was ment for this instance
     {
       var list = new App.Models.List( {id: listId} );
       list.fetch().then(function() {
 
         var itemCollection = new App.Collections.Item();
         var items = list.getItems();
+
         for( var key in items )
         {
           itemCollection.add( items[key] );
         }
-        itemCollection.listID = listId;
+
         app.itemsView = new App.Views.Items({ collection: itemCollection });
         app.itemsView.showAllItems();
       });

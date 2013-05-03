@@ -8,14 +8,13 @@ new App.Views.AddListForm();
 new App.Views.AddItemForm();
 
 //Fetch all lists
-app.listCollection = new App.Collections.List();
-app.listCollection.fetch().then(function() {
-  app.listsView = new App.Views.Lists({ collection: app.listCollection });
+var listCollection = new App.Collections.List();
+listCollection.fetch().then(function() {
+  app.listsView = new App.Views.Lists({ collection: listCollection });
   app.listsView.showAllLists();
 
+  // Firing up the router
   Backbone.history.start();
-  //app.router.navigate('', {trigger: true, replace:true});
-
 });
 
 

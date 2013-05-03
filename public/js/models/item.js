@@ -9,9 +9,23 @@ App.Models.Item = Backbone.Model.extend({
 
   urlRoot: '/item',
 
-  validate: function(arg) {
-    if (!arg.title) {
+  validate: function(arg)
+  {
+    if (!arg.title)
+    {
       return 'Invalid title';
+    }
+  },
+
+  getSubItems: function()
+  {
+    if (typeof(this.get('sub_items')) != "undefined")
+    {
+      return this.get('sub_items');
+    }
+    else
+    {
+      return {};
     }
   }
 });

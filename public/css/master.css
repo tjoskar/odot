@@ -1190,6 +1190,7 @@ h3 {
 
   float: left;
   cursor: pointer;
+  height: 20px;
 }
 a {
   text-decoration: none;

@@ -1,21 +1,7 @@
-/*
-GET /lists => all lists
-GET /list/:id => en lista and alla items
-POST/DELETE /list:id => skapar/tarbort lista
-
-POST /item/id => skapar item
-DELETE /item/id => tarbort item
-*/
-
-/**
-    TODO: finish it.
-**/
-
-
-
 /*=====================================================
 =            Initialisation of Application            =
 =====================================================*/
+
 var App = {
   Models: {},
   Collections: {},
@@ -26,9 +12,7 @@ var App = {
 var app = {
   router: {},
   listsView: {},
-  listCollection: {},   // Do we need this? (== app.listView.collection)
   itemsView: null,
-  currentListId: 0,
 
   saveLastViewedListId: function (listId) {
     localStorage.lastViewedListId = listId;

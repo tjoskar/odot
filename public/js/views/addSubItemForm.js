@@ -8,61 +8,50 @@ App.Views.AddSubItemsForm = Backbone.View.extend({
     'keypress': 'keypress'
   },
 
-  //tagName: '',
-
   input: null,
   parent: null,
 
   initialize: function() {
     this.parent = this.model.parent;
-    //this.newInput(true);
   },
 
   render: function() {
     this.parent.$el.find('.sub-items').append( this.el );
   },
 
-  keypress: function(e) {
-
+  keypress: function(e)
+  {
     if (e.keyCode == 13 || e.keyCode == 9) // enter or tab
     {
-      console.log('Add subitem');
-      var title = this.input.val();
-      console.log('Title: ' + title);
-      var newSubitem = new App.Models.SubItem({title: title, list_id: this.parent.model.listID, item_id: this.parent.model.id});
-      var that = this;
+      var title      = this.input.val();
+      var newSubitem = new App.Models.SubItem({title: title, list_id: getLastVisitedListId(), item_id: this.parent.model.id});
+      var that       = this;
 
-      if (newSubitem !== false)
+      if (newSubitem.isValid())
+      {
         newSubitem.save().then(function() {
           that.parent.subItemsCollection.add(newSubitem);
-          //that.parent.renderSubItems();
         });
+      }
+      else
+      {
+        /**
+            TODO:
+            - Cerate a warning dialog
+        **/
+      }
+
+      // Generate a new input field
       this.newInput();
     }
 
   },
 
   stopEdit: function() {
-    this.$el.empty();
+    this.$el.empty(); // Empty the view ie. remove all input fields
   },
 
-  // inputChange: function() {
-  //   var inputs = this.$el.find('input');
-  //   var emptyInput = 0;               // Number of empty inputs
-  //   inputs.each(function() {
-  //     if( ! $(this).val() )
-  //     {
-  //       console.log('yes');
-  //       emptyInput++;
-  //     }
-  //   });
-
-  //   if(emptyInput <= 1)
-  //     this.newInput(false);
-  // },
-
   newInput: function() {
-    console.log('Add new input ');
     this.input = $('<input class="add-sub-item" placeholder="Add subitem...">');
     this.$el.append(this.input);
     this.input.focus();
