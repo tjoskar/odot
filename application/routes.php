@@ -47,12 +47,13 @@ Route::get('login', function() {
 //Route::get('/', 'home.index');
 //Route::get('/', 'home@index');
 Route::controller('home');
-Route::get('/', array('before' => 'auth', 'home@index'));
+/*
+Route::get('/', 'home@index');
 Route::get('home', 'home@index');
 Route::get('login', 'home@get_login');
 Route::post('login', 'home@post_login');
 Route::get('logout', 'home@get_logout');
-
+*/
 /*
 Route::get('home', array('before' => 'auth', 'do' => function() {
     return View::make('home.index');
@@ -141,6 +142,7 @@ Route::filter('guest', function() {
 	}
 });
 */
+/*
 Route::filter('auth', function() {
 	if (Auth::guest()) { 
 		Session::put('redirect', URL::full());
@@ -152,7 +154,7 @@ Route::filter('auth', function() {
         return Redirect::to($redirect);
     }
 });
-
+*/
 Route::filter('before', function() {
 	// Do stuff before every request to your application...
 	

@@ -1,0 +1,81 @@
+//Import
+@import "lib.less";
+@import "reset.less";
+@import "fontAwesome/font-awesome.less";
+
+.odotlogin {
+        margin: 0 auto 0 auto;
+        width: 960px;
+        background-color: #fff;
+        min-height: 100px;
+        padding: 10px;
+        overflow: hidden;
+
+}
+.logo {
+    float: right;
+    font-family: 'Snippet', sans-serif;
+    font-size: 46px;
+    border-bottom: 1px solid #e9ebef;
+    clear: both;
+}
+#login-holder {
+    margin: 0 auto 0 auto;
+    padding-top: 100px;
+    width: 300px;
+}
+
+li {
+    list-style: none;
+}
+*:focus {
+    outline: none;
+}
+.auth-form {
+    overflow: hidden;
+}
+.auth-user, .auth-pass {
+    width: 100%;
+    height: 30px;
+    background: #e9ebef;
+    border: 1px solid white;
+    padding: 5px 10px 5px 10px;
+    font-family: 'Open Sans', sans-serif;
+    color: #757575;
+    font-size: 16px;
+}
+button.login-button {
+    width: 100%;
+}
+button.flat-button {
+    
+    height: 30px;
+
+    -webkit-appearance: none;
+    border: 1px solid white;
+    display: inline-block;
+    background: #6cb7e7;
+    color: white;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 5px 10px 5px 10px;
+    .ease-transition(0.5s);
+
+    &:hover {
+        background-color: rgb(75, 75, 75);
+    }
+}
+.reg-or-facebook {
+    margin: 0 auto 0 auto;
+    position: relative;
+    padding-top: 5px;
+    width: 300px;
+}
+
+#register-button {
+    float: left;
+}
+
+#facebook-button {
+    float: right;
+}

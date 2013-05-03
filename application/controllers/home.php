@@ -30,15 +30,18 @@ class Home_Controller extends Base_Controller {
 	|
 	*/
 
-	public function action_index() {
-		return View::make('index');
-	}
-	
-	public function action_get_login() {
+    public $restful = true;
+
+	public function get_index() {
+		
+		if(Auth::check()) {
+			return View::make('index');	
+		}
+
 		return View::make('login');
 	}
 
-	public function action_post_login() {
+	public function post_login() {
 		$userdata = array(
         	'username'      => Input::get('username'),
         	'password'      => Input::get('password')
@@ -46,19 +49,54 @@ class Home_Controller extends Base_Controller {
 
 	    if ( Auth::attempt($userdata) )
 	    {
-	        // we are now logged in, go to home
-	        Redirect::to('');
-	        return true;
+	        // we are now logged in
+            $result = array('result' => 'Success');
+            return json_encode($result);
 	    }
 	    
-	    // auth failure! lets go back to the login
-	    return Redirect::to('login')->with('login_errors', true);
-        // pass any error notification you want
-        // i like to do it this way :)
-	}
+	    // auth failure!
+        $result = array('result' => 'Failed');
+        return json_encode($result);    
+    }
 
-	public function action_get_logout() {
+	public function get_logout() {
 		Auth::logout();
     	return Redirect::to('login');
 	}
+
+    public function post_register() {
+        
+        $username = Input::get('username');
+        $password = Input::get('password');
+
+        if (is_null($username) || empty($username) || is_null($password) || empty($password)) {
+            $result = array('result' => 'Failed');
+            return json_encode($result);
+        }
+
+        $user = new User();
+        $user->username = $username;
+        $user->password = Hash::make($password);
+        $user->save();
+        
+        $userdata = array(
+            'username' => $username,
+            'password' => $password
+        );
+
+        if ( Auth::attempt($userdata) )
+        {
+            $result = array('result' => 'Success');
+            return json_encode($result);
+        }
+
+        $result = array('result' => 'Failed');
+        return json_encode($result);
+    }
 }
+
+
+
+
+
+

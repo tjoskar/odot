@@ -3,103 +3,64 @@
 <head>
 <title>ODOT</title>
 <link href='http://fonts.googleapis.com/css?family=Snippet|Cagliostro' rel='stylesheet' type='text/css'>
-<?php //echo HTML::style('css/master.css'); ?>
+<?php echo HTML::style('css/login.css'); ?>
 
 <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
 
-<style>
-    .odotauth {
-        margin: 0 auto 0 auto;
-        width: 960px;
-        background-color: #fff;
-        min-height: 100px;
-        padding: 10px;
-        overflow: hidden;
-
-    }
-    .logo {
-        float: right;
-        font-family: 'Snippet', sans-serif;
-        font-size: 46px;
-        border-bottom: 1px solid #e9ebef;
-    }
-    
-    li {
-        list-style: none;
-    }
-    *:focus {
-        outline: none;
-    }
-    .auth-form {
-        margin: 0 auto 0 auto;
-        position: relative;
-        padding-top: 100px;
-        width: 300px;
-        overflow: hidden;
-    }
-    .auth-user, .auth-pass {
-        width: 100%;
-        height: 30px;
-        background: #e9ebef;
-        border: 1px solid white;
-        padding: 5px 10px 5px 10px;
-        font-family: 'Open Sans', sans-serif;
-        color: #757575;
-        font-size: 16px;
-    }
-    button.auth-button {
-        width: 100%;
-        height: 30px;
-
-        -webkit-appearance: none;
-        border: 1px solid white;
-        display: inline-block;
-        background: #6cb7e7;
-        color: white;
-        cursor: pointer;
-        font-size: 12px;
-        padding: 5px 10px 5px 10px;
-        .ease-transition(0.5s);
-
-        &:hover {
-            background-color: rgb(75, 75, 75);
-        }
-    }
-    
-</style>
-
 </head>
 <body>
     
-    <div class="odotauth" id="odotauth">
-        <div class="logo">ODOT</div>
-        <form class="auth-form">
-            <ul>
-                <li><input class="auth-user" type="text" placeholder="username"></li>
-                <li><input class="auth-pass" type="password" placeholder="password"></li>
-                <li><button class="auth-button" type="submit">Login</button></li>
-            </ul>
-        </form>
-    </div>  
+<div class="odotlogin" id="odotlogin">
+    <div class="logo">ODOT</div>
+    <div id="login-holder"></div>
+</div>
 
 <?php echo HTML::script('js/libs/underscore.js') ?>
 <?php echo HTML::script('js/libs/jquery-1.9.1.js') ?>
 <?php echo HTML::script('js/libs/backbone.js') ?>
 
+<script type="text/template" id="login-template">
+    <form class="auth-form" id="login-form">
+        <ul>
+            <li><input class="auth-user" type="text" placeholder="username"></li>
+            <li><input class="auth-pass" type="password" placeholder="password"></li>
+            <li><button class="login-button flat-button" type="submit">Login</button></li>
+        </ul>
+    </form>
+
+    <div class="reg-or-facebook">
+        <button class="flat-button" id="register-button">Register</button>
+        <button class="flat-button" id="facebook-button">Login with Facebook</button>
+    </div>    
+</script>
+
+<script type="text/template" id="register-template">
+    <form class="auth-form" id="register-form">
+        <ul>
+            <li><input class="auth-user" type="text" placeholder="username"></li>
+            <li><input class="auth-pass" type="password" placeholder="password"></li>
+            <li><input class="auth-pass" type="password" placeholder="re-type password"></li>
+            <li><button class="flat-button" type="submit">Register</button></li>
+        </ul>
+    </form>
+</script>
 
 <script>
 var AuthView = Backbone.View.extend({
     
-    el: $(".auth-form"),
-    //template: _.template($('#auth-template').html()),
+    el: $("#odotlogin"),
+    loginTemplate: _.template($('#login-template').html()),
+    registerTemplate: _.template($('#register-template').html()),
     
     events: {
-      "submit" : "login",
+      "submit #login-form" : "submitLogin",
+      "submit #register-form" : "submitRegister",
+      "click #register-button" : "clickRegister",
     },
 
-    login: function(event) {
+    submitLogin: function(event) {
         event.preventDefault();
         
         //$('.alert-error').hide(); // Hide any errors on a new submit
@@ -112,25 +73,80 @@ var AuthView = Backbone.View.extend({
         console.log(formValues);
 
         $.ajax({
-            url: 'login',
+            url: 'home/login',
             type: 'post',
             dataType: 'json',
             data: formValues,//$('form.auth-form').serialize(),
             success: function(data) {
-                //alert("Logged in"); // <- this would have to be your own way of showing that user is logged in
+                if (data.result == 'Success') {
+                    window.location = '/'; //Reload index page
+                } else {
+                    alert('Login failed'); //Alert on fail
+                }
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                //alert("Login failed");
-                //alert(xhr.responseText); // <- same here, your own div, p, span, whatever you wish to use
+                console.log('Login failed (hard)');
+            }
+        });
+    },
+
+    clickRegister: function(event) {
+        this.renderRegister();
+    },
+
+    submitRegister: function(event) {
+        event.preventDefault();
+
+        var passwords = $('.auth-pass'); 
+        var p0 = $(passwords[0]).val();
+        var p1 = $(passwords[1]).val();
+        var user = $('.auth-user').val();
+
+        if (_.isEmpty(user)) {
+            alert('No username');
+            return;
+        }
+
+        if (_.isEmpty(p0) || _.isEmpty(p1) || p0 !== p1) {
+            alert('Passwords don\'t match');
+            return;
+        }
+
+        var formValues = {
+            username: user,
+            password: p0
+        };
+        console.log(formValues);
+
+        $.ajax({
+            url: 'home/register',
+            type: 'post',
+            dataType: 'json',
+            data: formValues,
+            success: function(data) {
+                if (data.result == 'Success') {
+                    window.location = '/'; //Reload index page
+                } else {
+                    alert('Registration failed'); //Alert on fail
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log('Registration failed (hard)');
             }
         });
     },
 
     initialize: function() {
+        this.renderLogin();
     },
 
-    render: function() {
-
+    renderLogin: function() {
+        $("#login-holder").empty();
+        $("#login-holder").append( this.loginTemplate() );
+    },
+    renderRegister: function() {
+        $("#login-holder").empty();
+        $("#login-holder").append( this.registerTemplate() );
     }
   });
 
