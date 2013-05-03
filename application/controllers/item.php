@@ -49,7 +49,8 @@ class Item_Controller extends Base_Controller {
 
 		if (!is_null($item))
 		{
-			$item->title = $input->title;
+			$item->title    = $input->title;
+			$item->complete = $input->complete;
 			$item->save();
 		}
 	}

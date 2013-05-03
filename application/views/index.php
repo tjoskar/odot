@@ -37,6 +37,7 @@
 
      <script type="text/template" id="item-template">
         <div class="head-item">
+            <div class="checkbox-holder"> <i class="icon-check-empty"></i> <i class="icon-check hide"></i> </div>
             <h3><%= title %></h3>
             <input class="hide itemEdit" value="<%= title %>" data-id="<%= id %>">
             <div class="item-button-holder"> <i class="icon-time"></i> <i class="icon-trash"></i> </div>

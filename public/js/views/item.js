@@ -14,11 +14,14 @@ App.Views.Item = Backbone.View.extend({
   addSubItemView: null,
 
   events : {
-    'click h3'          : 'itemClick',
-    'mouseenter'        : 'showIcon',
-    'mouseleave'        : 'hideIcon',
-    'click .icon-trash' : 'deleteItem',
-    'blur input'        : 'blur'
+    'click h3'                    : 'itemClick',
+    'mouseenter'                  : 'showIcon',
+    'mouseleave'                  : 'hideIcon',
+    'click .icon-trash'           : 'deleteItem',
+    'blur input'                  : 'blur',
+    'mouseenter .checkbox-holder' : 'hoverCheckbox',
+    'mouseleave .checkbox-holder' : 'hoverCheckbox',
+    'click .checkbox-holder'      : 'clickCheckbox'
   },
 
   initialize: function(){
@@ -155,6 +158,16 @@ App.Views.Item = Backbone.View.extend({
 
   hideIcon: function() {
     this.$el.find('.item-button-holder').hide();
+  },
+
+  hoverCheckbox: function(e) {
+    $(e.currentTarget).find('.icon-check-empty, .icon-check').toggleClass('hide');
+  },
+
+  clickCheckbox: function(e) {
+    this.model.toogleComplete();
+    this.model.save();
+    this.remove();
   },
 
   deleteItem: function() {

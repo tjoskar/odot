@@ -4,7 +4,8 @@
 
 App.Models.Item = Backbone.Model.extend({
   defaults: {
-    title: ''
+    title: '',
+    complete: 0
   },
 
   urlRoot: '/item',
@@ -15,6 +16,11 @@ App.Models.Item = Backbone.Model.extend({
     {
       return 'Invalid title';
     }
+  },
+
+  toogleComplete: function() {
+    var setComplete = (this.get('complete') == 1) ? 0 : 1;
+    this.set('complete', setComplete);
   },
 
   getSubItems: function()
