@@ -15,7 +15,7 @@ The site should allow the user to do the following
 
 ## Technological specification:
 
-We are going to use Laravel as server framework and Ember (and Jquery) on the client side. The communication between server and client will be done using web sockets in JSON format. We are going to try to use web sockets instead of polling and in other cases if there can be a benefit over ajax. Authentication will probably be done with an integrated authentication system provided with laravel and we aim to add Facebook/OpenID authentication as an option. We will also try to make the site well suited for a handheld device such as an smartphone or tablet. We aim to use a testing framework to set up a suit of automated tests to be used along the development to allow for fast and basic functionality verification, i.e. using Codeception or Selenium. 
+We are going to use Laravel4 as server framework and Backbone (and Jquery) on the client side. The communication between server and client will be done using web sockets in JSON format. We are going to try to use web sockets instead of polling and in other cases if there can be a benefit over ajax. Authentication will probably be done with an integrated authentication system provided with laravel and we aim to add Facebook/OpenID authentication as an option. We will also try to make the site well suited for a handheld device such as an smartphone or tablet. We aim to use a testing framework to set up a suit of automated tests to be used along the development to allow for fast and basic functionality verification, i.e. using Codeception or Selenium.
 
 ## License
 ODOT is open-sourced software licensed under the MIT License.

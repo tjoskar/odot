@@ -5,7 +5,7 @@
 App.Models.Item = Backbone.Model.extend({
   defaults: {
     title: '',
-    complete: 0
+    completed: 0
   },
 
   urlRoot: '/item',
@@ -18,20 +18,21 @@ App.Models.Item = Backbone.Model.extend({
     }
   },
 
-  toogleComplete: function() {
-    var setComplete = (this.get('complete') == 1) ? 0 : 1;
-    this.set('complete', setComplete);
+  toogleCompleted: function() {
+    var setCompleted = (this.get('completed') == 1) ? 0 : 1;
+    this.set('completed', setCompleted);
   },
 
   getSubItems: function()
   {
-    if (typeof(this.get('sub_items')) != "undefined")
+    if (this.get('sub_items'))
     {
       return this.get('sub_items');
     }
     else
     {
-      return {};
+      this.set('sub_items', {});
+      return this.get('sub_items');
     }
   }
 });

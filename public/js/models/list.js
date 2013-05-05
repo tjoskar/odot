@@ -5,7 +5,7 @@
 App.Models.List = Backbone.Model.extend({
   defaults: {
     title: '',
-    owner: '',
+    user_id: '',
     order: 0
   },
 
@@ -24,5 +24,5 @@ App.Models.List = Backbone.Model.extend({
 
 App.Collections.List = Backbone.Collection.extend({
   model: App.Models.List,
-  url: '/lists'
+  url: '/list'
 });

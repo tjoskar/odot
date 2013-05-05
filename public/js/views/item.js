@@ -165,7 +165,7 @@ App.Views.Item = Backbone.View.extend({
   },
 
   clickCheckbox: function(e) {
-    this.model.toogleComplete();
+    this.model.toogleCompleted();
     this.model.save();
     this.remove();
   },
