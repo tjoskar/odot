@@ -34,16 +34,27 @@ App.Views.List = Backbone.View.extend({
       var list = new App.Models.List( {id: listId} );
       list.fetch().then(function() {
 
-        var itemCollection = new App.Collections.Item();
+        var itemCollection     = new App.Collections.Item();
+        var compItemCollection = new App.Collections.Item();
         var items = list.getItems();
 
         for( var key in items )
         {
-          itemCollection.add( items[key] );
+          if (items[key].completed == '0')        // Uncompleted item
+          {
+            itemCollection.add( items[key] );
+          }
+          else
+          {
+            compItemCollection.add( items[key] );
+          }
         }
 
         app.itemsView = new App.Views.Items({ collection: itemCollection });
+        compItemsView = new App.Views.CompletedItems({ collection: compItemCollection });
+
         app.itemsView.showAllItems();
+        compItemsView.showAllItems();
       });
 
       //Store the view id

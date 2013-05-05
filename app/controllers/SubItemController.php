@@ -75,7 +75,8 @@ class SubitemController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-		//
+		$subItem = SubItem::find($id);
+		$subItem->delete();
 	}
 
 }

@@ -32,6 +32,8 @@
 
             <div id="items-holder"></div>
 
+            <div id="completed-items-holder"></div>
+
         </div>
     </div>
 
@@ -40,7 +42,7 @@
             <div class="item-checkbox-holder"> <i class="icon-check-empty"></i> <i class="icon-check hide"></i> </div>
             <h3><%= title %></h3>
             <input class="hide itemEdit" value="<%= title %>" data-id="<%= id %>">
-            <div class="item-button-holder"> <i class="icon-time"></i> <i class="icon-trash"></i> </div>
+            <div class="item-button-holder hide"> <i class="icon-time"></i> <i class="icon-trash"></i> </div>
         </div>
         <% if( !_.isUndefined(sub_items) ) %>
         <%  if ( !_.isEmpty(sub_items) ) %>
@@ -62,10 +64,18 @@
             <i class="icon-check-empty <% if (completed == 1) { %> hide <% } %>"></i>
             <i class="icon-check <% if (completed == 0) { %> hide <% } %>"></i>
         </div>
-        <p <% if (completed == 1) { %> class="completed-subitem" <% } %> >
+        <p <% if (completed == 1) { %> class="completed-item" <% } %> >
             <%= title %>
         </p>
         <input class="hide subItemEdit" value="<%= title %>" data-id="<%= id %>">
+        <div class="subitem-button-holder hide"> <i class="icon-trash"></i> </div>
+    </script>
+
+    <script type="text/template" id="completed-item-template">
+        <div class="head-item">
+            <div class="item-checkbox-holder"> <i class="icon-check-empty hide"></i> <i class="icon-check"></i> </div>
+            <h3 class="completed-item"><%= title %></h3>
+        </div>
     </script>
 
 <?php echo Html::script('js/libs/underscore.js') ?>
@@ -73,18 +83,24 @@
 <?php echo Html::script('js/libs/backbone.js') ?>
 
 <?php echo Html::script('js/app.js') ?>
+
 <?php echo Html::script('js/models/list.js') ?>
 <?php echo Html::script('js/models/item.js') ?>
 <?php echo Html::script('js/models/subitem.js') ?>
+
 <?php echo Html::script('js/views/lists.js') ?>
-<?php echo Html::script('js/views/addListForm.js') ?>
-<?php echo Html::script('js/views/addItemForm.js') ?>
 <?php echo Html::script('js/views/list.js') ?>
 <?php echo Html::script('js/views/items.js') ?>
 <?php echo Html::script('js/views/item.js') ?>
 <?php echo Html::script('js/views/subitems.js') ?>
 <?php echo Html::script('js/views/subitem.js') ?>
+<?php echo Html::script('js/views/completedItems.js') ?>
+<?php echo Html::script('js/views/completedItem.js') ?>
+
+<?php echo Html::script('js/views/addListForm.js') ?>
+<?php echo Html::script('js/views/addItemForm.js') ?>
 <?php echo Html::script('js/views/addSubItemForm.js') ?>
+
 <?php echo Html::script('js/routes.js') ?>
 <?php echo Html::script('js/home.js') ?>
 

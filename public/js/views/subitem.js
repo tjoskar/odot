@@ -34,7 +34,12 @@ App.Views.SubItem = Backbone.View.extend({
     this.render();
   },
 
-  deleteSubItem: function() {
+  hover: function() {
+    this.$el.find('.subitem-button-holder').toggleClass('hide');
+  },
+
+  deleteSubItem: function(e) {
+    e.preventDefault();
     this.model.destroy();
     this.remove();
   }
