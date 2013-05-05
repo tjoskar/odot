@@ -127,9 +127,13 @@ a {
             display: none;
         }
 
-        .checkbox-holder {
+        .item-checkbox-holder {
             float: left;
             margin: 12px 0 0 5px;
+        }
+
+        .subitem-checkbox-holder {
+            float: left;
         }
 
         /*&:hover {
@@ -188,7 +192,9 @@ a {
             input {
                 background: transparent;
                 padding: 0;
+                margin: 0;
             }
+
             input.add-sub-item {
                 padding: 10px;
                 width: 430px;
@@ -205,6 +211,12 @@ a {
                 padding: 10px;
                 width: 428px;
                 border-bottom: 1px solid #ffffff;
+            }
+
+            p.completed-subitem {
+                text-decoration: line-through;
+                color: #a1a1a1;
+                font-style: italic;
             }
         }
     }

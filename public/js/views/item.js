@@ -14,14 +14,14 @@ App.Views.Item = Backbone.View.extend({
   addSubItemView: null,
 
   events : {
-    'click h3'                    : 'itemClick',
-    'mouseenter'                  : 'showIcon',
-    'mouseleave'                  : 'hideIcon',
-    'click .icon-trash'           : 'deleteItem',
-    'blur input'                  : 'blur',
-    'mouseenter .checkbox-holder' : 'hoverCheckbox',
-    'mouseleave .checkbox-holder' : 'hoverCheckbox',
-    'click .checkbox-holder'      : 'clickCheckbox'
+    'click h3'                               : 'itemClick',
+    'mouseenter'                             : 'showIcon',
+    'mouseleave'                             : 'hideIcon',
+    'click .head-item .icon-trash'           : 'deleteItem',
+    'blur input'                             : 'blur',
+    'mouseenter .item-checkbox-holder' : 'hoverCheckbox',
+    'mouseleave .item-checkbox-holder' : 'hoverCheckbox',
+    'click .item-checkbox-holder'      : 'clickCheckbox'
   },
 
   initialize: function(){
@@ -100,20 +100,24 @@ App.Views.Item = Backbone.View.extend({
   },
 
   startEdit: function() {
-      this.$inputs = this.$el.find('input');  // Get all inputs
-      this.$inputs.removeClass('hide');       // Show all inputs
-      this.$el.find('h3, p').hide();          // Hide the actual text
-      this.addSubItemView.newInput();         // Add form for a new subitem
-      this.showSubitems(false);               // Show subitems
-      this.$inputs.first().focus();           // Set cursor at the first input field
+      this.$inputs = this.$el.find('input');              // Get all inputs
+      this.$inputs.removeClass('hide');                   // Show all inputs
+      this.$el.find('h3, p').hide();                      // Hide the actual text
+      this.$el.find('.item-checkbox-holder').hide();      // Hide all checkboxs
+      this.$el.find('.subitem-checkbox-holder').hide();
+      this.addSubItemView.newInput();                     // Add form for a new subitem
+      this.showSubitems(false);                           // Show subitems
+      this.$inputs.first().focus();                       // Set cursor at the first input field
   },
 
   stopEdit: function() {
-      this.addSubItemView.stopEdit();         // Tell the child-view that we are done with editing
-      this.updateCollection();                // Update the collection with the new data
-      this.$el.find('h3, p').show();          // Show the actual text again
-      this.$inputs.addClass('hide');          // And hide the input field again
-      this.renderSubItems();                  // Rerender the subitems
+      this.addSubItemView.stopEdit();                     // Tell the child-view that we are done with editing
+      this.updateCollection();                            // Update the collection with the new data
+      this.$el.find('h3, p').show();                      // Show the actual text again
+      this.$el.find('.item-checkbox-holder').show();      // Show all checkboxs again
+      this.$el.find('.subitem-checkbox-holder').show();
+      this.$inputs.addClass('hide');                      // And hide the input field again
+      this.renderSubItems();                              // Rerender the subitems
       window.debug = this.subItemsCollection;
   },
 

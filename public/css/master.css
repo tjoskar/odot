@@ -1307,9 +1307,12 @@ a {
   float: right;
   display: none;
 }
-.main-container li .checkbox-holder {
+.main-container li .item-checkbox-holder {
   float: left;
   margin: 12px 0 0 5px;
+}
+.main-container li .subitem-checkbox-holder {
+  float: left;
 }
 .main-container li .sub-items {
   float: left;
@@ -1323,6 +1326,7 @@ a {
 .main-container li .sub-items input {
   background: transparent;
   padding: 0;
+  margin: 0;
 }
 .main-container li .sub-items input.add-sub-item {
   padding: 10px;
@@ -1338,6 +1342,11 @@ a {
   padding: 10px;
   width: 428px;
   border-bottom: 1px solid #ffffff;
+}
+.main-container li .sub-items p.completed-subitem {
+  text-decoration: line-through;
+  color: #a1a1a1;
+  font-style: italic;
 }
 /* Form */
 form.add-task {

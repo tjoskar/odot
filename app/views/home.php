@@ -37,7 +37,7 @@
 
      <script type="text/template" id="item-template">
         <div class="head-item">
-            <div class="checkbox-holder"> <i class="icon-check-empty"></i> <i class="icon-check hide"></i> </div>
+            <div class="item-checkbox-holder"> <i class="icon-check-empty"></i> <i class="icon-check hide"></i> </div>
             <h3><%= title %></h3>
             <input class="hide itemEdit" value="<%= title %>" data-id="<%= id %>">
             <div class="item-button-holder"> <i class="icon-time"></i> <i class="icon-trash"></i> </div>
@@ -58,7 +58,13 @@
     </script>
 
     <script type="text/template" id="subItem-template">
-        <p><%= title %></p>
+        <div class="subitem-checkbox-holder">
+            <i class="icon-check-empty <% if (completed == 1) { %> hide <% } %>"></i>
+            <i class="icon-check <% if (completed == 0) { %> hide <% } %>"></i>
+        </div>
+        <p <% if (completed == 1) { %> class="completed-subitem" <% } %> >
+            <%= title %>
+        </p>
         <input class="hide subItemEdit" value="<%= title %>" data-id="<%= id %>">
     </script>
 

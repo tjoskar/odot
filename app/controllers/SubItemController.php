@@ -50,7 +50,7 @@ class SubitemController extends \BaseController {
 			$id      < 0  ||
 			($completed != 0 && $completed != 1))
 		{
-			return '';
+			return 'Wrong data';
 		}
 
 		$subItem = SubItem::find($id);
@@ -61,6 +61,8 @@ class SubitemController extends \BaseController {
 			$subItem->list_id = $list_id;
 			$subItem->item_id = $item_id;
 			$subItem->order = $order;
+			$subItem->completed = $completed;
+
 			$subItem->save();
 		}
 	}
