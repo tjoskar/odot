@@ -692,7 +692,7 @@ class Application extends Container implements HttpKernelInterface, ResponsePrep
      */
     public static function getBootstrapFile()
     {
-        return '/Users/Tjoskar/Documents/Projekt/odot/vendor/laravel/framework/src/Illuminate/Foundation' . '/start.php';
+        return '/Volumes/MacintoshHD/jonasbromo/Projects/Web projects/ODOT/vendor/laravel/framework/src/Illuminate/Foundation' . '/start.php';
     }
     /**
      * Start the exception handling for the request.
@@ -19142,7 +19142,7 @@ class PrettyPageHandler extends Handler
         // Get the 'pretty-template.php' template file
         // @todo: this can be made more dynamic &&|| cleaned-up
         if (!($resources = $this->getResourcesPath())) {
-            $resources = '/Users/Tjoskar/Documents/Projekt/odot/vendor/filp/whoops/src/Whoops/Handler' . '/../Resources';
+            $resources = '/Volumes/MacintoshHD/jonasbromo/Projects/Web projects/ODOT/vendor/filp/whoops/src/Whoops/Handler' . '/../Resources';
         }
         $templateFile = "{$resources}/pretty-template.php";
         // @todo: Make this more reliable,
