@@ -40,7 +40,7 @@
      <script type="text/template" id="item-template">
         <div class="head-item">
             <div class="item-checkbox-holder"> <i class="icon-check-empty"></i> <i class="icon-check hide"></i> </div>
-            <h3><%= title %></h3>
+            <h3 data-id="<%= id %>"><%= title %></h3>
             <input class="hide itemEdit" value="<%= title %>" data-id="<%= id %>">
             <div class="item-button-holder hide"> <i class="icon-time"></i> <i class="icon-trash"></i> </div>
         </div>
@@ -81,6 +81,8 @@
 <?php echo Html::script('js/libs/underscore.js') ?>
 <?php echo Html::script('js/libs/jquery-1.9.1.js') ?>
 <?php echo Html::script('js/libs/backbone.js') ?>
+
+<?php echo Html::script('js/libs/jquery.sortable.js') ?>
 
 <?php echo Html::script('js/app.js') ?>
 

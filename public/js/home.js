@@ -16,13 +16,3 @@ listCollection.fetch().then(function() {
   // Firing up the router
   Backbone.history.start();
 });
-
-
-
-
-
-
-
-
-
-

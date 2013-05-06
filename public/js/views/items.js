@@ -18,6 +18,23 @@ App.Views.Items = Backbone.View.extend({
       this.$el.append( itemView.render().$el );
     }, this);
 
+    // Lets make it sortable
+    var that = this;
+    this.$el.on(
+      function()
+      {
+        $(this).sortable().bind('sortupdate', function() {
+          var items = that.$el.find('h3');
+          $.each(items, function(i) {
+            var id = $(items[i]).data();
+            var model = that.collection.get(id);
+            model.set('order', i);
+            model.save();
+          });
+        });
+      }
+    );
+
     return this;
   },
 

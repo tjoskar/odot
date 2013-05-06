@@ -1231,6 +1231,10 @@ a {
   margin-top: 70px;
   border-right: 1px solid #e9ebef;
 }
+.left-list .sortable-placeholder {
+  height: 16px;
+  border: 1px dashed #CCC;
+}
 .left-list li {
   padding: 5px;
   font-family: 'Cagliostro', sans-serif;
@@ -1277,6 +1281,11 @@ a {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#000000', endColorstr='#f6f5f5', GradientType=0);
   /* IE6-9 */
 
+}
+.main-container .sortable-placeholder {
+  width: 450px;
+  height: 40px;
+  border: 1px dashed #CCC;
 }
 .main-container input {
   float: left;

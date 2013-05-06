@@ -1,6 +1,6 @@
 <?php
 
-class ItemController extends \BaseController {
+class ItemController extends BaseController {
 
 	/**
 	 * Store a newly created item in storage.
