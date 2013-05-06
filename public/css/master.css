@@ -1408,3 +1408,31 @@ input.add-list {
   color: #757575;
   font-size: 16px;
 }
+/* Alert */
+#alert-box-holder {
+  position: fixed;
+  /*margin: 0 0 0 -100px;
+    top: 10px;
+    left: 50%;*/
+
+  right: 50px;
+  width: 300px;
+}
+.alert-box {
+  border: 2px solid #217dbb;
+  margin-bottom: 2px;
+  padding: 10px;
+  font-size: 14px;
+  background-color: #3498db;
+  color: white;
+}
+.alert-box.alert {
+  background-color: #e74c3c;
+  border-color: #d62c1a;
+  color: white;
+}
+.alert-box.success {
+  background-color: #2ecc71;
+  border-color: #25a25a;
+  color: white;
+}

@@ -12,6 +12,11 @@
 </head>
 <body>
     <div id="odotapp" class="container">
+        <div id="alert-box-holder">
+            <div class="alert-box alert">Error: </div>
+            <div class="alert-box success">Success: </div>
+            <div class="alert-box">None: </div>
+        </div>
         <div class="logo">ODOT</div>
         <div class="left-list">
 
@@ -90,6 +95,8 @@
 <?php echo Html::script('js/models/item.js') ?>
 <?php echo Html::script('js/models/subitem.js') ?>
 
+<?php echo Html::script('js/models/alert.js') ?>
+
 <?php echo Html::script('js/views/lists.js') ?>
 <?php echo Html::script('js/views/list.js') ?>
 <?php echo Html::script('js/views/items.js') ?>
@@ -102,6 +109,8 @@
 <?php echo Html::script('js/views/addListForm.js') ?>
 <?php echo Html::script('js/views/addItemForm.js') ?>
 <?php echo Html::script('js/views/addSubItemForm.js') ?>
+
+<?php echo Html::script('js/views/alert.js') ?>
 
 <?php echo Html::script('js/routes.js') ?>
 <?php echo Html::script('js/home.js') ?>
