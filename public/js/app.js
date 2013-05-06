@@ -11,7 +11,7 @@ var App = {
 
 var app = {
   router: {},
-  listsView: {},
+  listsView: null,
   itemsView: null,
 
   saveLastViewedListId: function (listId) {
@@ -21,6 +21,6 @@ var app = {
   alert: function(msg, type)
   {
     var model = new App.Models.Alert({msg: msg, type: type});
-    new App.Views.Alert(model);
+    new App.Views.Alert({model: model});
   }
 };

@@ -22,10 +22,9 @@ App.Views.AddListForm = Backbone.View.extend({
           TODO:
           - Istället för att rendera om hela list vyn så borde vi enbart lägga till den nya listan längst ner
       **/
-      app.listsView.collection.add(newList); // Add new list to collection
       newList.save().then(function() {
-        app.listsView.showAllLists();        // Re-render lists
-        inputField.val('');                  // Clear input field
+        inputField.val('');                    // Clear input field
+        app.listsView.collection.add(newList); // Add new list to collection
       });
     }
     else

@@ -19,34 +19,36 @@ App.Views.Items = Backbone.View.extend({
     }, this);
 
     // Lets make it sortable
-    var that = this;
-    this.$el.on(
-      function()
-      {
-        $(this).sortable().bind('sortupdate', function() {
-          var items = that.$el.find('h3');
-          $.each(items, function(i) {
-            var id = $(items[i]).data();
-            var model = that.collection.get(id);
-            model.set('order', i);
-            model.save();
-          });
-        });
-      }
-    );
+    this.makeItemSortable();
 
     return this;
+  },
+
+  makeItemSortable: function() {
+    var that = this;
+    this.$el.sortable().bind('sortupdate', function() {
+      var items = that.$el.find('h3');
+      $.each(items, function(i) {
+        var id = $(items[i]).data();
+        var model = that.collection.get(id);
+        model.set('order', i);
+        model.save();
+      });
+    });
   },
 
   // Add a item to the view
   addItem: function(item) {
     var itemView = new App.Views.Item({ model: item });
     this.$el.append( itemView.render().$el );
+
+    // Lets make it sortable
+    this.$el.sortable();
   },
 
   // Show them all
   showAllItems: function() {
-    $("#items-holder").append( this.render().el );
+    $("#items-holder").html( this.render().el );
   }
 
 });

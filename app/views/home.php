@@ -13,9 +13,6 @@
 <body>
     <div id="odotapp" class="container">
         <div id="alert-box-holder">
-            <div class="alert-box alert">Error: </div>
-            <div class="alert-box success">Success: </div>
-            <div class="alert-box">None: </div>
         </div>
         <div class="logo">ODOT</div>
         <div class="left-list">

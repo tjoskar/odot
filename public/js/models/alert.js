@@ -5,6 +5,6 @@
 App.Models.Alert = Backbone.Model.extend({
   defaults: {
     msg: '',
-    type: ''
+    type: '' // alert, success or ''
   }
 });

@@ -8,6 +8,7 @@ App.Views.Lists = Backbone.View.extend({
   initialize: function() {
     // Wait for the call
     vent.on('lists:show', this.showAllLists, this);
+    this.collection.on("add", this.addList, this);
   },
 
   render: function() {
@@ -30,6 +31,15 @@ App.Views.Lists = Backbone.View.extend({
     });
 
     return this;
+  },
+
+  // Add a list to the view
+  addList: function(model) {
+    var listView = new App.Views.List({ model: model });
+    this.$el.append( listView.render().$el );
+
+    // Lets make it sortable
+    this.$el.sortable();
   },
 
   showAllLists: function() {

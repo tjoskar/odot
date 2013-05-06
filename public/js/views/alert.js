@@ -8,8 +8,6 @@ App.Views.Alert = Backbone.View.extend({
   timer: null,
 
   initialize: function() {
-    d(this.model);
-    return;
     $("#alert-box-holder").prepend( this.render().el ).show('slow');
 
     var that = this;
@@ -22,8 +20,11 @@ App.Views.Alert = Backbone.View.extend({
 
   render: function() {
     this.$el.html( this.template( this.model.toJSON() ));
-    if (this.model.type)
-      this.$el.addClass( this.model.type );
+    if (this.model.get('type'))
+    {
+      this.$el.addClass( this.model.get('type') );
+    }
+
     return this;
   },
 
@@ -32,7 +33,7 @@ App.Views.Alert = Backbone.View.extend({
   },
 
   click: function(e) {
-    //this.model.destroy();
+    this.model.destroy();
     this.remove();
   }
 

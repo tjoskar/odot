@@ -40,7 +40,7 @@ App.Views.List = Backbone.View.extend({
 
         for( var key in items )
         {
-          if (items[key].completed == '0')        // Uncompleted item
+          if (items[key].completed == '0')                    // Uncompleted item
           {
             itemCollection.add( items[key] );
           }

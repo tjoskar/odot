@@ -16,7 +16,7 @@ app.router = new App.Router();
 new App.Views.AddListForm();
 new App.Views.AddItemForm();
 
-app.alert('Welcome User', '');
+app.alert('Welcome back User', '');
 
 // Fetch all lists
 var listCollection = new App.Collections.List();
