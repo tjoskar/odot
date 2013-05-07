@@ -79,7 +79,7 @@ var AuthView = Backbone.View.extend({
             url: 'auth/login',
             type: 'post',
             dataType: 'json',
-            data: formValues,//$('form.auth-form').serialize(),
+            data: formValues,
             success: function(data) {
                 if (data.result == 'Success') {
                     window.location = '/'; //Reload index page
@@ -140,10 +140,31 @@ var AuthView = Backbone.View.extend({
     },
 
     facebookLoginSucceeded: function(res) {
-        console.log('Welcome!  Fetching your information.... ');
+        
         FB.api('/me', function(response) {
-            window.debug = response;
-            console.log('Good to see you, ' + response.name + '.');
+            var formValues = {
+                facebook_id: response.id,
+                visible_name: response.name
+            };
+
+            console.log(formValues);
+
+            $.ajax({
+                url: 'auth/loginfacebook',
+                type: 'post',
+                dataType: 'json',
+                data: formValues,
+                success: function(data) {
+                    if (data.result == 'Success') {
+                        window.location = '/'; //Reload index page
+                    } else {
+                        alert('Facebook login failed'); //Alert on fail
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log('Facebook login failed (hard)');
+                }
+            });
         });
     },
 

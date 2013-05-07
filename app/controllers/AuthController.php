@@ -3,7 +3,7 @@
 class AuthController extends \BaseController {
 
 	public function postLogin()
-	{
+    {
 		// if (Request::ajax())
 		$userdata = array(
         	'username'      => Input::get('username', ''),
@@ -20,8 +20,29 @@ class AuthController extends \BaseController {
         return json_encode(array('result' => 'Failed'));
     }
 
-	public function getLogout()
-	{
+    public function postLoginfacebook() 
+    {
+        
+        $visible_name = Input::get('visible_name', '');
+        $facebook_id = Input::get('facebook_id', '');
+
+        $user = User::where('facebook_id', '=', $facebook_id)->first();
+        
+        //Create if non existing user
+        if (is_null($user))
+        {
+            $user = new User();
+            $user->facebook_id = $facebook_id;
+            $user->visible_name = $visible_name;
+            $user->save();
+        }
+
+        Auth::loginUsingId($user->id);
+        return json_encode(array('result' => 'Success'));
+    }
+
+	public function getLogout() 
+    {
 		Auth::logout();
     	return Redirect::to('login');
 	}
@@ -42,12 +63,7 @@ class AuthController extends \BaseController {
         $user->password = Hash::make($password);
         $user->save();
 
-        $userdata = array(
-            'username' => $username,
-            'password' => $password
-        );
-
-        if ( Auth::attempt($userdata) )
+        if (Auth::login($user->id))
         {
             return json_encode(array('result' => 'Success'));
         }

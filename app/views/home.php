@@ -25,9 +25,9 @@
 
         <div class="main-container">
 
-            <form class="add-task">
-                <input class="add-task" placeholder="Add task...">
-                <button class="flat add-task-button">Add task</button>
+            <form class="add-item">
+                <input class="add-item" placeholder="Add item...">
+                <button class="flat add-item-button">Add item</button>
             </form>
 
             <div id="items-holder"></div>
