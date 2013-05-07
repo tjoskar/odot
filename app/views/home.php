@@ -12,6 +12,7 @@
 </head>
 <body>
     <div id="odotapp" class="container">
+        <div id="alert-box-holder"></div>
         <div class="logo">ODOT</div>
         <div class="left-list">
 
@@ -40,7 +41,7 @@
      <script type="text/template" id="item-template">
         <div class="head-item">
             <div class="item-checkbox-holder"> <i class="icon-check-empty"></i> <i class="icon-check hide"></i> </div>
-            <h3><%= title %></h3>
+            <h3 data-id="<%= id %>"><%= title %></h3>
             <input class="hide itemEdit" value="<%= title %>" data-id="<%= id %>">
             <div class="item-button-holder hide"> <i class="icon-time"></i> <i class="icon-trash"></i> </div>
         </div>
@@ -82,11 +83,15 @@
 <?php echo Html::script('js/libs/jquery-1.9.1.js') ?>
 <?php echo Html::script('js/libs/backbone.js') ?>
 
+<?php echo Html::script('js/libs/jquery.sortable.js') ?>
+
 <?php echo Html::script('js/app.js') ?>
 
 <?php echo Html::script('js/models/list.js') ?>
 <?php echo Html::script('js/models/item.js') ?>
 <?php echo Html::script('js/models/subitem.js') ?>
+
+<?php echo Html::script('js/models/alert.js') ?>
 
 <?php echo Html::script('js/views/lists.js') ?>
 <?php echo Html::script('js/views/list.js') ?>
@@ -100,6 +105,8 @@
 <?php echo Html::script('js/views/addListForm.js') ?>
 <?php echo Html::script('js/views/addItemForm.js') ?>
 <?php echo Html::script('js/views/addSubItemForm.js') ?>
+
+<?php echo Html::script('js/views/alert.js') ?>
 
 <?php echo Html::script('js/routes.js') ?>
 <?php echo Html::script('js/home.js') ?>

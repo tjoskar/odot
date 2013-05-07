@@ -24,5 +24,9 @@ App.Models.List = Backbone.Model.extend({
 
 App.Collections.List = Backbone.Collection.extend({
   model: App.Models.List,
-  url: '/list'
+  url: '/list',
+
+  comparator: function(model) {
+    return model.get('order');
+  }
 });

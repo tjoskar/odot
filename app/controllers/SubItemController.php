@@ -1,6 +1,6 @@
 <?php
 
-class SubitemController extends \BaseController {
+class SubitemController extends BaseController {
 
 	/**
 	 * Create a new subitem

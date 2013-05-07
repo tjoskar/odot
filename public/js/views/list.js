@@ -5,7 +5,7 @@
 App.Views.List = Backbone.View.extend({
   tagName: 'li',
   className: 'list',
-  template: _.template("<%= title %>"),
+  template: _.template("<p data-id='<%= id %>'><%= title %></p>"),
 
   initialize: function() {
     vent.on('list:show', this.showList, this);
@@ -40,7 +40,7 @@ App.Views.List = Backbone.View.extend({
 
         for( var key in items )
         {
-          if (items[key].completed == '0')        // Uncompleted item
+          if (items[key].completed == '0')                    // Uncompleted item
           {
             itemCollection.add( items[key] );
           }

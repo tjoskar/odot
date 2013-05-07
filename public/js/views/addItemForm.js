@@ -4,7 +4,7 @@
 
 // View to handle the "add item" input form
 App.Views.AddItemForm = Backbone.View.extend({
-  el: $('form.add-task'),
+  el: $('form.add-item'),
 
   events: {
     "submit" : "addNewItem"
@@ -25,10 +25,7 @@ App.Views.AddItemForm = Backbone.View.extend({
     }
     else
     {
-      /**
-          TODO:
-          - Cerate a warning dialog
-      **/
+      app.alert('An error occurred', 'alert');
     }
   }
 });

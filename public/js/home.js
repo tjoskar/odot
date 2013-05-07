@@ -3,11 +3,22 @@
 =    The app starting point   =
 =============================*/
 
+
+// Global functions
+var vent = _.extend({}, Backbone.Events);
+
+var d = function(msg) {
+  console.log(msg);
+};
+
+// Let's go, yo
 app.router = new App.Router();
 new App.Views.AddListForm();
 new App.Views.AddItemForm();
 
-//Fetch all lists
+app.alert('Welcome back User', '');
+
+// Fetch all lists
 var listCollection = new App.Collections.List();
 listCollection.fetch().then(function() {
   app.listsView = new App.Views.Lists({ collection: listCollection });
@@ -16,13 +27,3 @@ listCollection.fetch().then(function() {
   // Firing up the router
   Backbone.history.start();
 });
-
-
-
-
-
-
-
-
-
-

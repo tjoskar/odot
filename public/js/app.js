@@ -11,16 +11,16 @@ var App = {
 
 var app = {
   router: {},
-  listsView: {},
+  listsView: null,
   itemsView: null,
 
   saveLastViewedListId: function (listId) {
     localStorage.lastViewedListId = listId;
+  },
+
+  alert: function(msg, type)
+  {
+    var model = new App.Models.Alert({msg: msg, type: type});
+    new App.Views.Alert({model: model});
   }
-};
-
-var vent = _.extend({}, Backbone.Events);
-
-var d = function(msg) {
-  console.log(msg);
 };

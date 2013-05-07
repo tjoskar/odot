@@ -27,7 +27,7 @@ App.Views.CompletedItems = Backbone.View.extend({
 
   // Show them all
   showAllItems: function() {
-    $("#completed-items-holder").append( this.render().el );
+    $("#completed-items-holder").html( this.render().el );
   }
 
 });

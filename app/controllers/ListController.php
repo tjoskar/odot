@@ -1,6 +1,6 @@
 <?php
 
-class ListController extends \BaseController {
+class ListController extends BaseController {
 
 	/**
 	 * Get all lists
@@ -112,7 +112,22 @@ class ListController extends \BaseController {
 	 */
 	public function update($id)
 	{
-		//
+		$title     = Input::get('title', '');
+		$order     = (int) Input::get('order', 0);
+
+		if (empty($title) || $order < 0 || $id < 0)
+		{
+			return '';
+		}
+
+		$list = ItemList::find($id);
+
+		if (!is_null($list))
+		{
+			$list->title = $title;
+			$list->order = $order;
+			$list->save();
+		}
 	}
 
 	/**

@@ -35,10 +35,7 @@ App.Views.AddSubItemsForm = Backbone.View.extend({
       }
       else
       {
-        /**
-            TODO:
-            - Cerate a warning dialog
-        **/
+        app.alert('An error occurred', 'alert');
       }
 
       // Generate a new input field

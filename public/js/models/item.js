@@ -5,7 +5,8 @@
 App.Models.Item = Backbone.Model.extend({
   defaults: {
     title: '',
-    completed: 0
+    completed: 0,
+    order: 0
   },
 
   urlRoot: '/item',
@@ -38,5 +39,9 @@ App.Models.Item = Backbone.Model.extend({
 });
 
 App.Collections.Item = Backbone.Collection.extend({
-  model: App.Models.Item
+  model: App.Models.Item,
+
+  comparator: function(model) {
+    return model.get('order');
+  }
 });
