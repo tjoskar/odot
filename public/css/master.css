@@ -1231,6 +1231,10 @@ a {
   margin-top: 70px;
   border-right: 1px solid #e9ebef;
 }
+.left-list .sortable-placeholder {
+  height: 16px;
+  border: 1px dashed #CCC;
+}
 .left-list li {
   padding: 5px;
   font-family: 'Cagliostro', sans-serif;
@@ -1246,7 +1250,7 @@ a {
   background-color: #6cb7e7;
   color: #fff;
 }
-/* Item list */
+/* item list */
 .main-container .item-settings {
   display: none;
   position: relative;
@@ -1277,6 +1281,11 @@ a {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#000000', endColorstr='#f6f5f5', GradientType=0);
   /* IE6-9 */
 
+}
+.main-container .sortable-placeholder {
+  width: 450px;
+  height: 40px;
+  border: 1px dashed #CCC;
 }
 .main-container input {
   float: left;
@@ -1398,4 +1407,32 @@ input.add-list {
   font-family: 'Cagliostro', sans-serif;
   color: #757575;
   font-size: 16px;
+}
+/* Alert */
+#alert-box-holder {
+  position: fixed;
+  /*margin: 0 0 0 -100px;
+    top: 10px;
+    left: 50%;*/
+
+  right: 50px;
+  width: 300px;
+}
+.alert-box {
+  border: 2px solid #217dbb;
+  margin-bottom: 2px;
+  padding: 10px;
+  font-size: 14px;
+  background-color: #3498db;
+  color: white;
+}
+.alert-box.alert {
+  background-color: #e74c3c;
+  border-color: #d62c1a;
+  color: white;
+}
+.alert-box.success {
+  background-color: #2ecc71;
+  border-color: #25a25a;
+  color: white;
 }
