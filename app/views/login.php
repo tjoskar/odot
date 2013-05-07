@@ -143,12 +143,14 @@ var AuthView = Backbone.View.extend({
         
         FB.api('/me', function(response) {
             var formValues = {
+                username: response.username,
                 facebook_id: response.id,
                 visible_name: response.name
             };
-
-            console.log(formValues);
-
+            /*
+            window.debug = response;
+            return;
+            */
             $.ajax({
                 url: 'auth/loginfacebook',
                 type: 'post',

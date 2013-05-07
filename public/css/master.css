@@ -1224,6 +1224,26 @@ a {
   padding-left: 10px;
   border-left: 1px solid #e9ebef;
 }
+#user-info {
+  position: absolute;
+}
+#user-info #user-avatar {
+  float: left;
+  width: 50px;
+  height: 50px;
+  padding: 3px;
+}
+#user-info #visible-name {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  padding: 2px;
+}
+#user-info #user-menu {
+  float: left;
+}
+#user-info .user-button {
+  padding: 4px;
+}
 /* Left list */
 .left-list {
   float: left;

@@ -12,7 +12,40 @@
 </head>
 <body>
     <div id="odotapp" class="container">
-        <div id="alert-box-holder"></div>
+        <div id="alert-box-holder">
+        </div>
+
+        <!-- User Info -->
+        <div id="user-info">
+            <div id="user-avatar">
+                <?php 
+                    $facebook_id = Auth::user()->facebook_id;
+                    if ( !is_null($facebook_id) ) {
+                        echo '<img src="https://graph.facebook.com/'. $facebook_id .'/picture">';
+                    } else {
+                        echo '<i class="icon-user" style="font-size: 50px"></i>';
+                    }
+                    ?>
+            </div>
+            <div id="user-menu">
+            <ul>
+                <li><div id="visible-name">
+                    <?php 
+                        if ( !is_null(Auth::user()->visible_name) ) {
+                            echo Auth::user()->visible_name;
+                        } else {
+                            echo Auth::user()->username;
+                        }
+                    ?>
+                </div></li>
+                <li>
+                    <button class="flat user-button" id="settings"><i class="icon-cog"></i> Settings</button>
+                    <button class="flat user-button" id="logout"><i class="icon-signout"></i> Logout</button>
+                </li>
+            </ul>
+            </div>
+        </div>
+
         <div class="logo">ODOT</div>
         <div class="left-list">
 
@@ -107,6 +140,7 @@
 <?php echo Html::script('js/views/addSubItemForm.js') ?>
 
 <?php echo Html::script('js/views/alert.js') ?>
+<?php echo Html::script('js/views/userInfo.js') ?>
 
 <?php echo Html::script('js/routes.js') ?>
 <?php echo Html::script('js/home.js') ?>

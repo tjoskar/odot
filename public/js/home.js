@@ -16,7 +16,7 @@ app.router = new App.Router();
 new App.Views.AddListForm();
 new App.Views.AddItemForm();
 
-app.alert('Welcome back User', '');
+new App.Views.UserInfo();
 
 // Fetch all lists
 var listCollection = new App.Collections.List();
@@ -27,3 +27,5 @@ listCollection.fetch().then(function() {
   // Firing up the router
   Backbone.history.start();
 });
+
+

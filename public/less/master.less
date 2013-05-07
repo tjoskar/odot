@@ -34,6 +34,7 @@ h3 {
 a {
     text-decoration: none;
 }
+
 .completed-item {
     text-decoration: line-through;
     color: #a1a1a1;
@@ -64,6 +65,31 @@ a {
     margin: 70px 0 30px 200px;
     padding-left: 10px;
     border-left: 1px solid @lightGray
+}
+
+#user-info {
+    position: absolute;
+    //width: 200px;
+    
+    #user-avatar {
+        float: left;
+        width: 50px;
+        height: 50px;
+        padding: 3px;
+    }
+    #visible-name {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 18px;
+        padding: 2px;
+        //border-bottom: 1px solid @lightGray;
+    }
+    #user-menu {
+        float: left;
+        //padding-top: 5px;
+    }
+    .user-button {
+        padding: 4px;
+    }
 }
 
 /* Left list */

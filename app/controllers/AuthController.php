@@ -22,16 +22,17 @@ class AuthController extends BaseController {
 
     public function postLoginfacebook() 
     {
-        
+        $username = Input::get('username', '');
         $visible_name = Input::get('visible_name', '');
         $facebook_id = Input::get('facebook_id', '');
 
-        $user = User::where('facebook_id', '=', $facebook_id)->first();
+        $user = User::where('username', '=', $username)->where('facebook_id', '=', $facebook_id)->first();
         
         //Create if non existing user
         if (is_null($user))
         {
             $user = new User();
+            $user->username = $username;
             $user->facebook_id = $facebook_id;
             $user->visible_name = $visible_name;
             $user->save();
@@ -44,7 +45,7 @@ class AuthController extends BaseController {
 	public function getLogout() 
     {
 		Auth::logout();
-    	return Redirect::to('login');
+    	return json_encode(array('result' => 'Success'));
 	}
 
     public function postRegister()
