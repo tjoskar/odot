@@ -28,9 +28,6 @@ listCollection.fetch().then(function() {
   Backbone.history.start();
 });
 
-<<<<<<< HEAD
-
-=======
 if ("WebSocket" in window) // Check if the browser has WebSocket support
 {
 	app.conn = new WebSocket('ws://localhost:8080');			// Establish a connection to the websocket server
@@ -65,4 +62,3 @@ if ("WebSocket" in window) // Check if the browser has WebSocket support
 		console.log(e.data);
 	};
 }
->>>>>>> Added websocket support for add, update and remove items (not subitems)
