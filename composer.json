@@ -1,9 +1,14 @@
 {
 	"require": {
 		"laravel/framework": "4.0.*",
-		"way/generators": "1.0.*@dev"
+		"way/generators": "1.0.*@dev",
+		"cboden/Ratchet": "0.2.*"
+		//,"react/zmq": "dev-master"
 	},
 	"autoload": {
+		"psr-0": {
+            "SocketServer": "socketserver/"
+        },
 		"classmap": [
 			"app/commands",
 			"app/controllers",

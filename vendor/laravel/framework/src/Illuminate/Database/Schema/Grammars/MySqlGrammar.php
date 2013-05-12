@@ -332,7 +332,7 @@ class MySqlGrammar extends Grammar {
 	 */
 	protected function typeBoolean(Fluent $column)
 	{
-		return 'tinyint';
+		return 'tinyint(1)';
 	}
 
 	/**
@@ -387,7 +387,7 @@ class MySqlGrammar extends Grammar {
 	 */
 	protected function typeTimestamp(Fluent $column)
 	{
-		return 'timestamp default 0';
+		return 'timestamp';
 	}
 
 	/**

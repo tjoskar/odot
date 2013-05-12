@@ -112,6 +112,10 @@
         </div>
     </script>
 
+<script>
+var user_id = <?php echo Auth::user()->id; ?>
+</script>
+
 <?php echo Html::script('js/libs/underscore.js') ?>
 <?php echo Html::script('js/libs/jquery-1.9.1.js') ?>
 <?php echo Html::script('js/libs/backbone.js') ?>

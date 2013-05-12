@@ -28,4 +28,41 @@ listCollection.fetch().then(function() {
   Backbone.history.start();
 });
 
+<<<<<<< HEAD
 
+=======
+if ("WebSocket" in window) // Check if the browser has WebSocket support
+{
+	app.conn = new WebSocket('ws://localhost:8080');			// Establish a connection to the websocket server
+	app.conn.onopen = function(e)
+	{
+		console.log("Websocket connection established!");
+		var data = {'method': 'setUserID', 'args': user_id};
+		app.conn.send(JSON.stringify(data));					// Send our user id to the websocket server
+	};
+
+	app.conn.onmessage = function(e)
+	{
+		var json = JSON.parse(e.data);
+		if (_.has(json, 'status') && json.status == 200)
+		{
+			if (_.has(json, 'fire'))
+			{
+				if (_.has(json.fire, 'name') && _.has(json.fire, 'args'))
+				{
+					vent.trigger(json.fire.name, json.fire.args);
+				}
+				else
+				{
+					app.alert('Bad message from server', 'alert');
+				}
+			}
+		}
+		else if (_.has(json, 'error') && _.has(json.error, 'name') && _.has(json.error, 'args'))
+		{
+			app.alert(json.error.name + ': ' + json.error.args, 'alert');
+		}
+		console.log(e.data);
+	};
+}
+>>>>>>> Added websocket support for add, update and remove items (not subitems)

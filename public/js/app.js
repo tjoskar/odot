@@ -13,6 +13,7 @@ var app = {
   router: {},
   listsView: null,
   itemsView: null,
+  conn: false,
 
   saveLastViewedListId: function (listId) {
     localStorage.lastViewedListId = listId;

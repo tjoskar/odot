@@ -61,4 +61,5 @@ App.Views.List = Backbone.View.extend({
       app.saveLastViewedListId(this.model.id);
     }
   }
+
 });

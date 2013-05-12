@@ -20,6 +20,29 @@ App.Models.List = Backbone.Model.extend({
   getItems: function() {
     return this.get('items');
   }
+
+  // sync: function(method, model, options)
+  // {
+  //   d(method);
+  //   if(method === 'create')
+  //   {
+  //     if (conn)
+  //     {
+  //       var data = {'method': 'createList', 'args': model};
+  //       conn.send(JSON.stringify(data));
+  //       return true;
+  //     }
+  //     else
+  //     {
+  //       return Backbone.sync(method, model, options);
+  //     }
+  //   }
+  //   else
+  //   {
+  //     return Backbone.sync(method, model, options);
+  //   }
+
+  // }
 });
 
 App.Collections.List = Backbone.Collection.extend({

@@ -5,26 +5,29 @@
 // View to handle the "add list" input form
 App.Views.AddListForm = Backbone.View.extend({
   el: $('form.add-list'),
+  inputField: null,
+  newList: null,
 
   events: {
     "submit" : "addNewList"
   },
 
+  initialize: function() {
+    vent.on('list:createFromForm', this.addListFromForm, this);
+    vent.on('list:create', this.addList, this);
+  },
+
   addNewList: function(e) {
     e.preventDefault();
-    var inputField  = $(this.el).find('input');
-    var enteredText = inputField.val().trim();
-    var newList     = new App.Models.List({title: enteredText});
+    this.inputField = $(this.el).find('input');
+    var enteredText = this.inputField.val().trim();
+    this.newList    = new App.Models.List({title: enteredText});
 
-    if (newList.isValid())
+    if (this.newList.isValid())
     {
-      /**
-          TODO:
-          - Istället för att rendera om hela list vyn så borde vi enbart lägga till den nya listan längst ner
-      **/
-      newList.save().then(function() {
-        inputField.val('');                    // Clear input field
-        app.listsView.collection.add(newList); // Add new list to collection
+      var then = this;
+      this.newList.save().then(function() {
+        then.addListFromForm();
       });
     }
     else
@@ -34,6 +37,18 @@ App.Views.AddListForm = Backbone.View.extend({
           - Cerate a warning dialog
       **/
     }
+  },
+
+  addListFromForm: function(args) {
+    this.inputField.val('');                    // Clear input field
+    this.newList.set(args);
+    app.listsView.collection.add(this.newList); // Add new list to collection
+  },
+
+  addList: function(model) {
+    d(model);
+    var newList = new App.Models.List(model);
+    app.listsView.collection.add(newList);
   }
 
 });

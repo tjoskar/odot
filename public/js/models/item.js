@@ -35,6 +35,21 @@ App.Models.Item = Backbone.Model.extend({
       this.set('sub_items', {});
       return this.get('sub_items');
     }
+  },
+
+  sync: function(method, model, options)
+  {
+    if (method === 'create' || method === 'delete' || method === 'update')
+    {
+      var msg = {'method': method+'Item', 'args': model};
+      if (app.conn)
+      {
+        app.conn.send(JSON.stringify(msg));
+        return true;
+      }
+    }
+
+    return Backbone.sync(method, model, options);
   }
 });
 

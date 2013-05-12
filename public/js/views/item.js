@@ -14,11 +14,11 @@ App.Views.Item = Backbone.View.extend({
   addSubItemView: null,
 
   events : {
-    'click h3'                               : 'itemClick',
-    'mouseenter'                             : 'hover',
-    'mouseleave'                             : 'hover',
-    'click .head-item .icon-trash'           : 'deleteItem',
-    'blur input'                             : 'blur',
+    'click h3'                         : 'itemClick',
+    'mouseenter'                       : 'hover',
+    'mouseleave'                       : 'hover',
+    'click .head-item .icon-trash'     : 'deleteItem',
+    'blur input'                       : 'blur',
     'mouseenter .item-checkbox-holder' : 'hoverCheckbox',
     'mouseleave .item-checkbox-holder' : 'hoverCheckbox',
     'click .item-checkbox-holder'      : 'clickCheckbox'
@@ -41,6 +41,8 @@ App.Views.Item = Backbone.View.extend({
 
     // Listen for "title change". If the title change, re-render it
     this.model.on("change:title", this.renderItem, this);
+    this.model.on("remove", this.removeView, this);
+    vent.on('item:update', this.updateItem, this);
   },
 
   render: function() {
@@ -174,5 +176,26 @@ App.Views.Item = Backbone.View.extend({
   deleteItem: function() {
     this.model.destroy();
     this.remove();
+  },
+
+  removeView: function() {
+    this.remove();
+  },
+
+  updateItem: function(model) {
+    if (model.id == this.model.get('id'))
+    {
+      if (this.model.get('completed') != model.completed)
+      {
+        this.model.set(model);
+        vent.trigger('item:completed', this.model);
+        this.remove();
+      }
+      else
+      {
+        this.model.set(model);
+        this.renderItem();
+      }
+    }
   }
 });
