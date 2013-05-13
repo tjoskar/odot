@@ -11,7 +11,7 @@ App.Views.Item = Backbone.View.extend({
   timer: null,
   subItemsCollection: null,
   subItemsView: null,
-  addSubItemView: null,
+  addSubItemForm: null,
 
   events : {
     'click h3'                         : 'itemClick',
@@ -26,7 +26,7 @@ App.Views.Item = Backbone.View.extend({
 
   initialize: function(){
     // Create a form to add sub items
-    this.addSubItemView = new App.Views.AddSubItemsForm({ model: {parent: this} });
+    this.addSubItemForm = new App.Views.AddSubItemsForm({ model: {parent: this} });
 
     // Add sub items
     var subItems = this.model.getSubItems();                    // Get all sub items from the model
@@ -48,7 +48,7 @@ App.Views.Item = Backbone.View.extend({
   render: function() {
     this.renderItem();
     this.renderSubItems();
-    this.addSubItemView.render();
+    this.addSubItemForm.render();
     return this;
   },
 
@@ -107,20 +107,19 @@ App.Views.Item = Backbone.View.extend({
       this.$el.find('h3, p').hide();                      // Hide the actual text
       this.$el.find('.item-checkbox-holder').hide();      // Hide all checkboxs
       this.$el.find('.subitem-checkbox-holder').hide();
-      this.addSubItemView.newInput();                     // Add form for a new subitem
+      this.addSubItemForm.newInput();                     // Add form for a new subitem
       this.showSubitems(false);                           // Show subitems
       this.$inputs.first().focus();                       // Set cursor at the first input field
   },
 
   stopEdit: function() {
-      this.addSubItemView.stopEdit();                     // Tell the child-view that we are done with editing
+      this.addSubItemForm.stopEdit();                     // Tell the child-view that we are done with editing
       this.updateCollection();                            // Update the collection with the new data
       this.$el.find('h3, p').show();                      // Show the actual text again
       this.$el.find('.item-checkbox-holder').show();      // Show all checkboxs again
       this.$el.find('.subitem-checkbox-holder').show();
       this.$inputs.addClass('hide');                      // And hide the input field again
       this.renderSubItems();                              // Rerender the subitems
-      window.debug = this.subItemsCollection;
   },
 
   updateCollection: function() {
@@ -129,7 +128,7 @@ App.Views.Item = Backbone.View.extend({
 
     if (newTitle && this.model.get('title') != newTitle)  // Has the input change
     {
-      this.model.save({title: newTitle});                 // Lets save it (local and in server db)
+      this.model.save({title: newTitle});                 // Lets save it (local and server db)
     }
 
     // Update subitem

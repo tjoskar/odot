@@ -11,7 +11,7 @@ class ItemController extends BaseController {
 	{
 		$title     = Input::get('title', '');
 		$list_id   = (int) Input::get('list_id', 0);
-		$order     = (int) Input::get('order', 0);
+		$order     = (int) Item::where('list_id', '=', $list_id)->max('order') + 1;
 
 		if (empty($title) || $list_id < 0 || $order < 0)
 		{

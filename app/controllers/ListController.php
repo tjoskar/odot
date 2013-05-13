@@ -2,6 +2,19 @@
 
 class ListController extends BaseController {
 
+	private $_userID;
+
+	public function __construct() {
+		if (Auth::check())
+		{
+			$this->_userID = Auth::user()->id;
+		}
+		else
+		{
+			App::abort(401, 'You are not authorized.');
+		}
+	}
+
 	/**
 	 * Get all lists
 	 *
@@ -9,7 +22,7 @@ class ListController extends BaseController {
 	 */
 	public function index()
 	{
-		return ItemList::all();
+		return User::find($this->_userID)->lists;
 	}
 
 	/**
@@ -20,20 +33,20 @@ class ListController extends BaseController {
 	public function store()
 	{
 		$title   = Input::get('title', '');
-		$user_id = (int) Input::get('user_id', 0);
-		$order   = (int) Input::get('order', 0);
+		$order   = (int) ItemList::max('order') + 1;
 
-		if (empty($title) || $user_id < 0 || $order < 0)
+		if (empty($title) || $order < 0)
 		{
 			return '';
 		}
 
 		$list = new ItemList();
 		$list->title = $title;
-		$list->user_id = $user_id;
+		$list->user_id = $this->_userID;
 		$list->order = $order;
 
-		$list->save();
+		User::find($this->_userID)->lists()->save($list);
+
 		return $list;
 	}
 
@@ -79,7 +92,7 @@ class ListController extends BaseController {
 			return Response::json($output);
 
 		// Get all (not sub) items associated with the current list
-		$items = $list->items()->orderBy('order', 'desc')->get();
+		$items = $list->items()->get();
 
 		$output = $list->toArray();
 		$output['items'] = array();
@@ -91,7 +104,7 @@ class ListController extends BaseController {
 			$output['items'][$item['id']] = $item;
 		}
 
-		$sub_items = SubItem::where('list_id', '=', $id)->orderBy('order', 'desc')->get();
+		$sub_items = SubItem::where('list_id', '=', $id)->get();
 
 		// Insert the subitems
 		foreach ($sub_items as $sub_item_obj)
@@ -112,8 +125,8 @@ class ListController extends BaseController {
 	 */
 	public function update($id)
 	{
-		$title     = Input::get('title', '');
-		$order     = (int) Input::get('order', 0);
+		$title = Input::get('title', '');
+		$order = (int) Input::get('order', 0);
 
 		if (empty($title) || $order < 0 || $id < 0)
 		{
