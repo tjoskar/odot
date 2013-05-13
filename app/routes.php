@@ -30,3 +30,9 @@ Route::controller('auth', 'AuthController');
 Route::resource('item', 'ItemController');
 Route::resource('list', 'ListController');
 Route::resource('subitem', 'SubItemController');
+
+
+DB::listen(function($sql, $bindings, $time)
+{
+    Log::info($sql);
+});

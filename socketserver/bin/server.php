@@ -78,7 +78,7 @@ class Request implements MessageComponentInterface
     public function setUserID(ConnectionInterface $from, $arg='')
     {
         $id = (int) $arg;
-        if ($id > 0)
+        if ($id > 0 && !isset($this->clients[$from->resourceId]->user_id))
         {
             $this->clients[$from->resourceId]->user_id = $id;
             $data = array(
@@ -143,27 +143,41 @@ class Request implements MessageComponentInterface
 
     public function createItem(ConnectionInterface $from, $model='')
     {
-        if (is_null($model) || !is_object($model))
+        if (is_null($model)         || !is_object($model)      ||   // Are the model OK?
+            !isset($model->title)   || empty($model->title)    ||   // Do we have a title?
+            !isset($model->list_id) || empty($model->list_id))      // Do we have a list id?
         {
             $from->send(json_encode($this->_JSONError));
             return;
         }
 
-        $model->id = rand(50, 100);
+        /**
+            TODO:
+            - Do we own the list?
+        **/
 
-        $data = array(
+
+        $order = (int) Item::where('list_id', '=', $model->list_id)->max('order') + 1;
+
+        $item = new Item();
+        $item->title = $model->title;
+        $item->list_id = $model->list_id;
+        $item->order = $order;
+
+        $item->save();
+
+        $json = json_encode(array(
             'status' => 200,
             'fire'   => array(
                 'name' => 'item:createFromForm',
-                'args' => $model));
-        $json = json_encode($data);
+                'args' => $item->toArray() )));
         $from->send($json);
 
         $json = json_encode(array(
             'status' => 200,
             'fire'   => array(
                 'name' => 'item:create',
-                'args' => $model)));
+                'args' => $item->toArray() )));
 
         foreach ($this->clients as $resourceId => $client) {
             if ($client->user_id != $from->user_id)
@@ -175,22 +189,31 @@ class Request implements MessageComponentInterface
 
     public function deleteItem(ConnectionInterface $from, $model='')
     {
-        if (is_null($model) || !is_object($model))
+        if (is_null($model)    || !is_object($model) ||
+            !isset($model->id) || $model->id <= 0)
         {
             $from->send(json_encode($this->_JSONError));
             return;
         }
 
-        $json = json_encode(array(
-            'status' => 200,
-            'fire'   => array(
-                'name' => 'item:delete',
-                'args' => $model)));
+        $item = Item::find($model->id);
 
-        foreach ($this->clients as $resourceId => $client) {
-            if ($client->user_id != $from->user_id)
-            {
-                $client->send($json);
+        if (!is_null($item))
+        {
+            $item->subItems()->delete();    // Delete all subitem
+            $item->delete();                // And delete the item
+
+            $json = json_encode(array(
+                'status' => 200,
+                'fire'   => array(
+                    'name' => 'item:delete',
+                    'args' => $model)));
+
+            foreach ($this->clients as $resourceId => $client) {
+                if ($client->user_id != $from->user_id)
+                {
+                    $client->send($json);
+                }
             }
         }
     }

@@ -8,10 +8,4 @@ class Item extends Eloquent {
     {
         return $this->hasMany('SubItem');
     }
-
-    public function scopeGetHighestOrder($query, $list_id)
-    {
-        return $query->where('list_id', '=', $list_id)->max('order');
-    }
-
 }

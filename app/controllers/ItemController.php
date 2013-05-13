@@ -9,14 +9,15 @@ class ItemController extends BaseController {
 	 */
 	public function store()
 	{
-		$title     = Input::get('title', '');
-		$list_id   = (int) Input::get('list_id', 0);
-		$order     = (int) Item::where('list_id', '=', $list_id)->max('order') + 1;
+		$title   = Input::get('title', '');
+		$list_id = (int) Input::get('list_id', 0);
 
-		if (empty($title) || $list_id < 0 || $order < 0)
+		if (empty($title) || $list_id < 0)
 		{
 			return '';
 		}
+
+		$order = (int) Item::where('list_id', '=', $list_id)->max('order') + 1;
 
 		$item = new Item();
 		$item->title = $title;
@@ -35,6 +36,8 @@ class ItemController extends BaseController {
 	 */
 	public function show($item_id)
 	{
+		Item::create(array('hej'));
+		return;
 		if ($item_id <= 0)
 		{
 			return Response::json(array());
