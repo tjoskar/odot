@@ -15,7 +15,7 @@ App.Views.AddItemForm = Backbone.View.extend({
   initialize: function() {
     vent.on('item:createFromForm', this.addItemFromForm, this);
     vent.on('item:create', this.addItem, this);
-    vent.on('item:delete', this.deleteItem, this);
+    //vent.on('item:delete', this.deleteItem, this);
     //vent.on('item:update', this.updateItem, this);
   },
 
@@ -52,34 +52,34 @@ App.Views.AddItemForm = Backbone.View.extend({
     {
       app.alert('New item is added');
     }
-  },
-
-  deleteItem: function(model)
-  {
-    var currentListId = getLastVisitedListId();
-    if (model.list_id === currentListId)
-    {
-      app.itemsView.collection.remove(model);
-    }
-    else
-    {
-      app.alert('A item has been removed');
-    }
-  },
-
-  updateItem: function(model)
-  {
-    d('updateItem');
-    var currentListId = getLastVisitedListId();
-    if (model.list_id === currentListId)
-    {
-      var item = app.itemsView.collection.get(model.id);
-      item.set(model);
-    }
-    else
-    {
-      app.alert('A item has been removed');
-    }
   }
+
+  // deleteItem: function(model)
+  // {
+  //   var currentListId = getLastVisitedListId();
+  //   if (model.list_id === currentListId)
+  //   {
+  //     app.itemsView.collection.remove(model);
+  //   }
+  //   else
+  //   {
+  //     app.alert('A item has been removed');
+  //   }
+  // },
+
+  // updateItem: function(model)
+  // {
+  //   d('updateItem');
+  //   var currentListId = getLastVisitedListId();
+  //   if (model.list_id === currentListId)
+  //   {
+  //     var item = app.itemsView.collection.get(model.id);
+  //     item.set(model);
+  //   }
+  //   else
+  //   {
+  //     app.alert('A item has been removed');
+  //   }
+  // }
 
 });

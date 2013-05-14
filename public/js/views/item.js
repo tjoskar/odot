@@ -41,8 +41,9 @@ App.Views.Item = Backbone.View.extend({
 
     // Listen for "title change". If the title change, re-render it
     this.model.on("change:title", this.renderItem, this);
-    this.model.on("remove", this.removeView, this);
+    //this.model.on("remove", this.removeView, this);
     vent.on('item:update', this.updateItem, this);
+    vent.on('item:delete', this.socketDeleteItem, this);
   },
 
   render: function() {
@@ -170,6 +171,15 @@ App.Views.Item = Backbone.View.extend({
     this.model.save();
     vent.trigger('item:completed', this.model);
     this.remove();
+  },
+
+  socketDeleteItem: function(model)
+  {
+    if (model.id == this.model.get('id'))
+    {
+      this.model.destroy({silent: true});
+      this.remove();
+    }
   },
 
   deleteItem: function() {

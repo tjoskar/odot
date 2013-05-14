@@ -8,7 +8,7 @@ App.Views.Items = Backbone.View.extend({
   initialize: function () {
     // When a model is add to the collection, add the model to this view as well
     this.collection.on("add", this.addItem, this);
-    this.collection.on("remove", this.removeItem, this);
+    //this.collection.on("remove", this.removeItem, this);
     vent.on('item:uncompleted', this.addItem, this);
   },
 
@@ -47,10 +47,10 @@ App.Views.Items = Backbone.View.extend({
     this.$el.sortable();
   },
 
-  removeItem: function(item) {
-    d('removeItem');
-    item.destroy();
-  },
+  // removeItem: function(item) {
+  //   d('removeItem');
+  //   item.destroy();
+  // },
 
   // Show them all
   showAllItems: function() {
