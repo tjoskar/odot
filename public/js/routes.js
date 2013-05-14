@@ -22,7 +22,7 @@ App.Router = Backbone.Router.extend({
     }
     else // No previously viewed list id stored
     {
-      alert('No previously viewed list id stored');
+      //alert('No previously viewed list id stored');
       console.log('No previously viewed list id stored');
     }
   },
