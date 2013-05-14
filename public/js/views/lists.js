@@ -7,7 +7,6 @@ App.Views.Lists = Backbone.View.extend({
 
   initialize: function() {
     // Wait for the call
-    vent.on('lists:show', this.showAllLists, this);
     this.collection.on("add", this.addList, this);
   },
 
