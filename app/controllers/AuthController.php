@@ -64,12 +64,8 @@ class AuthController extends BaseController {
         $user->password = Hash::make($password);
         $user->save();
 
-        if (Auth::login($user->id))
-        {
-            return json_encode(array('result' => 'Success'));
-        }
-
-        return json_encode(array('result' => 'Failed'));
+        Auth::loginUsingId($user->id);
+        return json_encode(array('result' => 'Success'));
     }
 
 }
