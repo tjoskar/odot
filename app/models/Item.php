@@ -8,4 +8,9 @@ class Item extends Eloquent {
     {
         return $this->hasMany('SubItem');
     }
+
+    public function getHigestOrder($list_id)
+    {
+        return $this->where('list_id', '=', $list_id)->max('order') + 1;
+    }
 }

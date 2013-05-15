@@ -12,6 +12,8 @@ class Request implements MessageComponentInterface
 {
     protected $clients;
 
+    private $DBmodel;
+
     private $_JSONError = array(
         'status' => 400,
         'error'  => array(
@@ -27,11 +29,17 @@ class Request implements MessageComponentInterface
         'error'  => array(
             'name' => 'ArgumentError',
             'args' => 'Invalid argument'));
+    private $_UnauthorizedError = array(
+        'status' => 401,
+        'error'  => array(
+            'name' => 'Unauthorized',
+            'args' => 'You are unauthorized for this operation'));
 
 
     public function __construct()
     {
         $this->clients = array();
+        $this->DBmodel = new DBmodel();
     }
 
     public function onOpen(ConnectionInterface $conn)
@@ -40,7 +48,8 @@ class Request implements MessageComponentInterface
         echo "New connection! ({$conn->resourceId})\n";
     }
 
-    public function onMessage(ConnectionInterface $from, $json_msg) {
+    public function onMessage(ConnectionInterface $from, $json_msg)
+    {
         echo sprintf('Connection %d sending message "%s"'."\n", $from->resourceId, $json_msg);
 
         $msg = json_decode($json_msg);
@@ -63,16 +72,6 @@ class Request implements MessageComponentInterface
         {
             $from->send(json_encode($this->_MethodError));
         }
-    }
-
-    public function getUserID(ConnectionInterface $from, $arg='')
-    {
-        $id = $this->clients[$from->resourceId]->user_id;
-        $data = array(
-                'status' => 200,
-                'value'  => $id);
-        $json = json_encode($data);
-        $from->send($json);
     }
 
     public function setUserID(ConnectionInterface $from, $arg='')
@@ -151,20 +150,12 @@ class Request implements MessageComponentInterface
             return;
         }
 
-        /**
-            TODO:
-            - Do we own the list?
-        **/
+        $item = $DBmodel->saveItem($model, $from->user_id);
 
-
-        $order = (int) Item::where('list_id', '=', $model->list_id)->max('order') + 1;
-
-        $item = new Item();
-        $item->title = $model->title;
-        $item->list_id = $model->list_id;
-        $item->order = $order;
-
-        $item->save();
+        if (is_null($item))
+        {
+            $from->send(json_encode($this->_UnauthorizedError));
+        }
 
         $json = json_encode(array(
             'status' => 200,
