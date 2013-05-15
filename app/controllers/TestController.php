@@ -1,19 +1,16 @@
 <?php
 
-class TestController extends BaseController {
+class TestController extends Controller {
 
 	public function getIndex()
 	{
 		$data = array('Oskar', 'Karlsson');
 
-        $DBmodel = new DBmodel();
+                $model = new ItemListModel();
 
-        $item = new StdClass;
-        $item->title   = 'test';
-        $item->list_id = '1';
-
-        $t = $DBmodel->saveItem($item, 6);
-        var_dump($t);
+                echo '<pre>';
+                var_dump($model->getOwner(1));
+                echo '</pre>';
 
 	}
 

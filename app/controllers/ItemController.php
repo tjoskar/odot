@@ -2,6 +2,14 @@
 
 class ItemController extends BaseController {
 
+	private $Item_m;
+
+	public function __construct()
+    {
+    	parent::__construct();
+        $this->Item_m = new ItemModel();
+    }
+
 	/**
 	 * Store a newly created item in storage.
 	 *
@@ -9,22 +17,17 @@ class ItemController extends BaseController {
 	 */
 	public function store()
 	{
-		$title   = Input::get('title', '');
-		$list_id = (int) Input::get('list_id', 0);
+		$model          = new stdClass;
+		$model->title   = Input::get('title', '');
+		$model->list_id = (int) Input::get('list_id', 0);
 
-		if (empty($title) || $list_id < 0)
+		if (empty($model->title) || $model->list_id <= 0)
 		{
-			return '';
+			return Response::json(array('ststus' => 400));
 		}
 
-		$order = (int) Item::where('list_id', '=', $list_id)->max('order') + 1;
+		$item = $this->Item_m->save($model, $this->_userID);
 
-		$item = new Item();
-		$item->title = $title;
-		$item->list_id = $list_id;
-		$item->order = $order;
-
-		$item->save();
 		return $item;
 	}
 
@@ -36,14 +39,12 @@ class ItemController extends BaseController {
 	 */
 	public function show($item_id)
 	{
-		Item::create(array('hej'));
-		return;
 		if ($item_id <= 0)
 		{
 			return Response::json(array());
 		}
 
-		$item = Item::where('id', '=', $item_id)->first();				// TODO: Can we use "find" here?
+		$item = Item::find($item_id);
 		$output = (is_object($item)) ? $item->attributes : array();
 
 		return Response::json($output);
@@ -57,24 +58,30 @@ class ItemController extends BaseController {
 	 */
 	public function update($id)
 	{
-		$title     = Input::get('title', '');
-		$completed = (int) Input::get('completed', 0);
-		$order     = (int) Input::get('order', 0);
 
-		if (empty($title) || $order < 0 || ($completed != 0 && $completed != 1) || $id < 0)
+		$model            = new stdClass;
+		$model->id        = Input::get('id', -1);
+		$model->list_id   = (int) Input::get('list_id', -1);
+		$model->completed = (int) Input::get('completed', -1);
+		$model->title     = (int) Input::get('title', '');
+		$model->order     = (int) Input::get('order', -1);
+
+		if (empty($model->title) || $model->order  < 0 || ($model->completed != 0 && $model->completed != 1) || $model->id <= 0 || $model->list_id <= 0)
 		{
-			return '';
+			return Response::json(array('status' => 400));
 		}
 
-		$item = Item::find($id);
+		$status = $this->Item_m->update($model, $this->_userID);
 
-		if (!is_null($item))
+		if ($status)
 		{
-			$item->title     = $title;
-			$item->completed = $completed;
-			$item->order     = $order;
-			$item->save();
+			return Response::json(array('status' => 200));
 		}
+		else
+		{
+			return Response::json(array('status' => 401));
+		}
+
 	}
 
 	/**

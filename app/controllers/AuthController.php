@@ -1,6 +1,6 @@
 <?php
 
-class AuthController extends BaseController {
+class AuthController extends Controller {
 
 	public function postLogin()
     {
@@ -20,14 +20,14 @@ class AuthController extends BaseController {
         return json_encode(array('result' => 'Failed'));
     }
 
-    public function postLoginfacebook() 
+    public function postLoginfacebook()
     {
         $username = Input::get('username', '');
         $visible_name = Input::get('visible_name', '');
         $facebook_id = Input::get('facebook_id', '');
 
         $user = User::where('username', '=', $username)->where('facebook_id', '=', $facebook_id)->first();
-        
+
         //Create if non existing user
         if (is_null($user))
         {
@@ -42,7 +42,7 @@ class AuthController extends BaseController {
         return json_encode(array('result' => 'Success'));
     }
 
-	public function getLogout() 
+	public function getLogout()
     {
 		Auth::logout();
     	return json_encode(array('result' => 'Success'));

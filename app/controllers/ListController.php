@@ -2,18 +2,13 @@
 
 class ListController extends BaseController {
 
-	private $_userID;
+	private $ItemList_m;
 
-	public function __construct() {
-		if (Auth::check())
-		{
-			$this->_userID = Auth::user()->id;
-		}
-		else
-		{
-			App::abort(401, 'You are not authorized.');
-		}
-	}
+	public function __construct()
+    {
+    	parent::__construct();
+        $this->ItemList_m = new ItemListModel();
+    }
 
 	/**
 	 * Get all lists
@@ -32,22 +27,24 @@ class ListController extends BaseController {
 	 */
 	public function store()
 	{
-		$title   = Input::get('title', '');
-		$order   = (int) ItemList::max('order') + 1;
+		$model        = new ItemList();
+		$model->title = Input::get('title', '');
 
-		if (empty($title) || $order < 0)
+		if (empty($model->title))
 		{
-			return '';
+			return Response::json(array('ststus' => 400));
 		}
 
-		$list = new ItemList();
-		$list->title = $title;
-		$list->user_id = $this->_userID;
-		$list->order = $order;
+		$list = $this->ItemList_m->save($model, $this->_userID);
 
-		User::find($this->_userID)->lists()->save($list);
-
-		return $list;
+		if (is_null($list))
+		{
+			return Response::json(array('ststus' => 400));
+		}
+		else
+		{
+			return $list;
+		}
 	}
 
 	/**
@@ -125,21 +122,25 @@ class ListController extends BaseController {
 	 */
 	public function update($id)
 	{
-		$title = Input::get('title', '');
-		$order = (int) Input::get('order', 0);
+		$model        = new ItemList();
+		$model->title = Input::get('title', '');
+		$model->order = Input::get('order', -1);
+		$model->id 	  = (int) $id;
 
-		if (empty($title) || $order < 0 || $id < 0)
+		if (empty($model->order) || $model->order < 0 || $model->id <= 0)
 		{
-			return '';
+			return Response::json(array('ststus' => 400));
 		}
 
-		$list = ItemList::find($id);
+		$list = $this->ItemList_m->save($model, $this->_userID);
 
-		if (!is_null($list))
+		if ($status)
 		{
-			$list->title = $title;
-			$list->order = $order;
-			$list->save();
+			return Response::json(array('status' => 200));
+		}
+		else
+		{
+			return Response::json(array('status' => 401));
 		}
 	}
 
@@ -151,7 +152,22 @@ class ListController extends BaseController {
 	 */
 	public function destroy($id)
 	{
-		//
+		$id = (int) $id;
+		$list = ListItem::find($id);
+
+		/**
+
+		    - What about user_lists ?
+
+		**/
+
+
+		if (!is_null($list))
+		{
+			$list->delete();
+		}
+
+		return;
 	}
 
 }

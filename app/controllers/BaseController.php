@@ -2,6 +2,20 @@
 
 class BaseController extends Controller {
 
+	protected $_userID;
+
+	public function __construct()
+	{
+		if (Auth::check())
+		{
+			$this->_userID = Auth::user()->id;
+		}
+		else
+		{
+			App::abort(401, 'You are not authorized.');
+		}
+	}
+
 	/**
 	 * Setup the layout used by the controller.
 	 *
