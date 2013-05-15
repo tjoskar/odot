@@ -155,6 +155,7 @@ class Request implements MessageComponentInterface
         if (is_null($item))
         {
             $from->send(json_encode($this->_UnauthorizedError));
+            return;
         }
 
         $json = json_encode(array(
