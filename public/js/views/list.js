@@ -5,10 +5,18 @@
 App.Views.List = Backbone.View.extend({
   tagName: 'li',
   className: 'list',
-  template: _.template("<p data-id='<%= id %>'><%= title %></p>"),
+  template: _.template($('#list-template').html()),
 
   initialize: function() {
     vent.on('list:show', this.showList, this);
+
+    /*
+    if ( this.model.id == 34 )
+    {
+      app.popup = new App.Views.SharePopup(this.model);
+      app.popup.show();
+    }
+  */
   },
 
   render: function() {
@@ -18,13 +26,30 @@ App.Views.List = Backbone.View.extend({
 
   // Add event to capture click on a list (<li>)
   events : {
-    "click" : "listClicked"
+    'click'             : 'clickList',
+    'mouseenter'        : 'mouseEnter',
+    'mouseleave'        : 'mouseLeave',
+    'click .icon-group' : 'clickShare',
+    'click .icon-trash' : 'clickDelete',
   },
 
-  listClicked: function(e) {
+  clickList: function(e) {
     // Router user to a single list
     var listUrl = this.model.urlRoot + '/' + this.model.id;
     app.router.navigate(listUrl, {trigger: true});
+  },
+  mouseEnter: function(e) {
+    this.$el.find('.list-button-holder').removeClass('hide');
+  },
+  mouseLeave: function(e) {
+    this.$el.find('.list-button-holder').addClass('hide');
+  },
+  clickShare: function(e) {
+    app.popup = new App.Views.SharePopup(this.model);
+    app.popup.show();
+  },
+  clickDelete: function(e) {
+    
   },
 
   showList: function(listId) {
@@ -59,7 +84,15 @@ App.Views.List = Backbone.View.extend({
 
       //Store the view id
       app.saveLastViewedListId(this.model.id);
+
+      this.$el.addClass('active');
+    }
+    else 
+    {
+      this.$el.removeClass('active');
     }
   }
-
 });
+
+
+

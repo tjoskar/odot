@@ -1195,6 +1195,77 @@ h3 {
 a {
   text-decoration: none;
 }
+.blur {
+  -webkit-filter: blur(5px);
+}
+#fullscreen-popup-background {
+  background-color: #000;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+  z-index: 10;
+  left: 0;
+  top: 0;
+}
+#fullscreen-popup {
+  background-color: #f5f5f5;
+  position: absolute;
+  width: 100%;
+  opacity: 1.0;
+  z-index: 11;
+  margin-top: -100px;
+  top: 50%;
+}
+#fullscreen-popup #popup-container {
+  width: 400px;
+  padding: 10px;
+  margin: 0 auto 20px auto;
+}
+#fullscreen-popup #popup-container h1 {
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 25px;
+  margin: 5px 20px 20px 0;
+  float: left;
+}
+#fullscreen-popup #popup-container #list-title {
+  font-family: Arial, Helvetica, sans-serif;
+  -webkit-appearance: none;
+  border: none;
+  display: inline-block;
+  background: #6cb7e7;
+  color: white;
+  font-size: 20px;
+  padding: 5px 10px 5px 10px;
+  float: left;
+}
+#fullscreen-popup #popup-container p#title {
+  font-family: Arial, Helvetica, sans-serif;
+  word-wrap: break-word;
+  padding-bottom: 20px;
+  float: left;
+}
+#fullscreen-popup #popup-container p#share-desc {
+  float: left;
+  font-family: Arial, Helvetica, sans-serif;
+}
+#fullscreen-popup #popup-container input.add-user {
+  float: left;
+  margin: 5px 5px 20px 0;
+  width: 250px;
+  height: 30px;
+  background: #e9ebef;
+  border: none;
+  padding: 5px 0px 5px 5px;
+  font-family: 'Open Sans', sans-serif;
+  color: #757575;
+  font-size: 16px;
+}
+#fullscreen-popup #popup-container .add-user-button {
+  height: 40px;
+  float: left;
+  margin: 5px 5px 20px 0;
+}
 .completed-item {
   text-decoration: line-through;
   color: #a1a1a1;
@@ -1257,6 +1328,7 @@ a {
 }
 .left-list li {
   padding: 5px;
+  height: 16px;
   font-family: 'Cagliostro', sans-serif;
   font-size: 16px;
   -webkit-transition: all 0.2s ease-out;
@@ -1265,10 +1337,16 @@ a {
   -o-transition: all 0.2s ease-out;
   transition: all 0.2s ease-out;
 }
+.left-list li .list {
+  float: left;
+}
 .left-list li:hover,
 .left-list li.active {
   background-color: #6cb7e7;
   color: #fff;
+}
+.left-list li .list-button-holder {
+  float: right;
 }
 /* item list */
 .main-container .item-settings {

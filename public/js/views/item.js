@@ -15,8 +15,8 @@ App.Views.Item = Backbone.View.extend({
 
   events : {
     'click h3'                         : 'itemClick',
-    'mouseenter'                       : 'hover',
-    'mouseleave'                       : 'hover',
+    'mouseenter'                       : 'mouseEnter',
+    'mouseleave'                       : 'mouseLeave',
     'click .head-item .icon-trash'     : 'deleteItem',
     'blur input'                       : 'blur',
     'mouseenter .item-checkbox-holder' : 'hoverCheckbox',
@@ -158,8 +158,11 @@ App.Views.Item = Backbone.View.extend({
     $(this.el).find('.sub-items').slideUp("slow");
   },
 
-  hover: function() {
-    this.$el.find('.item-button-holder').toggleClass('hide');
+  mouseEnter: function(e) {
+    this.$el.find('.item-button-holder').removeClass('hide');
+  },
+  mouseLeave: function(e) {
+    this.$el.find('.item-button-holder').addClass('hide');
   },
 
   hoverCheckbox: function(e) {

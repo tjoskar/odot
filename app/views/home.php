@@ -10,7 +10,25 @@
 <![endif]-->
 
 </head>
+
 <body>
+    
+    <div class="hide" id="fullscreen-popup-background">
+    </div>
+    <div class="hide" id="fullscreen-popup">
+        <div id="popup-container"></div>
+    </div>
+    
+    <script type="text/template" id="share-list-popup-template">
+        <h1>Share list</h1><div id="list-title"><%= listTitle %></div>
+        <p id="title"><%= title %></p>
+        <p id="share-desc">Add user to share this list</p>
+        <form class="add-user">
+            <input class="add-user" placeholder="username">
+            <button class="flat add-user-button">Share</button>
+        </form>
+    </script>
+
     <div id="odotapp" class="container">
         <div id="alert-box-holder">
         </div>
@@ -71,7 +89,12 @@
         </div>
     </div>
 
-     <script type="text/template" id="item-template">
+    <script type="text/template" id="list-template">
+        <p class="list" data-id='<%= id %>'><%= title %></p>
+        <div class="list-button-holder hide"> <i class="icon-group"></i> <i class="icon-trash"></i> </div>
+    </script>
+
+    <script type="text/template" id="item-template">
         <div class="head-item">
             <div class="item-checkbox-holder"> <i class="icon-check-empty"></i> <i class="icon-check hide"></i> </div>
             <h3 data-id="<%= id %>"><%= title %></h3>
@@ -145,6 +168,8 @@ var user_id = <?php echo Auth::user()->id; ?>
 
 <?php echo Html::script('js/views/alert.js') ?>
 <?php echo Html::script('js/views/userInfo.js') ?>
+
+<?php echo Html::script('js/views/sharePopup.js') ?>
 
 <?php echo Html::script('js/routes.js') ?>
 <?php echo Html::script('js/home.js') ?>
