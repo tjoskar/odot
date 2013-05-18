@@ -1,10 +1,10 @@
-/*==========================================
-=            Models/Collections            =
-==========================================*/
+/*=============================================
+=            Model for 'alert box'            =
+=============================================*/
 
 App.Models.Alert = Backbone.Model.extend({
   defaults: {
     msg: '',
-    type: '' // alert, success or ''
+    type: '' // alert (red), success (green) or '' (blue)
   }
 });

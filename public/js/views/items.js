@@ -10,6 +10,7 @@ App.Views.Items = Backbone.View.extend({
     this.collection.on("add", this.addItem, this);
     //this.collection.on("remove", this.removeItem, this);
     vent.on('item:uncompleted', this.addItem, this);
+    vent.on('item:update', this.updateItem, this);
   },
 
   render: function() {
@@ -47,10 +48,24 @@ App.Views.Items = Backbone.View.extend({
     this.$el.sortable();
   },
 
-  // removeItem: function(item) {
-  //   d('removeItem');
-  //   item.destroy();
-  // },
+   updateItem: function(model) {
+    item = this.collection.get(model.id);
+    if (!_.isNull(item))
+    {
+      if (item.get('completed') != model.completed)
+      {
+        item.set(model);
+        vent.trigger('item:completed', item);
+        item.destroy();
+      }
+      else
+      {
+        item.set(model);
+        this.collection.sort();
+        this.render();
+      }
+    }
+  },
 
   // Show them all
   showAllItems: function() {

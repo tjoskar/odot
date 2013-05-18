@@ -6,12 +6,12 @@ class TestController extends Controller {
 	{
 		$data = array('Oskar', 'Karlsson');
 
-                $model = new ItemListModel();
+    $model = new ItemListModel();
 
-                echo '<pre>';
-                var_dump($model->getOwner(1));
-                echo '</pre>';
+    echo '<pre>';
+    var_dump($model->getOwner(1));
+    echo '</pre>';
 
-	}
+  }
 
 }

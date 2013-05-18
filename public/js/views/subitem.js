@@ -17,6 +17,8 @@ App.Views.SubItem = Backbone.View.extend({
 
   initialize: function () {
     this.model.on("change:title", this.render, this);
+    vent.on('subItem:update', this.updateSubItem, this);
+    vent.on('subItem:delete', this.socketDeleteSubItem, this);
   },
 
   render: function() {
@@ -42,5 +44,22 @@ App.Views.SubItem = Backbone.View.extend({
     e.preventDefault();
     this.model.destroy();
     this.remove();
+  },
+
+  socketDeleteSubItem: function(model)
+  {
+    if (model.id == this.model.get('id'))
+    {
+      this.model.destroy({silent: true});
+      this.remove();
+    }
+  },
+
+  updateSubItem: function(model) {
+    if (model.id == this.model.get('id'))
+    {
+        this.model.set(model);
+        this.render();
+    }
   }
 });

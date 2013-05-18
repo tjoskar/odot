@@ -1,6 +1,6 @@
 <?php
 
-class ItemModel {
+class SubItemModel {
 
     private $_table;
 
@@ -9,15 +9,15 @@ class ItemModel {
         $this->_table = new stdClass;
 
         // Set tables name
-        $this->_table->item = 'items';
+        $this->_table->subItem = 'sub_items';
         $this->_table->userList = 'user_lists';
     }
 
-    public function getNextOrderIndex($list_id)
+    public function getNextOrderIndex($item_id)
     {
-        if (is_int($list_id))
+        if (is_int($item_id))
         {
-            return DB::table($this->_table->item)->where('list_id', $list_id)->max('order') + 1;
+            return DB::table($this->_table->subItem)->where('item_id', $item_id)->max('order') + 1;
         }
         else
         {
@@ -27,8 +27,9 @@ class ItemModel {
 
     public function save(stdClass $model, $user_id)
     {
-        if (!isset($model->title)   || empty($model->title)    ||   // Do we have a title?
-            !isset($model->list_id) || empty($model->list_id))      // Do we have a list id?
+        if (!isset($model->title)   || empty($model->title)    ||
+            !isset($model->item_id) || empty($model->item_id)  ||
+            !isset($model->list_id) || empty($model->list_id))
         {
             throw new Exception('Incomplete model was passed to '.__METHOD__.'. File: '.__FILE__.' Line: '. __LINE__);
         }
@@ -37,27 +38,31 @@ class ItemModel {
 
         if ($ownList == 1)
         {
-            $list = ItemList::find($model->list_id);
-            if (!is_null($list))
+            $item = Item::find($model->item_id);
+            if (!is_null($item))
             {
-                $item = new Item();
-                $item->title   = $model->title;
-                $item->list_id = $model->list_id;
-                $item->order   = $this->getNextOrderIndex((int) $model->list_id);
+                $subItem = new SubItem();
+                $subItem->title = $model->title;
+                $subItem->list_id = $model->list_id;
+                $subItem->item_id = $model->item_id;
+                $subItem->order = $this->getNextOrderIndex((int) $model->item_id);
 
-                $item->save();
+                $subItem->save();
 
-                return $item;
+                return $subItem;
             }
         }
-
-        return NULL;
+        else
+        {
+            return NULL;
+        }
     }
 
     public function update(stdClass $model, $user_id)
     {
         if (!isset($model->id)        || $model->id <= 0          ||
             !isset($model->list_id)   || $model->list_id <= 0     ||
+            !isset($model->item_id)   || $model->item_id <= 0     ||
             !isset($model->completed) || ($model->completed != 0 && $model->completed != 1) ||
             !isset($model->title)     || empty($model->title)     ||
             !isset($model->order)     || $model->order < 0)
@@ -69,14 +74,17 @@ class ItemModel {
 
         if ($ownList == 1)
         {
-            $item = Item::find($model->id);
+            $subItem = SubItem::find($model->id);
 
-            if (!is_null($item))
+            if (!is_null($subItem))
             {
-                $item->title     = $model->title;
-                $item->completed = $model->completed;
-                $item->order     = $model->order;
-                $item->save();
+                $subItem->title = $model->title;
+                $subItem->list_id = $model->list_id;
+                $subItem->item_id = $model->item_id;
+                $subItem->order = $model->order;
+                $subItem->completed = $model->completed;
+
+                $subItem->save();
                 return TRUE;
             }
         }
@@ -86,12 +94,10 @@ class ItemModel {
 
     public function delete($id)
     {
-        $item = Item::find($id);
-
-        if (!is_null($item))
+        $subItem = SubItem::find($id);
+        if (!is_null($subItem))
         {
-            $item->subItems()->delete();    // Delete all subitem
-            $item->delete();                // And delete the item
+            $subItem->delete();
             return TRUE;
         }
         return FALSE;

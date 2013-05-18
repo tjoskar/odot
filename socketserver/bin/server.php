@@ -39,8 +39,9 @@ class Request implements MessageComponentInterface
 
     public function __construct()
     {
-        $this->clients = array();
-        $this->Item_m = new ItemModel();
+        $this->clients    = array();
+        $this->SubItem_m  = new SubItemModel();
+        $this->Item_m     = new ItemModel();
         $this->ListItem_m = new ItemListModel();
     }
 
@@ -112,25 +113,25 @@ class Request implements MessageComponentInterface
             return;
         }
 
-        $owner = $this->ListItem_m->getOwner((int)$model->list_id);
-
         $from->send(json_encode(array(
             'status' => 200,
             'fire'   => array(
                 'name' => 'item:createFromForm',
                 'args' => $item->toArray() ))));
 
-        $json = json_encode(array(
+        $owners = $this->ListItem_m->getOwner((int)$model->list_id);
+
+        if (count($owners) > 1)
+        {
+            $json = json_encode(array(
             'status' => 200,
             'fire'   => array(
                 'name' => 'item:create',
                 'args' => $item->toArray() )));
 
-        if (count($owner) > 1)
-        {
             foreach ($this->clients as $client)
             {
-                if (in_array($client->user_id, $owner) && $client->user_id != $from->user_id)
+                if (in_array($client->user_id, $owners) && $client->user_id != $from->user_id)
                 {
                     $client->send($json);
                 }
@@ -148,26 +149,21 @@ class Request implements MessageComponentInterface
             return;
         }
 
-        $item = Item::find($model->id);
-
-        if (!is_null($item))
+        if ($this->Item_m->delete((int) $model->id))
         {
-            $item->subItems()->delete();    // Delete all subitem
-            $item->delete();                // And delete the item
-
             $json = json_encode(array(
                 'status' => 200,
                 'fire'   => array(
                     'name' => 'item:delete',
                     'args' => $model)));
 
-            $owner = $this->ListItem_m->getOwner((int)$model->list_id);
+            $owners = $this->ListItem_m->getOwner((int)$model->list_id);
 
-            if (count($owner) > 1)
+            if (count($owners) > 1)
             {
                 foreach ($this->clients as $client)
                 {
-                    if (in_array($client->user_id, $owner) && $client->user_id != $from->user_id)
+                    if (in_array($client->user_id, $owners) && $client->user_id != $from->user_id)
                     {
                         $client->send($json);
                     }
@@ -197,16 +193,134 @@ class Request implements MessageComponentInterface
             return;
         }
 
-        $json = json_encode(array(
+        $owner = $this->ListItem_m->getOwner((int)$model->list_id);
+
+        if (count($owner) > 1)
+        {
+            $json = json_encode(array(
+                'status' => 200,
+                'fire'   => array(
+                    'name' => 'item:update',
+                    'args' => $model)));
+            foreach ($this->clients as $client)
+            {
+                if (in_array($client->user_id, $owner) && $client->user_id != $from->user_id)
+                {
+                    $client->send($json);
+                }
+            }
+        }
+    }
+
+    public function createSubItem(ConnectionInterface $from, $model='')
+    {
+        if (is_null($model)         || !is_object($model)      ||   // Are the model OK?
+            !isset($model->title)   || empty($model->title)    ||   // Do we have a title?
+            !isset($model->item_id) || $model->item_id <= 0    ||   // Do we have a item id?
+            !isset($model->list_id) || $model->list_id <= 0)        // Do we have a list id?
+        {
+            $from->send(json_encode($this->_JSONError));
+            return;
+        }
+
+        $subItem = $this->SubItem_m->save($model, $from->user_id);
+
+        if (is_null($subItem))
+        {
+            $from->send(json_encode($this->_UnauthorizedError));
+            return;
+        }
+
+        $from->send(json_encode(array(
             'status' => 200,
             'fire'   => array(
-                'name' => 'item:update',
-                'args' => $model)));
+                'name' => 'subItem:createFromForm',
+                'args' => $subItem->toArray() ))));
+
+        $owners = $this->ListItem_m->getOwner((int)$model->list_id);
+
+        if (count($owners) > 1)
+        {
+            $json = json_encode(array(
+            'status' => 200,
+            'fire'   => array(
+                'name' => 'subItem:create',
+                'args' => $subItem->toArray() )));
+
+            foreach ($this->clients as $client)
+            {
+                if (in_array($client->user_id, $owners) && $client->user_id != $from->user_id)
+                {
+                    $client->send($json);
+                }
+            }
+        }
+    }
+
+    public function deleteSubItem(ConnectionInterface $from, $model='')
+    {
+        if (is_null($model)         || !is_object($model)    ||
+            !isset($model->id)      || $model->id <= 0       ||
+            !isset($model->list_id) || $model->list_id <= 0)
+        {
+            $from->send(json_encode($this->_JSONError));
+            return;
+        }
+
+        if ($this->SubItem_m->delete((int) $model->id))
+        {
+            $owners = $this->ListItem_m->getOwner((int)$model->list_id);
+
+            if (count($owners) > 1)
+            {
+                $json = json_encode(array(
+                    'status' => 200,
+                    'fire'   => array(
+                        'name' => 'subItem:delete',
+                        'args' => $model)));
+
+                foreach ($this->clients as $client)
+                {
+                    if (in_array($client->user_id, $owners) && $client->user_id != $from->user_id)
+                    {
+                        $client->send($json);
+                    }
+                }
+            }
+        }
+    }
+
+    public function updateSubItem(ConnectionInterface $from, $model='')
+    {
+        if (is_null($model)           || !is_object($model)       ||
+            !isset($model->id)        || $model->id <= 0          ||
+            !isset($model->list_id)   || $model->list_id <= 0     ||
+            !isset($model->item_id)   || $model->item_id <= 0     ||
+            !isset($model->completed) || ($model->completed != 0 && $model->completed != 1) ||
+            !isset($model->title)     || empty($model->title)     ||
+            !isset($model->order)     || $model->order < 0)
+        {
+            $from->send(json_encode($this->_JSONError));
+            return;
+        }
+
+        $status = $this->SubItem_m->update($model, $from->user_id);
+
+        if (!$status)
+        {
+            $from->send(json_encode($this->_UnauthorizedError));
+            return;
+        }
 
         $owner = $this->ListItem_m->getOwner((int)$model->list_id);
 
         if (count($owner) > 1)
         {
+            $json = json_encode(array(
+                'status' => 200,
+                'fire'   => array(
+                    'name' => 'subItem:update',
+                    'args' => $model)));
             foreach ($this->clients as $client)
             {
                 if (in_array($client->user_id, $owner) && $client->user_id != $from->user_id)

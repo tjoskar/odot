@@ -52,7 +52,6 @@ class ItemListModel {
         **/
 
         $ownList = DB::table($this->_table->userList)->where('user_id', $user_id)->where('list_id', $model->id)->count();
-        $list = ItemList::find($id);
 
         if ($ownList == 1)
         {

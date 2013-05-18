@@ -30,15 +30,15 @@ listCollection.fetch().then(function() {
 
 if ("WebSocket" in window) // Check if the browser has WebSocket support
 {
-	app.conn = new WebSocket('ws://localhost:8080');			// Establish a connection to the websocket server
-	app.conn.onopen = function(e)
+	app.socketConn = new WebSocket('ws://localhost:8080');			// Establish a connection to the websocket server
+	app.socketConn.onopen = function(e)
 	{
 		console.log("Websocket connection established!");
 		var data = {'method': 'setUserID', 'args': user_id};
-		app.conn.send(JSON.stringify(data));					// Send our user id to the websocket server
+		app.socketConn.send(JSON.stringify(data));					// Send our user id to the websocket server
 	};
 
-	app.conn.onmessage = function(e)
+	app.socketConn.onmessage = function(e)
 	{
 		var json = JSON.parse(e.data);
 		if (_.has(json, 'status') && json.status == 200)

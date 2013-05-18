@@ -2,6 +2,14 @@
 
 class SubitemController extends BaseController {
 
+	private $SubItem_m;
+
+	public function __construct()
+    {
+    	parent::__construct();
+        $this->SubItem_m = new SubItemModel();
+    }
+
 	/**
 	 * Create a new subitem
 	 *
@@ -9,23 +17,18 @@ class SubitemController extends BaseController {
 	 */
 	public function store()
 	{
-		$title     = Input::get('title', '');
-		$list_id   = (int) Input::get('list_id', 0);
-		$item_id   = (int) Input::get('item_id', 0);
-		$order     = (int) Input::get('order', 0);
+		$model          = new stdClass;
+		$model->title   = Input::get('title', '');
+		$model->list_id = (int) Input::get('list_id', 0);
+		$model->item_id = (int) Input::get('item_id', 0);
 
-		if (empty($title) || $list_id < 0 || $item_id < 0 || $order < 0)
+		if (empty($model->title) || $model->list_id <= 0 || $model->item_id <= 0)
 		{
-			return '';
+			return Response::json(array('ststus' => 400));
 		}
 
-		$subItem = new SubItem();
-		$subItem->title = $title;
-		$subItem->list_id = $list_id;
-		$subItem->item_id = $item_id;
-		$subItem->order = $order;
+		$subItem = $this->SubItem_m->save($model, $this->_userID);
 
-		$subItem->save();
 		return $subItem;
 	}
 
@@ -37,33 +40,29 @@ class SubitemController extends BaseController {
 	 */
 	public function update($id)
 	{
-		$title     = Input::get('title', '');
-		$list_id   = (int) Input::get('list_id', 0);
-		$item_id   = (int) Input::get('item_id', 0);
-		$order     = (int) Input::get('order', 0);
-		$completed = (int) Input::get('completed', 0);
+		$model            = new stdClass;
+		$model->id 		  = (int) $id;
+		$model->title     = Input::get('title', '');
+		$model->list_id   = (int) Input::get('list_id', -1);
+		$model->item_id   = (int) Input::get('item_id', -1);
+		$model->order     = (int) Input::get('order', -1);
+		$model->completed = (int) Input::get('completed', -1);
 
-		if (empty($title) ||
-			$list_id < 0  ||
-			$item_id < 0  ||
-			$order   < 0  ||
-			$id      < 0  ||
-			($completed != 0 && $completed != 1))
+		if (empty($model->title)  ||
+			$model->list_id <= 0  ||
+			$model->item_id <= 0  ||
+			$model->order   <  0  ||
+			$model->id      <= 0  ||
+			($model->completed != 0 && $model->completed != 1))
 		{
-			return 'Wrong data';
+			return Response::json(array('status' => 400));
 		}
 
-		$subItem = SubItem::find($id);
+		$status = $this->SubItem_m->update($model, $this->_userID);
 
-		if (!is_null($subItem))
+		if (!$status)
 		{
-			$subItem->title = $title;
-			$subItem->list_id = $list_id;
-			$subItem->item_id = $item_id;
-			$subItem->order = $order;
-			$subItem->completed = $completed;
-
-			$subItem->save();
+			return Response::json(array('status' => 401));
 		}
 	}
 
@@ -75,8 +74,7 @@ class SubitemController extends BaseController {
 	 */
 	public function destroy($id)
 	{
-		$subItem = SubItem::find($id);
-		$subItem->delete();
+		$this->SubItem_m->delete((int) $id);
 	}
 
 }

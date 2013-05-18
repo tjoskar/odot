@@ -42,11 +42,12 @@ App.Views.Item = Backbone.View.extend({
     // Listen for "title change". If the title change, re-render it
     this.model.on("change:title", this.renderItem, this);
     //this.model.on("remove", this.removeView, this);
-    vent.on('item:update', this.updateItem, this);
+    //vent.on('item:update', this.updateItem, this);
     vent.on('item:delete', this.socketDeleteItem, this);
   },
 
   render: function() {
+    d('Render');
     this.renderItem();
     this.renderSubItems();
     this.addSubItemForm.render();
@@ -54,10 +55,12 @@ App.Views.Item = Backbone.View.extend({
   },
 
   renderItem: function() {
+    d('Render items');
     this.$el.html( this.template( this.model.toJSON() ));
   },
 
   renderSubItems: function() {
+    d('Render subites');
     var subItemHTML = this.$el.find('.sub-items');
     subItemHTML.prepend( this.subItemsView.render().el );
   },
@@ -188,26 +191,26 @@ App.Views.Item = Backbone.View.extend({
   deleteItem: function() {
     this.model.destroy();
     this.remove();
-  },
-
-  removeView: function() {
-    this.remove();
-  },
-
-  updateItem: function(model) {
-    if (model.id == this.model.get('id'))
-    {
-      if (this.model.get('completed') != model.completed)
-      {
-        this.model.set(model);
-        vent.trigger('item:completed', this.model);
-        this.remove();
-      }
-      else
-      {
-        this.model.set(model);
-        this.renderItem();
-      }
-    }
   }
+
+  // removeView: function() {
+  //   this.remove();
+  // },
+
+  // updateItem: function(model) {
+  //   if (model.id == this.model.get('id'))
+  //   {
+  //     if (this.model.get('completed') != model.completed)
+  //     {
+  //       this.model.set(model);
+  //       vent.trigger('item:completed', this.model);
+  //       this.remove();
+  //     }
+  //     else
+  //     {
+  //       this.model.set(model);
+  //       this.render();
+  //     }
+  //   }
+  // }
 });

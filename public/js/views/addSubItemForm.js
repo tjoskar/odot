@@ -10,9 +10,13 @@ App.Views.AddSubItemsForm = Backbone.View.extend({
 
   input: null,
   parent: null,
+  newSubitem: null,
 
   initialize: function() {
     this.parent = this.model.parent;
+
+    vent.on('subItem:createFromForm', this.createFromForm, this);
+    vent.on('subItem:create', this.addItem, this);
   },
 
   render: function() {
@@ -23,15 +27,13 @@ App.Views.AddSubItemsForm = Backbone.View.extend({
   {
     if (e.keyCode == 13 || e.keyCode == 9) // enter or tab
     {
-      var title      = this.input.val();
-      var newSubitem = new App.Models.SubItem({title: title, list_id: getLastVisitedListId(), item_id: this.parent.model.id});
-      var that       = this;
+      d('save');
+      var title       = this.input.val();
+      this.newSubitem = new App.Models.SubItem({title: title, list_id: getLastVisitedListId(), item_id: this.parent.model.id});
 
-      if (newSubitem.isValid())
+      if (this.newSubitem.isValid())
       {
-        newSubitem.save().then(function() {
-          that.parent.subItemsCollection.add(newSubitem);
-        });
+        this.newSubitem.save();
       }
       else
       {
@@ -44,13 +46,34 @@ App.Views.AddSubItemsForm = Backbone.View.extend({
 
   },
 
-  stopEdit: function() {
-    this.$el.empty(); // Empty the view ie. remove all input fields
+  stopEdit: function()
+  {
+    this.$el.empty(); // Empty the view, ie. remove all input fields for this item
   },
 
-  newInput: function() {
+  newInput: function()
+  {
     this.input = $('<input class="add-sub-item" placeholder="Add subitem...">');
     this.$el.append(this.input);
     this.input.focus();
+  },
+
+  createFromForm: function(args)
+  {
+    if (args.item_id == this.parent.model.get('id'))
+    {
+      this.newSubitem.set(args);
+      this.parent.subItemsCollection.add(this.newSubitem);
+    }
+  },
+
+  addItem: function(model)
+  {
+    if (model.item_id == this.parent.model.get('id'))
+    {
+      var newSubItem = new App.Models.SubItem(model);
+      this.parent.subItemsCollection.add(newSubItem);
+      this.parent.subItemsView.render();
+    }
   }
 });

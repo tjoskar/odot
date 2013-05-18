@@ -58,9 +58,8 @@ class ItemController extends BaseController {
 	 */
 	public function update($id)
 	{
-
 		$model            = new stdClass;
-		$model->id        = Input::get('id', -1);
+		$model->id        = $id;
 		$model->list_id   = (int) Input::get('list_id', -1);
 		$model->completed = (int) Input::get('completed', -1);
 		$model->title     = (int) Input::get('title', '');
@@ -92,14 +91,7 @@ class ItemController extends BaseController {
 	 */
 	public function destroy($id)
 	{
-		$id = (int) $id;
-		$item = Item::find($id);
-
-		if (!is_null($item))
-		{
-			$item->subItems()->delete();	// Delete all subitem
-			$item->delete();				// And delete the item
-		}
+		$this->Item_m->delete((int) $id);
 	}
 
 }
