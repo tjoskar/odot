@@ -42,10 +42,15 @@ App.Models.Item = Backbone.Model.extend({
   {
     if (method === 'create' || method === 'delete' || method === 'update')      // Only overwrite if there is a create, delete or update method
     {
-      var msg = {'method': method+'Item', 'args': model};                       // Create a custom message
+      if (!_.isUndefined(options.reportToServer) && options.reportToServer === false)
+      {
+        return true;
+      }
+
+      var msg = {'method': method+'Item', 'args': model};                     // Create a custom message
       if (app.socketConn)
       {
-        app.socketConn.send(JSON.stringify(msg));                               // And of we go
+        app.socketConn.send(JSON.stringify(msg));                             // And of we go
         return true;
       }
     }

@@ -29,188 +29,228 @@ App.Views.Item = Backbone.View.extend({
     this.addSubItemForm = new App.Views.AddSubItemsForm({ model: {parent: this} });
 
     // Add sub items
-    var subItems = this.model.getSubItems();                    // Get all sub items from the model
-    this.subItemsCollection = new App.Collections.SubItem();    // Create a collection for the sub items
-    for(var key in subItems)                                    // Loop through the subitems
+    var subItems = this.model.getSubItems();                                       // Get all sub items from the model
+    this.subItemsCollection = new App.Collections.SubItem();                       // Create a collection for the subitems
+    for(var key in subItems)                                                       // And loop through them
     {
-      var subItemModel = new App.Models.SubItem(subItems[key]); // Create a new model
-      this.subItemsCollection.add(subItemModel);                // And add it to the subitem collection
+      var subItemModel = new App.Models.SubItem(subItems[key]);                    // Create a new model
+      this.subItemsCollection.add(subItemModel);                                   // And add it to the subitem-collection
     }
+
     // Create the subitem view
     this.subItemsView = new App.Views.SubItems({ collection: this.subItemsCollection });
 
-    // Listen for "title change". If the title change, re-render it
-    this.model.on("change:title", this.renderItem, this);
-    //this.model.on("remove", this.removeView, this);
+    this.model.on("change:title", this.renderItem, this);                          // Listen for "title change". If the title change, re-render it
+    this.model.on("remove", this.removeView, this);                                // If the model disappear, remove the view
     //vent.on('item:update', this.updateItem, this);
-    vent.on('item:delete', this.socketDeleteItem, this);
+    vent.on('item:delete', this.socketDeleteItem, this);                           // Server trigger this event
+    vent.on('item:update', this.updateItem, this);                                  // This event is trigged by the websocket-server when an item should be updated
   },
 
-  render: function() {
-    d('Render');
+  render: function()
+  {
     this.renderItem();
     this.renderSubItems();
     this.addSubItemForm.render();
     return this;
   },
 
-  renderItem: function() {
-    d('Render items');
+  renderItem: function()
+  {
     this.$el.html( this.template( this.model.toJSON() ));
   },
 
-  renderSubItems: function() {
-    d('Render subites');
+  renderSubItems: function()
+  {
     var subItemHTML = this.$el.find('.sub-items');
     subItemHTML.prepend( this.subItemsView.render().el );
   },
 
-  blur: function() {
-    this.$inputs = this.$el.find('input');     // Get all inputs
+  blur: function()                                                                  // The user loses input focus
+  {
+    this.$inputs = this.$el.find('input');                                          // Get all inputs
     var that     = this;
 
-    setTimeout(function() {                   // Wait to see if the user put his cursor in another field
+    setTimeout(function() {                                                         // Wait to see if the user put his cursor in another field
       var focus = false;
-      that.$inputs.each(function() {          // Loop through the input fields
-        if ($(this).is(':focus'))             // And check if any of them is in focus
+      that.$inputs.each(function() {                                                // Loop through the input fields
+        if ($(this).is(':focus'))                                                   // And check if any of them is in focus
         {
           focus = true;
           return;
         }
       });
 
-      if (!focus)                             // If the user dont select another field within 50 ms
-        that.stopEdit();                      // the user are done editing
+      if (!focus)                                                                   // If the user dont select another field within 50 ms
+        that.stopEdit();                                                            // the user are done editing
 
     }, 50);
 
   },
 
-  itemClick: function() {
+  itemClick: function()                                                               // The user clicks at an item
+  {
     this.clicks++;
     var that = this;
 
     if (this.clicks == 1)
     {
-      this.timer = setTimeout(function() {    // Wait to see if the user only click once
-        that.clicks = 0;                      // Reset the number of clicks
-        that.showSubitems(true);              // And show the subitems
+      this.timer = setTimeout(function() {                                            // Wait to see if the user only click once
+        that.clicks = 0;                                                              // Reset the number of clicks
+        that.showSubitems(true);                                                      // And show the subitems
       }, this._clickDelay);
     }
     else
     {
-      clearTimeout(this.timer);               // We dont need to wait any more, it is a double click
-      this.clicks = 0;                        // Reset the number of clicks
-      this.startEdit();                       // And show the edit-mode
+      clearTimeout(this.timer);                                                       // We dont need to wait any more, it is a double click
+      this.clicks = 0;                                                                // Reset the number of clicks
+      this.startEdit();                                                               // And show the edit-mode
     }
   },
 
-  startEdit: function() {
-      this.$inputs = this.$el.find('input');              // Get all inputs
-      this.$inputs.removeClass('hide');                   // Show all inputs
-      this.$el.find('h3, p').hide();                      // Hide the actual text
-      this.$el.find('.item-checkbox-holder').hide();      // Hide all checkboxs
+  startEdit: function()                                                               // Start edit mode
+  {
+      this.$inputs = this.$el.find('input');                                          // Get all inputs
+      this.$inputs.removeClass('hide');                                               // Show all inputs
+      this.$el.find('h3, p').hide();                                                  // Hide the actual text
+      this.$el.find('.item-checkbox-holder').hide();                                  // Hide all checkboxs
       this.$el.find('.subitem-checkbox-holder').hide();
-      this.addSubItemForm.newInput();                     // Add form for a new subitem
-      this.showSubitems(false);                           // Show subitems
-      this.$inputs.first().focus();                       // Set cursor at the first input field
+      this.addSubItemForm.newInput();                                                 // Add form for a new subitem
+      this.showSubitems(false);                                                       // Show subitems
+      this.$inputs.first().focus();                                                   // Set cursor at the first input field
   },
 
-  stopEdit: function() {
-      this.addSubItemForm.stopEdit();                     // Tell the child-view that we are done with editing
-      this.updateCollection();                            // Update the collection with the new data
-      this.$el.find('h3, p').show();                      // Show the actual text again
-      this.$el.find('.item-checkbox-holder').show();      // Show all checkboxs again
+  stopEdit: function()                                                                // Quit edit mode
+  {
+      this.addSubItemForm.stopEdit();                                                 // Tell the child-view that we are done with editing
+      this.updateCollection();                                                        // Update the collection with the new data
+      this.$el.find('h3, p').show();                                                  // Show the actual text again
+      this.$el.find('.item-checkbox-holder').show();                                  // Show all checkboxs again
       this.$el.find('.subitem-checkbox-holder').show();
-      this.$inputs.addClass('hide');                      // And hide the input field again
-      this.renderSubItems();                              // Rerender the subitems
+      this.$inputs.addClass('hide');                                                  // And hide the input field again
+      this.renderSubItems();                                                          // Rerender the subitems
   },
 
-  updateCollection: function() {
-    var input = this.$el.find('input.itemEdit');          // Get input field for the "head" item
-    var newTitle = input.val().trim();
+  updateCollection: function()                                                        // Update collection
+  {
+    var input = this.$el.find('input.itemEdit');                                      // Get input field for the "head" item
+    var newTitle = input.val().trim();                                                // And the inserted value
 
-    if (newTitle && this.model.get('title') != newTitle)  // Has the input change
+    if (newTitle && this.model.get('title') != newTitle)                              // Has the title changed
     {
-      this.model.save({title: newTitle});                 // Lets save it (local and server db)
+      this.model.save({title: newTitle});                                             // Okay then, lets save it (local and server db)
     }
 
     // Update subitem
-    var inputs = this.$el.find('input.subItemEdit');      // Find all subitems input
+    var inputs = this.$el.find('input.subItemEdit');                                  // Find all subitems input
     var that = this;
-    inputs.each(function() {                              // And loop through them
+    inputs.each(function() {                                                          // And loop through them
       var id       = $(this).data('id');
       var model    = that.subItemsCollection.get(id);
       var newTitle = $(this).val().trim();
 
-      if (newTitle && model.get('title') != newTitle)     // Has the title change
+      if (newTitle && model.get('title') != newTitle)                                 // Has the title change
       {
-        model.save({title: newTitle});                    // In that case, save it (local and in server db)
+        model.save({title: newTitle});                                                // In that case, save it (local and in server db)
       }
     });
   },
 
-  showSubitems: function(toggle) {                        // Show (and hide) the subitems
+  showSubitems: function(toggle)                                                      // Allways show subitems if toogle = false
+  {                                                                                   // otherwise, toggle appearance
     if (toggle)
       this.$el.find('.sub-items').slideToggle("slow");
     else
       $(this.el).find('.sub-items').slideDown("slow");
   },
 
-  hideSubitems: function() {                              // Hide the subitems
+  hideSubitems: function()                                                            // Hide subitems
+  {
     $(this.el).find('.sub-items').slideUp("slow");
   },
 
-  mouseEnter: function(e) {
+  mouseEnter: function(e)                                                             // Show buttons when the user enter the object
+  {
     this.$el.find('.item-button-holder').removeClass('hide');
   },
-  mouseLeave: function(e) {
+  mouseLeave: function(e)                                                             // And hide them when the user's cursor is leaving
+  {
     this.$el.find('.item-button-holder').addClass('hide');
   },
 
-  hoverCheckbox: function(e) {
+  hoverCheckbox: function(e)                                                          // Toggel check-box-status when user is hover over it
+  {
     $(e.currentTarget).find('.icon-check-empty, .icon-check').toggleClass('hide');
   },
 
-  clickCheckbox: function(e) {
-    this.model.toogleCompleted();
-    this.model.save();
-    vent.trigger('item:completed', this.model);
+  clickCheckbox: function(e)                                                          // Called when user mark a item as completed
+  {
+    this.stopListening();
+    this.model.toogleCompleted();                                                     // Toggel completed-status ie. mark item as completed
+    this.model.save();                                                                // Send a send event to the (websocketserver-) server
+    vent.trigger('item:completed', this.model.toJSON());                                       // Send event to completedItems.js that will add this item (inc. subitems) to the 'compleated'-list
     this.remove();
+    this.model.destroy({reportToServer: false});                                      // Remove this item BUT we can not remove it from the server, therefore we are silent
   },
 
-  socketDeleteItem: function(model)
+  socketDeleteItem: function(model)                                                   // Called by the socketserver
   {
     if (model.id == this.model.get('id'))
     {
-      this.model.destroy({silent: true});
-      this.remove();
+      this.model.destroy({reportToServer: false});                                    // The client must not send a new destroy call to the webbserver
+      //this.remove();
     }
   },
 
-  deleteItem: function() {
-    this.model.destroy();
-    this.remove();
-  }
-
-  // removeView: function() {
-  //   this.remove();
-  // },
-
-  // updateItem: function(model) {
-  //   if (model.id == this.model.get('id'))
+  // updateItem: function(model)                                                       // Called by the server
+  // {
+  //   item = this.collection.get(model.id);                                           // Check if we own the item to be updated
+  //   if (!_.isUndefined(item))
   //   {
-  //     if (this.model.get('completed') != model.completed)
+  //     if (item.get('completed') != model.completed)                                 // Has it been marked as completed?
   //     {
-  //       this.model.set(model);
-  //       vent.trigger('item:completed', this.model);
-  //       this.remove();
+  //       var cp = item.clone();
+  //       cp.set(model);                                                            // Update the item
+  //       vent.trigger('item:completed', cp);                                       // Tell complettedItems.js that the item now is completed
+  //       item.destroy({reportToServer: false});                                      // Remove the item, and do it quiet
   //     }
   //     else
   //     {
-  //       this.model.set(model);
+  //       item.set(model);                                                            // We keep the item but we update it, sort the collection and re-Render the list
+  //       this.collection.sort();
   //       this.render();
   //     }
   //   }
-  // }
+  // },
+
+  deleteItem: function()                                                              // Called when user clicks on trash-icon
+  {
+    this.model.destroy();
+    //this.remove();
+  },
+
+  removeView: function()                                                              // Called when the model is removed
+  {
+    this.remove();
+  },
+
+  updateItem: function(model)
+  {
+    if (model.id == this.model.get('id'))
+    {
+      if (this.model.get('completed') != model.completed)
+      {
+        this.stopListening();
+        vent.trigger('item:completed', model);
+        this.model.destroy({reportToServer: false});
+        this.remove();
+      }
+      else
+      {
+        this.model.set(model);
+        app.itemsView.collection.sort();
+        app.itemsView.render();
+      }
+    }
+  }
 });

@@ -5,13 +5,15 @@
 App.Views.SubItems = Backbone.View.extend({
   tagName: 'ul',
 
-  initialize: function() {
+  initialize: function()
+  {
     // Wait for the call
     //this.collection.on("add", this.addSubItem, this);
   },
 
-  render: function() {
-	this.$el.empty();
+  render: function()
+  {
+    this.$el.empty();
     this.collection.each(function(subItem) {
       var subItemView = new App.Views.SubItem({ model: subItem });
       this.$el.append( subItemView.render().$el );
@@ -20,10 +22,9 @@ App.Views.SubItems = Backbone.View.extend({
     return this;
   },
 
-  // Add a subitem to the view
-  addSubItem: function(model) {
+  addSubItem: function(model)                                            // Add a subitem to the view
+  {
     var subItemView = new App.Views.SubItem({ model: model });
-    d('addSubItem');
     this.$el.append( subItemView.render().$el );
   }
 });

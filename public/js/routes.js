@@ -9,9 +9,8 @@ App.Router = Backbone.Router.extend({
     'lists': 'lists'
   },
 
-  index: function()
+  index: function()                                                         // Go to last visited list
   {
-    //Go to last visited list
     var lastViewedListId = getLastVisitedListId();
 
     if (0 < lastViewedListId)
@@ -20,10 +19,9 @@ App.Router = Backbone.Router.extend({
       var lastViewdUrl = lastViewedList.urlRoot + '/' + lastViewedListId;
       app.router.navigate(lastViewdUrl, {trigger: true});
     }
-    else // No previously viewed list id stored
+    else                                                                    // No previously viewed list id stored
     {
-      //alert('No previously viewed list id stored');
-      console.log('No previously viewed list id stored');
+      d('No previously viewed list id stored');
     }
   },
 
@@ -34,7 +32,7 @@ App.Router = Backbone.Router.extend({
     if (id > 0)
       vent.trigger('list:show', id);
     else
-      alert('404');
+      app.alert('List can not be found', 'alert');
   }
 
 });
@@ -49,31 +47,27 @@ function getLastVisitedListId()
   {
     if (typeof(localStorage.lastViewedListId) !== "undefined")
     {
-      // Return the last visited list id if list still exists
       var lastViewdList = app.listsView.collection.get(localStorage.lastViewedListId);
-      if (typeof(lastViewdList) !== "undefined")
+      if (typeof(lastViewdList) !== "undefined")                      // Return the last visited list id if list still exists
       {
         return localStorage.lastViewedListId;
       }
     }
     else
     {
-      console.log('Local storage: No last viewed list id');
+      d('Local storage: No last viewed list id');
     }
   }
   else
   {
-    // Local Web storage not supported
-    console.log('Local Web storage not supported');
+    d('Local Web storage not supported');
   }
 
-  // Return the first list if at least one list exists
-  if (app.listsView.collection.isEmpty() === false)
+  if (app.listsView.collection.isEmpty() === false)                   // Return the first list if at least one list exists
   {
     var firstListModel = app.listsView.collection.models[0];
     return firstListModel.id;
   }
 
-  // No lists exist
-  return 0;
+  return 0;                                                           // No lists existj
 }

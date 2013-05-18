@@ -5,50 +5,29 @@
 // View to handle the "add list" input form
 App.Views.AddListForm = Backbone.View.extend({
   el: $('form.add-list'),
-  inputField: null,
-  newList: null,
 
   events: {
     "submit" : "addNewList"
   },
 
-  initialize: function() {
-    vent.on('list:createFromForm', this.addListFromForm, this);
-    vent.on('list:create', this.addList, this);
-  },
-
-  addNewList: function(e) {
+  addNewList: function(e)                                                           // Called when user submit the form
+  {
     e.preventDefault();
-    this.inputField = $(this.el).find('input');
-    var enteredText = this.inputField.val().trim();
-    this.newList    = new App.Models.List({title: enteredText});
+    var inputField = $(this.el).find('input');
+    var enteredText = inputField.val().trim();
+    var newList     = new App.Models.List({title: enteredText});
 
-    if (this.newList.isValid())
+    if (newList.isValid())
     {
-      var then = this;
-      this.newList.save().then(function() {
-        then.addListFromForm();
+      newList.save().then(function() {
+        inputField.val('');                                                         // Clear input field
+        app.listsView.collection.add(newList);                                      // Add new list to collection
       });
     }
     else
     {
-      /**
-          TODO:
-          - Cerate a warning dialog
-      **/
+      app.alert('Please, insert a valit titel', 'alert');
     }
-  },
-
-  addListFromForm: function(args) {
-    this.inputField.val('');                    // Clear input field
-    this.newList.set(args);
-    app.listsView.collection.add(this.newList); // Add new list to collection
-  },
-
-  addList: function(model) {
-    d(model);
-    var newList = new App.Models.List(model);
-    app.listsView.collection.add(newList);
   }
 
 });

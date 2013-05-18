@@ -15,50 +15,57 @@ App.Views.SubItem = Backbone.View.extend({
     'click .subitem-checkbox-holder'         : 'clickCheckbox'
   },
 
-  initialize: function () {
-    this.model.on("change:title", this.render, this);
-    vent.on('subItem:update', this.updateSubItem, this);
-    vent.on('subItem:delete', this.socketDeleteSubItem, this);
+  initialize: function ()
+  {
+    this.model.on("change:title", this.render, this);                                   // Rerender subitem when the title is changed
+    vent.on('subItem:update', this.updateSubItem, this);                                // Trigged by the webserver
+    vent.on('subItem:delete', this.socketDeleteSubItem, this);                          // Trigged by the webserver
   },
 
-  render: function() {
+  render: function()
+  {
     this.$el.html( this.template( this.model.toJSON() ));
     return this;
   },
 
-  hoverCheckbox: function(e) {
+  hoverCheckbox: function(e)
+  {
     $(e.currentTarget).find('.icon-check-empty, .icon-check').toggleClass('hide');
   },
 
-  clickCheckbox: function(e) {
+  clickCheckbox: function(e)
+  {
     this.model.toogleCompleted();
     this.model.save();
     this.render();
   },
 
-  hover: function() {
+  hover: function()
+  {
     this.$el.find('.subitem-button-holder').toggleClass('hide');
   },
 
-  deleteSubItem: function(e) {
+  deleteSubItem: function(e)                                                            // Called when the user clicks at the trash icon
+  {
     e.preventDefault();
-    this.model.destroy();
-    this.remove();
+    this.model.destroy();                                                               // Delete the model and report it to the server
+    this.remove();                                                                      // Remove the view
   },
 
   socketDeleteSubItem: function(model)
   {
     if (model.id == this.model.get('id'))
     {
-      this.model.destroy({silent: true});
+      this.model.destroy({silent: true});                                               // The subitem has allrady been removed, so it is time to remove this model
       this.remove();
     }
   },
 
-  updateSubItem: function(model) {
+  updateSubItem: function(model)
+  {
     if (model.id == this.model.get('id'))
     {
-        this.model.set(model);
+        this.model.set(model);                                                          // Update this subitem
         this.render();
     }
   }

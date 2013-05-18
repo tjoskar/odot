@@ -11,23 +11,6 @@ var d = function(msg) {
   console.log(msg);
 };
 
-// Let's go, yo
-app.router = new App.Router();
-new App.Views.AddListForm();
-new App.Views.AddItemForm();
-
-new App.Views.UserInfo();
-
-// Fetch all lists
-var listCollection = new App.Collections.List();
-listCollection.fetch().then(function() {
-  app.listsView = new App.Views.Lists({ collection: listCollection });
-  app.listsView.showAllLists();
-
-  // Firing up the router
-  Backbone.history.start();
-});
-
 if ("WebSocket" in window) // Check if the browser has WebSocket support
 {
 	app.socketConn = new WebSocket('ws://localhost:8080');			// Establish a connection to the websocket server
@@ -62,3 +45,20 @@ if ("WebSocket" in window) // Check if the browser has WebSocket support
 		console.log(e.data);
 	};
 }
+
+// Let's go, yo
+app.router = new App.Router();
+new App.Views.AddListForm();
+new App.Views.AddItemForm();
+
+new App.Views.UserInfo();
+
+// Fetch all lists
+var listCollection = new App.Collections.List();
+listCollection.fetch().then(function() {
+  app.listsView = new App.Views.Lists({ collection: listCollection });
+  app.listsView.showAllLists();
+
+  // Firing up the router
+  Backbone.history.start();
+});

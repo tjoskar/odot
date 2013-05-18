@@ -13,44 +13,51 @@ App.Views.AddItemForm = Backbone.View.extend({
   },
 
   initialize: function() {
-    vent.on('item:createFromForm', this.addItemFromForm, this);
-    vent.on('item:create', this.addItem, this);
+    vent.on('item:createFromForm', this.addItemFromForm, this);                                 // After an item has been created by the form and been saved in the database, the server responds by this event
+    vent.on('item:create', this.addItem, this);                                                 // The server push out a new item
     //vent.on('item:delete', this.deleteItem, this);
     //vent.on('item:update', this.updateItem, this);
   },
 
-  addNewItem: function(e) {
+  addNewItem: function(e)                                                                       // User submit the form
+  {
     e.preventDefault();
     this.inputField = this.$el.find('input');
     var title       = this.inputField.val().trim();
-    this.newItem    = new App.Models.Item({title: title, list_id: getLastVisitedListId()});
+    this.newItem    = new App.Models.Item({title: title, list_id: getLastVisitedListId()});     // Create a new item
 
-    if (this.newItem.isValid())
+    if (this.newItem.isValid())                                                                 // Check if the new item is valid
     {
-      this.newItem.save();
+      this.newItem.save();                                                                      // And if it is valid, save it
     }
     else
     {
-      app.alert('An error occurred', 'alert');
+      app.alert('Please, insert a valit titel', 'alert');
     }
   },
 
-  addItemFromForm: function(args) {
-    this.inputField.val('');                    // Clear input field
-    this.newItem.set(args);
-    app.itemsView.collection.add(this.newItem); // Add new item to collection
+  addItemFromForm: function(args)                                                               // Called by the server when a new item has been created by this client
+  {
+    this.inputField.val('');                                                                    // Clear input field
+    this.newItem.set(args);                                                                     // Update the item ie. give the item an id
+    app.itemsView.collection.add(this.newItem);                                                 // Add new item to collection
   },
 
-  addItem: function(model) {
+  addItem: function(model)                                                                      // Another user has create an item
+  {
     var currentListId = getLastVisitedListId();
-    if (model.list_id === currentListId)
+    if (model.list_id === currentListId)                                                        // Check if the item shuld be added to this list (the list that the user currently are viewing)
     {
-      var newItem = new App.Models.Item(model);
-      app.itemsView.collection.add(newItem);
+      var newItem = new App.Models.Item(model);                                                 // Create the item
+      app.itemsView.collection.add(newItem);                                                    // And add it
     }
     else
     {
-      app.alert('New item is added');
+      listModel = app.listsView.collection.get(model.list_id);
+      if (!_.isUndefined(listModel))
+      {
+        app.alert('New item is added to the list: '+listModel.get('title'));
+      }
     }
   }
 

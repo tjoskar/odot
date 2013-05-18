@@ -15,7 +15,8 @@ var app = {
   itemsView: null,
   conn: false,
 
-  saveLastViewedListId: function (listId) {
+  saveLastViewedListId: function (listId)
+  {
     localStorage.lastViewedListId = listId;
   },
 

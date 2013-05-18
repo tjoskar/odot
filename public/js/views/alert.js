@@ -7,32 +7,35 @@ App.Views.Alert = Backbone.View.extend({
   template: _.template("<%= msg %>"),
   timer: null,
 
-  initialize: function() {
-    $("#alert-box-holder").prepend( this.render().el ).show('slow');
+  events : {
+    "click" : "click"
+  },
 
-    var that = this;
+  initialize: function()
+  {
+    $("#alert-box-holder").prepend( this.render().el ).show('slow');    // Display the alert dialog
+
+    var self = this;
     this.timer = setTimeout(function() {
-      that.$el.fadeOut(1000, function() {
-        that.remove();
+      self.$el.fadeOut(1000, function() {
+        self.remove();                                                  // Remove the dialog after 3s
       });
     }, 3000);
   },
 
-  render: function() {
+  render: function()
+  {
     this.$el.html( this.template( this.model.toJSON() ));
     if (this.model.get('type'))
     {
-      this.$el.addClass( this.model.get('type') );
+      this.$el.addClass( this.model.get('type') );                      // Add some style to the dialog
     }
 
     return this;
   },
 
-  events : {
-    "click" : "click"
-  },
-
-  click: function(e) {
+  click: function(e)                                                    // Remove the dialog if the user click on it
+  {
     this.model.destroy();
     this.remove();
   }
