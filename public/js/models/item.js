@@ -6,7 +6,8 @@ App.Models.Item = Backbone.Model.extend({
   defaults: {
     title: '',
     completed: 0,
-    order: 0
+    order: 0,
+    due_date: ''
   },
 
   urlRoot: '/item',

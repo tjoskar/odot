@@ -2,6 +2,8 @@
 @import "lib.less";
 @import "reset.less";
 @import "fontAwesome/font-awesome.less";
+@import "pickadate/default.less";
+@import "pickadate/default.date.less";
 
 
 body {
@@ -15,6 +17,14 @@ li {
 }
 .hide {
     display: none !important;
+}
+.datepicker {
+    display: none;
+}
+.due-date {
+    color: gray;
+    font-size: 14px;
+    font-style: italic;
 }
 
 /* Text */
@@ -148,7 +158,7 @@ a {
 #user-info {
     position: absolute;
     //width: 200px;
-    
+
     #user-avatar {
         float: left;
         width: 50px;

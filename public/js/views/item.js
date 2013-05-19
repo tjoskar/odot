@@ -12,19 +12,23 @@ App.Views.Item = Backbone.View.extend({
   subItemsCollection: null,
   subItemsView: null,
   addSubItemForm: null,
+  datepicker: null,
 
   events : {
     'click h3'                         : 'itemClick',
     'mouseenter'                       : 'mouseEnter',
     'mouseleave'                       : 'mouseLeave',
     'click .head-item .icon-trash'     : 'deleteItem',
+    'click .head-item .icon-time'      : 'setDate',
+    'click .head-item .due-date'       : 'setDate',
     'blur input'                       : 'blur',
     'mouseenter .item-checkbox-holder' : 'hoverCheckbox',
     'mouseleave .item-checkbox-holder' : 'hoverCheckbox',
     'click .item-checkbox-holder'      : 'clickCheckbox'
   },
 
-  initialize: function(){
+  initialize: function()
+  {
     // Create a form to add sub items
     this.addSubItemForm = new App.Views.AddSubItemsForm({ model: {parent: this} });
 
@@ -58,6 +62,10 @@ App.Views.Item = Backbone.View.extend({
   renderItem: function()
   {
     this.$el.html( this.template( this.model.toJSON() ));
+
+    var dateinput = this.$el.find('.datepicker').pickadate();
+    this.datepicker = dateinput.pickadate('picker');
+    this.datepicker.set('min', true);
   },
 
   renderSubItems: function()
@@ -227,6 +235,18 @@ App.Views.Item = Backbone.View.extend({
   {
     this.model.destroy();
     //this.remove();
+  },
+
+  setDate: function(e)
+  {
+    var self = this;
+    this.datepicker.on('set', function() {
+      self.model.set('due_date', this.get());
+      self.model.save();
+      self.renderItem();
+    });
+    this.datepicker.open();
+    e.stopPropagation();
   },
 
   removeView: function()                                                              // Called when the model is removed

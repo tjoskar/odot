@@ -17,9 +17,9 @@ class ItemController extends BaseController {
 	 */
 	public function store()
 	{
-		$model          = new stdClass;
-		$model->title   = Input::get('title', '');
-		$model->list_id = (int) Input::get('list_id', 0);
+		$model           = new stdClass;
+		$model->title    = Input::get('title', '');
+		$model->list_id  = (int) Input::get('list_id', 0);
 
 		if (empty($model->title) || $model->list_id <= 0)
 		{
@@ -64,6 +64,7 @@ class ItemController extends BaseController {
 		$model->completed = (int) Input::get('completed', -1);
 		$model->title     = (int) Input::get('title', '');
 		$model->order     = (int) Input::get('order', -1);
+        $model->due_date  = Input::get('due_date', '');
 
 		if (empty($model->title) || $model->order  < 0 || ($model->completed != 0 && $model->completed != 1) || $model->id <= 0 || $model->list_id <= 0)
 		{

@@ -12,13 +12,13 @@
 </head>
 
 <body>
-    
+
     <div class="hide" id="fullscreen-popup-background">
     </div>
     <div class="hide" id="fullscreen-popup">
         <div id="popup-container"></div>
     </div>
-    
+
     <script type="text/template" id="share-list-popup-template">
         <h1>Share list</h1><div id="list-title"><%= listTitle %></div>
         <p id="title"><%= title %></p>
@@ -36,7 +36,7 @@
         <!-- User Info -->
         <div id="user-info">
             <div id="user-avatar">
-                <?php 
+                <?php
                     $facebook_id = Auth::user()->facebook_id;
                     if ( !is_null($facebook_id) ) {
                         echo '<img src="https://graph.facebook.com/'. $facebook_id .'/picture">';
@@ -48,7 +48,7 @@
             <div id="user-menu">
             <ul>
                 <li><div id="visible-name">
-                    <?php 
+                    <?php
                         if ( !is_null(Auth::user()->visible_name) ) {
                             echo Auth::user()->visible_name;
                         } else {
@@ -99,7 +99,15 @@
             <div class="item-checkbox-holder"> <i class="icon-check-empty"></i> <i class="icon-check hide"></i> </div>
             <h3 data-id="<%= id %>"><%= title %></h3>
             <input class="hide itemEdit" value="<%= title %>" data-id="<%= id %>">
-            <div class="item-button-holder hide"> <i class="icon-time"></i> <i class="icon-trash"></i> </div>
+            <div class="item-button-holder hide">
+                <% if( _.isEmpty(due_date) ) { %>
+                <i class="icon-time"></i>
+                <% } else { %>
+                <i class="due-date"><%= due_date %></i>
+                <% } %>
+                <i class="icon-trash"></i>
+            </div>
+            <input class="datepicker">
         </div>
         <% if( !_.isUndefined(sub_items) ) %>
         <%  if ( !_.isEmpty(sub_items) ) %>
@@ -143,6 +151,8 @@ var user_id = <?php echo Auth::user()->id; ?>
 <?php echo Html::script('js/libs/jquery-1.9.1.js') ?>
 <?php echo Html::script('js/libs/backbone.js') ?>
 
+<?php echo Html::script('js/libs/picker.js') ?>
+<?php echo Html::script('js/libs/picker.date.js') ?>
 <?php echo Html::script('js/libs/jquery.sortable.js') ?>
 
 <?php echo Html::script('js/app.js') ?>

@@ -179,7 +179,8 @@ class Request implements MessageComponentInterface
             !isset($model->list_id)   || $model->list_id <= 0     ||
             !isset($model->completed) || ($model->completed != 0 && $model->completed != 1) ||
             !isset($model->title)     || empty($model->title)     ||
-            !isset($model->order)     || $model->order < 0)
+            !isset($model->order)     || $model->order < 0        ||
+            !isset($model->due_date))
         {
             $from->send(json_encode($this->_JSONError));
             return;

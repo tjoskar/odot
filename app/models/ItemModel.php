@@ -60,7 +60,8 @@ class ItemModel {
             !isset($model->list_id)   || $model->list_id <= 0     ||
             !isset($model->completed) || ($model->completed != 0 && $model->completed != 1) ||
             !isset($model->title)     || empty($model->title)     ||
-            !isset($model->order)     || $model->order < 0)
+            !isset($model->order)     || $model->order < 0        ||
+            !isset($model->due_date))
         {
             throw new Exception('Incomplete model was passed to '.__METHOD__.'. File: '.__FILE__.' Line: '. __LINE__);
         }
@@ -76,6 +77,7 @@ class ItemModel {
                 $item->title     = $model->title;
                 $item->completed = $model->completed;
                 $item->order     = $model->order;
+                $item->due_date  = $model->due_date;
                 $item->save();
                 return TRUE;
             }
