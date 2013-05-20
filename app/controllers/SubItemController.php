@@ -2,12 +2,12 @@
 
 class SubitemController extends BaseController {
 
-	private $SubItem_m;
+	private $subItem_m;
 
 	public function __construct()
     {
     	parent::__construct();
-        $this->SubItem_m = new SubItemModel();
+        $this->subItem_m = new SubItemModel();
     }
 
 	/**
@@ -27,7 +27,7 @@ class SubitemController extends BaseController {
 			return Response::json(array('ststus' => 400));
 		}
 
-		$subItem = $this->SubItem_m->save($model, $this->_userID);
+		$subItem = $this->subItem_m->save($model, $this->_userID);
 
 		return $subItem;
 	}
@@ -58,7 +58,7 @@ class SubitemController extends BaseController {
 			return Response::json(array('status' => 400));
 		}
 
-		$status = $this->SubItem_m->update($model, $this->_userID);
+		$status = $this->subItem_m->update($model, $this->_userID);
 
 		if (!$status)
 		{
@@ -74,7 +74,7 @@ class SubitemController extends BaseController {
 	 */
 	public function destroy($id)
 	{
-		$this->SubItem_m->delete((int) $id);
+		$this->subItem_m->delete((int) $id);
 	}
 
 }

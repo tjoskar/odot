@@ -6,7 +6,7 @@ class TestController extends Controller {
 	{
 		$data = array('Oskar', 'Karlsson');
 
-    $model = new ItemListModel();
+    $model = new ListItemModel();
 
     echo '<pre>';
     var_dump($model->getOwner(1));

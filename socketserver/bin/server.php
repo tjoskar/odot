@@ -7,42 +7,25 @@ use Ratchet\ConnectionInterface;
 require __DIR__.'/../../bootstrap/autoload.php';
 require_once __DIR__.'/../../bootstrap/start.php';
 
+require __DIR__.'/../errorMessages.php';
+require __DIR__.'/../ItemHandler.php';
+require __DIR__.'/../SubItemHandler.php';
+require __DIR__.'/../UserHandler.php';
 
 class Request implements MessageComponentInterface
 {
     protected $clients;
 
-    private $Item_m;
-    private $ListItem_m;
-
-    private $_JSONError = array(
-        'status' => 400,
-        'error'  => array(
-            'name' => 'JSONError',
-            'args' => 'Invalid JSON data'));
-    private $_MethodError = array(
-        'status' => 400,
-        'error'  => array(
-            'name' => 'MethodError',
-            'args' => 'Invalid method call'));
-    private $_ArgumentError = array(
-        'status' => 400,
-        'error'  => array(
-            'name' => 'ArgumentError',
-            'args' => 'Invalid argument'));
-    private $_UnauthorizedError = array(
-        'status' => 401,
-        'error'  => array(
-            'name' => 'Unauthorized',
-            'args' => 'You are unauthorized for this operation'));
-
+    private $item;
+    private $subItem;
+    private $user;
 
     public function __construct()
     {
-        $this->clients    = array();
-        $this->SubItem_m  = new SubItemModel();
-        $this->Item_m     = new ItemModel();
-        $this->ListItem_m = new ItemListModel();
+        $this->clients = array();
+        $this->item = new ItemHandler($this->clients);
+        $this->subItem = new SubItemHandler($this->clients);
+        $this->user = new UserHandler($this->clients);
     }
 
     public function onOpen(ConnectionInterface $conn)
@@ -59,276 +42,24 @@ class Request implements MessageComponentInterface
 
         if (is_null($msg))
         {
-            $from->send(json_encode($this->_JSONError));
+            global $_JSONError;
+            $from->send(json_encode($_JSONError));
             return;
         }
-
+        $object = (isset($msg->object) ? $msg->object : '');
         $method = (isset($msg->method) ? $msg->method : '');
         $args   = (isset($msg->args) ? $msg->args : '');
 
-        // Safety first - check if $json->method exist
-        if (!empty($method) && method_exists($this, $method))
+        // Safety first - check if $json->object and method exist
+        if (!empty($object) && isset($this->$object) &&
+            !empty($method) && method_exists($this->$object, $method))
         {
-            $this->$method($from, $args);
+            $this->$object->$method($from, $args);
         }
         else
         {
-            $from->send(json_encode($this->_MethodError));
-        }
-    }
-
-    public function setUserID(ConnectionInterface $from, $arg='')
-    {
-        $id = (int) $arg;
-        if ($id > 0 && !isset($this->clients[$from->resourceId]->user_id))
-        {
-            $this->clients[$from->resourceId]->user_id = $id;
-            $data = array(
-                'status' => 200,
-                'value'  => '');
-            $json = json_encode($data);
-            $from->send($json);
-        }
-        else
-        {
-            $from->send(json_encode($this->_ArgumentError));
-        }
-    }
-
-    public function createItem(ConnectionInterface $from, $model='')
-    {
-        if (is_null($model)         || !is_object($model)      ||   // Are the model OK?
-            !isset($model->title)   || empty($model->title)    ||   // Do we have a title?
-            !isset($model->list_id) || $model->list_id <= 0)        // Do we have a list id?
-        {
-            $from->send(json_encode($this->_JSONError));
-            return;
-        }
-
-        $item = $this->Item_m->save($model, $from->user_id);
-
-        if (is_null($item))
-        {
-            $from->send(json_encode($this->_UnauthorizedError));
-            return;
-        }
-
-        $from->send(json_encode(array(
-            'status' => 200,
-            'fire'   => array(
-                'name' => 'item:createFromForm',
-                'args' => $item->toArray() ))));
-
-        $owners = $this->ListItem_m->getOwner((int)$model->list_id);
-
-        if (count($owners) > 1)
-        {
-            $json = json_encode(array(
-            'status' => 200,
-            'fire'   => array(
-                'name' => 'item:create',
-                'args' => $item->toArray() )));
-
-            foreach ($this->clients as $client)
-            {
-                if (in_array($client->user_id, $owners) && $client->user_id != $from->user_id)
-                {
-                    $client->send($json);
-                }
-            }
-        }
-    }
-
-    public function deleteItem(ConnectionInterface $from, $model='')
-    {
-        if (is_null($model)         || !is_object($model)    ||
-            !isset($model->id)      || $model->id <= 0       ||
-            !isset($model->list_id) || $model->list_id <= 0)
-        {
-            $from->send(json_encode($this->_JSONError));
-            return;
-        }
-
-        if ($this->Item_m->delete((int) $model->id))
-        {
-            $json = json_encode(array(
-                'status' => 200,
-                'fire'   => array(
-                    'name' => 'item:delete',
-                    'args' => $model)));
-
-            $owners = $this->ListItem_m->getOwner((int)$model->list_id);
-
-            if (count($owners) > 1)
-            {
-                foreach ($this->clients as $client)
-                {
-                    if (in_array($client->user_id, $owners) && $client->user_id != $from->user_id)
-                    {
-                        $client->send($json);
-                    }
-                }
-            }
-        }
-    }
-
-    public function updateItem(ConnectionInterface $from, $model='')
-    {
-        if (is_null($model)           || !is_object($model)       ||
-            !isset($model->id)        || $model->id <= 0          ||
-            !isset($model->list_id)   || $model->list_id <= 0     ||
-            !isset($model->completed) || ($model->completed != 0 && $model->completed != 1) ||
-            !isset($model->title)     || empty($model->title)     ||
-            !isset($model->order)     || $model->order < 0        ||
-            !isset($model->due_date))
-        {
-            $from->send(json_encode($this->_JSONError));
-            return;
-        }
-
-        $status = $this->Item_m->update($model, $from->user_id);
-
-        if (!$status)
-        {
-            $from->send(json_encode($this->_UnauthorizedError));
-            return;
-        }
-
-        $owner = $this->ListItem_m->getOwner((int)$model->list_id);
-
-        if (count($owner) > 1)
-        {
-            $json = json_encode(array(
-                'status' => 200,
-                'fire'   => array(
-                    'name' => 'item:update',
-                    'args' => $model)));
-            foreach ($this->clients as $client)
-            {
-                if (in_array($client->user_id, $owner) && $client->user_id != $from->user_id)
-                {
-                    $client->send($json);
-                }
-            }
-        }
-    }
-
-    public function createSubItem(ConnectionInterface $from, $model='')
-    {
-        if (is_null($model)         || !is_object($model)      ||   // Are the model OK?
-            !isset($model->title)   || empty($model->title)    ||   // Do we have a title?
-            !isset($model->item_id) || $model->item_id <= 0    ||   // Do we have a item id?
-            !isset($model->list_id) || $model->list_id <= 0)        // Do we have a list id?
-        {
-            $from->send(json_encode($this->_JSONError));
-            return;
-        }
-
-        $subItem = $this->SubItem_m->save($model, $from->user_id);
-
-        if (is_null($subItem))
-        {
-            $from->send(json_encode($this->_UnauthorizedError));
-            return;
-        }
-
-        $from->send(json_encode(array(
-            'status' => 200,
-            'fire'   => array(
-                'name' => 'subItem:createFromForm',
-                'args' => $subItem->toArray() ))));
-
-        $owners = $this->ListItem_m->getOwner((int)$model->list_id);
-
-        if (count($owners) > 1)
-        {
-            $json = json_encode(array(
-            'status' => 200,
-            'fire'   => array(
-                'name' => 'subItem:create',
-                'args' => $subItem->toArray() )));
-
-            foreach ($this->clients as $client)
-            {
-                if (in_array($client->user_id, $owners) && $client->user_id != $from->user_id)
-                {
-                    $client->send($json);
-                }
-            }
-        }
-    }
-
-    public function deleteSubItem(ConnectionInterface $from, $model='')
-    {
-        if (is_null($model)         || !is_object($model)    ||
-            !isset($model->id)      || $model->id <= 0       ||
-            !isset($model->list_id) || $model->list_id <= 0)
-        {
-            $from->send(json_encode($this->_JSONError));
-            return;
-        }
-
-        if ($this->SubItem_m->delete((int) $model->id))
-        {
-            $owners = $this->ListItem_m->getOwner((int)$model->list_id);
-
-            if (count($owners) > 1)
-            {
-                $json = json_encode(array(
-                    'status' => 200,
-                    'fire'   => array(
-                        'name' => 'subItem:delete',
-                        'args' => $model)));
-
-                foreach ($this->clients as $client)
-                {
-                    if (in_array($client->user_id, $owners) && $client->user_id != $from->user_id)
-                    {
-                        $client->send($json);
-                    }
-                }
-            }
-        }
-    }
-
-    public function updateSubItem(ConnectionInterface $from, $model='')
-    {
-        if (is_null($model)           || !is_object($model)       ||
-            !isset($model->id)        || $model->id <= 0          ||
-            !isset($model->list_id)   || $model->list_id <= 0     ||
-            !isset($model->item_id)   || $model->item_id <= 0     ||
-            !isset($model->completed) || ($model->completed != 0 && $model->completed != 1) ||
-            !isset($model->title)     || empty($model->title)     ||
-            !isset($model->order)     || $model->order < 0)
-        {
-            $from->send(json_encode($this->_JSONError));
-            return;
-        }
-
-        $status = $this->SubItem_m->update($model, $from->user_id);
-
-        if (!$status)
-        {
-            $from->send(json_encode($this->_UnauthorizedError));
-            return;
-        }
-
-        $owner = $this->ListItem_m->getOwner((int)$model->list_id);
-
-        if (count($owner) > 1)
-        {
-            $json = json_encode(array(
-                'status' => 200,
-                'fire'   => array(
-                    'name' => 'subItem:update',
-                    'args' => $model)));
-            foreach ($this->clients as $client)
-            {
-                if (in_array($client->user_id, $owner) && $client->user_id != $from->user_id)
-                {
-                    $client->send($json);
-                }
-            }
+            global $_MethodError;
+            $from->send(json_encode($_MethodError));
         }
     }
 
@@ -354,52 +85,3 @@ $server = IoServer::factory(
 	);
 
 $server->run();
-
-
-    // public function echoMsg(ConnectionInterface $from, $arg='')
-    // {
-    //     if (!isset($arg->msg) || empty($arg->msg))
-    //     {
-    //         $from->send(json_encode($this->_ArgumentError));
-    //     }
-    //     else
-    //     {
-    //         $data = array(
-    //             'status' => 200,
-    //             'value'  => $arg->msg);
-    //         $json = json_encode($data);
-    //         $from->send($json);
-    //     }
-    // }
-
-    // public function createList(ConnectionInterface $from, $model='')
-    // {
-    //     if (is_null($model) || !is_object($model))
-    //     {
-    //         $from->send(json_encode($this->_JSONError));
-    //         return;
-    //     }
-
-    //     $model->id = 56;
-
-    //     $data = array(
-    //         'status' => 200,
-    //         'fire'   => array(
-    //             'name' => 'list:createFromForm',
-    //             'args' => $model));
-    //     $json = json_encode($data);
-    //     $from->send($json);
-
-    //     $json = json_encode(array(
-    //         'status' => 200,
-    //         'fire'   => array(
-    //             'name' => 'list:create',
-    //             'args' => $model)));
-
-    //     foreach ($this->clients as $resourceId => $client) {
-    //         if ($client->user_id != $from->user_id)
-    //         {
-    //             $client->send($json);
-    //         }
-    //     }
-    // }

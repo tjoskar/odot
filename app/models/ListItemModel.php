@@ -1,6 +1,6 @@
 <?php
 
-class ItemListModel {
+class ListItemModel {
 
     private $_table;
 

@@ -26,6 +26,7 @@
 Route::get('/', 'HomeController@index');
 
 Route::controller('auth', 'AuthController');
+Route::controller('share', 'ShareListController');
 
 Route::resource('item', 'ItemController');
 Route::resource('list', 'ListController');

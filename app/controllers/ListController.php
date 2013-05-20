@@ -2,12 +2,12 @@
 
 class ListController extends BaseController {
 
-	private $ItemList_m;
+	private $listItem_m;
 
 	public function __construct()
     {
     	parent::__construct();
-        $this->ItemList_m = new ItemListModel();
+        $this->listItem_m = new ListItemModel();
     }
 
 	/**
@@ -35,7 +35,7 @@ class ListController extends BaseController {
 			return Response::json(array('ststus' => 400));
 		}
 
-		$list = $this->ItemList_m->save($model, $this->_userID);
+		$list = $this->listItem_m->save($model, $this->_userID);
 
 		if (is_null($list))
 		{
@@ -132,7 +132,7 @@ class ListController extends BaseController {
 			return Response::json(array('ststus' => 400));
 		}
 
-		$list = $this->ItemList_m->save($model, $this->_userID);
+		$list = $this->listItem_m->save($model, $this->_userID);
 
 		if ($status)
 		{

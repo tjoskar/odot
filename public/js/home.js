@@ -17,7 +17,7 @@ if ("WebSocket" in window) // Check if the browser has WebSocket support
 	app.socketConn.onopen = function(e)
 	{
 		console.log("Websocket connection established!");
-		var data = {'method': 'setUserID', 'args': user_id};
+		var data = {'object': 'user', 'method': 'setUserID', 'args': user_id};
 		app.socketConn.send(JSON.stringify(data));					// Send our user id to the websocket server
 	};
 
