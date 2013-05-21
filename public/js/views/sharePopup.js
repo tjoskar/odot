@@ -7,55 +7,65 @@ App.Views.SharePopup = Backbone.View.extend(
         'submit'        : 'shareWithUserClick',
     },
 
-    initialize: function(listModel)
+    initialize: function()
     {
-        //Register websocket callbacks
+        this.undelegateEvents();
+
+        // Register websocket callbacks
         vent.on('sharePopup:usersSharingList', this.usersSharingList, this);
         vent.on('sharePopup:listSharedWithUser', this.listSharedWithUser, this);
 
+        // Register a background click event to hide popup
+        var self = this;
+        $('#fullscreen-popup-background').click(function() {
+            self.hide();
+        });
+    },
+
+    show: function(listModel)
+    {
         this.model = {};
         this.model.listTitle = listModel.get('title');
         this.model.listId = listModel.get('id');
         
         this.getUsersSharingThisList();
 
-        //Register a background click event to hide popup
-        $('#fullscreen-popup-background').click(function() {
-            app.popup.hide();
-        });
-    },
-    show: function()
-    {
         $('#odotapp').addClass('blur');
         $('#fullscreen-popup-background').removeClass('hide');
         $('#fullscreen-popup').removeClass('hide');
     },
+
     hide: function()
     {
         $('#odotapp').removeClass('blur');
         $('#fullscreen-popup-background').addClass('hide');
         $('#fullscreen-popup').addClass('hide');
     },
+
     getUsersSharingThisList: function()
     {
-        //Find which users already sharing this list
+        // Find which users already sharing this list
         var args = {
             listId: this.model.listId
         };
 
         var data = {'object': 'user', 'method': 'getUsersSharingListId', 'args': args};
         app.socketConn.send(JSON.stringify(data));
+        console.log('getUsersSharingThisList');
     },
+
     usersSharingList: function(response)
     {
-        //Set the popup description
+        console.log('usersSharingList');
+
+        // Set the popup description
         this.model.description = '\"' + this.model.listTitle + '\" is currently ';
 
         this.model.users = response;
 
         if (this.model.users != null && this.model.users.length > 0)
         {
-            //Format the string to contain all users sharing this list
+            // Format the string to contain all users sharing this list
             this.model.description += 'shared with ';
 
             for (var i in this.model.users)
@@ -85,6 +95,7 @@ App.Views.SharePopup = Backbone.View.extend(
         this.$el.empty();
         this.$el.append( this.template( this.model ) );
     },
+
     shareWithUserClick: function(event)
     {
         event.preventDefault();
@@ -97,8 +108,11 @@ App.Views.SharePopup = Backbone.View.extend(
         var data = {'object': 'user', 'method': 'shareListWithUser', 'args': args};
         app.socketConn.send(JSON.stringify(data));
     },
+
     listSharedWithUser: function(response)
     {
+        
+
         if (response != '')
         {
             app.alert('List \"' + this.model.listTitle + '\" is now shared with ' + response, 'success');
@@ -107,7 +121,7 @@ App.Views.SharePopup = Backbone.View.extend(
         }
         else
         {
-            app.alert('Cannot share list to user', 'alert');
+            app.alert('Cannot share list with user', 'alert');
         }
     }
 });

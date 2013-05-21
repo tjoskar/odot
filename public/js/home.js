@@ -53,6 +53,9 @@ new App.Views.AddItemForm();
 
 new App.Views.UserInfo();
 
+//Initialize the popup view
+app.popup = new App.Views.SharePopup();
+
 // Fetch all lists
 var listCollection = new App.Collections.List();
 listCollection.fetch().then(function() {

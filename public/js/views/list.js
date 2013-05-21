@@ -45,8 +45,7 @@ App.Views.List = Backbone.View.extend({
     this.$el.find('.list-button-holder').addClass('hide');
   },
   clickShare: function(e) {
-    app.popup = new App.Views.SharePopup(this.model);
-    app.popup.show();
+    app.popup.show(this.model);
   },
   clickDelete: function(e) {
     

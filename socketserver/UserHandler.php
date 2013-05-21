@@ -101,8 +101,8 @@ class UserHandler
             {
                 //Check that user is not already sharing the list and
                 //Check that list exist
-                if (is_null(DB::table('user_lists')->where('list_id', $args['listId'])->where('user_id', $user->id)->get()) &&
-                    DB::table('lists')->where('id', $args['listId'])->count() == 1);
+                if (is_null(DB::table('user_lists')->where('list_id', $listId)->where('user_id', $user->id)->get()) &&
+                    DB::table('lists')->where('id', $listId)->count() == 1);
                 {
                     //Share the list to the user
                     DB::table('user_lists')->insert(

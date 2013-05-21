@@ -14,6 +14,7 @@ var app = {
   listsView: null,
   itemsView: null,
   conn: false,
+  popup: null,
 
   saveLastViewedListId: function (listId)
   {
