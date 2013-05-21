@@ -27,7 +27,7 @@ class ItemListModel {
 
         $list = new ItemList();
         $list->title = $model->title;
-        $list->user_id = $user_id;
+        //$list->user_id = $user_id;
         $list->order = $this->getNextOrderIndex();
 
         User::find($user_id)->lists()->save($list);

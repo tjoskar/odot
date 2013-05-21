@@ -27,7 +27,7 @@ class ListController extends BaseController {
 	 */
 	public function store()
 	{
-		$model        = new ItemList();
+		$model        = new stdClass();
 		$model->title = Input::get('title', '');
 
 		if (empty($model->title))

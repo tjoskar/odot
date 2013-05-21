@@ -6,11 +6,9 @@ class TestController extends Controller {
 	{
 		$data = array('Oskar', 'Karlsson');
 
-    $model = new ItemListModel();
+        var_dump(App::environment());
 
-    echo '<pre>';
-    var_dump($model->getOwner(1));
-    echo '</pre>';
+
 
   }
 

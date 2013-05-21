@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class AddDueDateToItems extends Migration {
+class CreateUserListsTable extends Migration {
 
     /**
      * Run the migrations.
@@ -12,8 +12,11 @@ class AddDueDateToItems extends Migration {
      */
     public function up()
     {
-        Schema::table('items', function(Blueprint $table) {
-            $table->string('due_date', 100)->nullable()->default('');
+        Schema::create('user_lists', function(Blueprint $table) {
+            $table->increments('id');
+            $table->integer('user_id');
+            $table->integer('list_id');
+            $table->timestamps();
         });
     }
 
@@ -24,9 +27,7 @@ class AddDueDateToItems extends Migration {
      */
     public function down()
     {
-        Schema::table('items', function(Blueprint $table) {
-            $table->dropColumn('due_date');
-        });
+        Schema::drop('lists');
     }
 
 }
