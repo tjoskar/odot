@@ -12,14 +12,14 @@ class UsersTableSeeder extends Seeder {
                 'password'     => Hash::make('osk'),
                 'created_at'   => new DateTime,
                 'updated_at'   => new DateTime,
-                'visible_name' => null,
+                'visible_name' => 'Oskar',
                 'facebook_id'  => null),
             array( // ID 2
                 'username'     => 'Jonas',
                 'password'     => Hash::make('jon'),
                 'created_at'   => new DateTime,
                 'updated_at'   => new DateTime,
-                'visible_name' => null,
+                'visible_name' => 'Jonas',
                 'facebook_id'  => null),
             array( // ID 3
                 'username'     => 'j.bromo',
@@ -33,7 +33,7 @@ class UsersTableSeeder extends Seeder {
                 'password'     => Hash::make('joh'),
                 'created_at'   => new DateTime,
                 'updated_at'   => new DateTime,
-                'visible_name' => null,
+                'visible_name' => 'John Doe',
                 'facebook_id'  => null),
         );
 

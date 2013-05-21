@@ -21,6 +21,11 @@ var app = {
     localStorage.lastViewedListId = listId;
   },
 
+  removeLastViewedListId: function()
+  {
+    localStorage.removeItem('lastViewedListId');
+  },
+
   alert: function(msg, type, timeout)
   {
     //var t = timeout || 3000;

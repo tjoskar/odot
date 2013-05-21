@@ -68,6 +68,13 @@ class ListItemModel {
         return FALSE;
     }
 
+    public function delete($id)
+    {
+        DB::table('lists')->where('id', $id)->delete();             // And delete the list
+        DB::table('items')->where('list_id', $id)->delete();        // Delete the item
+        DB::table('sub_items')->where('list_id', $id)->delete();    // Delete all subitem
+    }
+
     public function getOwner($list_id)
     {
         if (!is_int($list_id))
@@ -87,5 +94,11 @@ class ListItemModel {
         }
 
         return $return;
+    }
+
+    public function listExist($list_id)
+    {
+        $t = (DB::table('lists')->where('id', $list_id)->count() == 1);
+        return $t;
     }
 }

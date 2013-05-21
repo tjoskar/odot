@@ -4,7 +4,7 @@ App.Views.SharePopup = Backbone.View.extend(
     template: _.template($('#share-list-popup-template').html()),
 
     events : {
-        'submit'        : 'shareWithUserClick',
+        'submit' : 'shareWithUserClick'
     },
 
     initialize: function()
@@ -22,12 +22,10 @@ App.Views.SharePopup = Backbone.View.extend(
         });
     },
 
-    show: function(listModel)
+    show: function(model)
     {
-        this.model = {};
-        this.model.listTitle = listModel.get('title');
-        this.model.listId = listModel.get('id');
-        
+        this.model = model;
+
         this.getUsersSharingThisList();
 
         $('#odotapp').addClass('blur');
@@ -85,7 +83,7 @@ App.Views.SharePopup = Backbone.View.extend(
                 }
             }
             this.model.description += '.';
-        } 
+        }
         else
         {
             this.model.description += 'not shared with anyone.';
@@ -111,8 +109,6 @@ App.Views.SharePopup = Backbone.View.extend(
 
     listSharedWithUser: function(response)
     {
-        
-
         if (response != '')
         {
             app.alert('List \"' + this.model.listTitle + '\" is now shared with ' + response, 'success');

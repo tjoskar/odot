@@ -7,48 +7,59 @@ App.Views.List = Backbone.View.extend({
   className: 'list',
   template: _.template($('#list-template').html()),
 
-  initialize: function() {
-    vent.on('list:show', this.showList, this);
-
-    /*
-    if ( this.model.id == 34 )
-    {
-      app.popup = new App.Views.SharePopup(this.model);
-      app.popup.show();
-    }
-  */
-  },
-
-  render: function() {
-    this.$el.html( this.template( this.model.toJSON() ));
-    return this;
-  },
-
   // Add event to capture click on a list (<li>)
   events : {
     'click'             : 'clickList',
     'mouseenter'        : 'mouseEnter',
     'mouseleave'        : 'mouseLeave',
     'click .icon-group' : 'clickShare',
-    'click .icon-trash' : 'clickDelete',
+    'click .icon-trash' : 'clickDelete'
   },
 
-  clickList: function(e) {
+  initialize: function()
+  {
+    vent.on('list:show', this.showList, this);
+  },
+
+  render: function()
+  {
+    this.$el.html( this.template( this.model.toJSON() ));
+    return this;
+  },
+
+  clickList: function(e)
+  {
     // Router user to a single list
     var listUrl = this.model.urlRoot + '/' + this.model.id;
     app.router.navigate(listUrl, {trigger: true});
   },
-  mouseEnter: function(e) {
+
+  mouseEnter: function(e)
+  {
     this.$el.find('.list-button-holder').removeClass('hide');
   },
-  mouseLeave: function(e) {
+
+  mouseLeave: function(e)
+  {
     this.$el.find('.list-button-holder').addClass('hide');
   },
-  clickShare: function(e) {
-    app.popup.show(this.model);
+
+  clickShare: function(e)
+  {
+    app.popup.show({listTitle: this.model.get('title'), listId: this.model.get('id')});
   },
-  clickDelete: function(e) {
-    
+
+  clickDelete: function(e)
+  {
+    var self = this;
+    this.model.destroy({success: function(model, response) {
+      app.removeLastViewedListId();
+      app.router.navigate('', {trigger: true});
+      self.remove();
+    },
+    error: function(model, response) {
+      app.alert('Unable to remove list', 'alert');
+    }});
   },
 
   showList: function(listId) {
@@ -86,7 +97,7 @@ App.Views.List = Backbone.View.extend({
 
       this.$el.addClass('active');
     }
-    else 
+    else
     {
       this.$el.removeClass('active');
     }

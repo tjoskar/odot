@@ -4,7 +4,6 @@ class AuthController extends Controller {
 
 	public function postLogin()
     {
-		// if (Request::ajax())
 		$userdata = array(
         	'username'      => Input::get('username', ''),
         	'password'      => Input::get('password', '')
@@ -62,6 +61,7 @@ class AuthController extends Controller {
         $user = new User();
         $user->username = $username;
         $user->password = Hash::make($password);
+        $user->visible_name = $username;
         $user->save();
 
         Auth::loginUsingId($user->id);

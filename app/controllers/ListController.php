@@ -152,22 +152,25 @@ class ListController extends BaseController {
 	 */
 	public function destroy($id)
 	{
-		$id = (int) $id;
-		$list = ListItem::find($id);
+        $id = (int) $id;
 
-		/**
+        if ($id < 0)
+            return;
 
-		    - What about user_lists ?
+        $share_m = new ShareModel();
 
-		**/
+        // Get number of sharing
+        $num_of_sharing = $share_m->numSharing($id);
 
+        // Remove the share connection
+        $share_m->removeSharing($this->_userID, $id);
 
-		if (!is_null($list))
-		{
-			$list->delete();
-		}
-
-		return;
+        if ($num_of_sharing == 1)
+        {
+            // No other is using the list
+            $this->listItem_m->delete($id);
+        }
+		return Response::json(array('status' => 200));
 	}
 
 }

@@ -5,12 +5,17 @@
 App.Views.Lists = Backbone.View.extend({
   tagName: 'ul',
 
-  initialize: function() {
+  initialize: function()
+  {
     // Wait for the call
     this.collection.on("add", this.addList, this);
+    d('lyssna efter addListFromServer');
+    vent.on('list:add', this.addListFromServer, this);
   },
 
-  render: function() {
+  render: function()
+  {
+    d('render');
     this.$el.empty();
     this.collection.each(function(list) {
       var listView = new App.Views.List({ model: list });
@@ -33,7 +38,8 @@ App.Views.Lists = Backbone.View.extend({
   },
 
   // Add a list to the view
-  addList: function(model) {
+  addList: function(model)
+  {
     var listView = new App.Views.List({ model: model });
     this.$el.append( listView.render().$el );
 
@@ -41,7 +47,14 @@ App.Views.Lists = Backbone.View.extend({
     this.$el.sortable();
   },
 
-  showAllLists: function() {
+  addListFromServer: function(model)
+  {
+    var listModel = new App.Models.List(model);
+    this.collection.add(listModel);
+  },
+
+  showAllLists: function()
+  {
     $("#lists-holder").append( this.render().el );
   }
 });

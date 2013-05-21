@@ -9,15 +9,18 @@ require 'errorMessages.php';
 
 class UserHandler
 {
-    private $clients; //Reference to the the server clients
+    private $clients;   // Reference to the the server clients
+    private $share_m;
+    private $listItem_m;
 
-    //Constructor
     public function __construct(&$clients)
     {
-        $this->clients = &$clients;
+        $this->clients    = &$clients; // Save an reference
+        $this->share_m    = new ShareModel();
+        $this->listItem_m = new ListItemModel();
     }
 
-    public function setUserID(ConnectionInterface $from, $arg='')
+    public function setUserID(ConnectionInterface $from, $arg = 0)
     {
         $id = (int) $arg;
         if ($id > 0 && !isset($this->clients[$from->resourceId]->user_id))
@@ -34,103 +37,87 @@ class UserHandler
             global $_ArgumentError;
             $from->send(json_encode($_ArgumentError));
         }
+        return;
     }
 
     public function getUsersSharingListId(ConnectionInterface $from, $arg='')
     {
-        $args = (array) $arg;
-        if (isset($args) && isset($args['listId']) && !empty($args['listId']) &&
-            $args['listId'] > 0)
+        // Validate argument
+        if (isset($arg) && isset($arg->listId) && !empty($arg->listId) && $arg->listId > 0)
         {
-            $listId = $args['listId'];
-            //$users = DB::table('user_lists')->select('user_id')->where('list_id', $listId)->get();
-            /*
-            $userIDs = DB::table('user_lists')->where('list_id', $listId)->lists('user_id');
+            $response = $this->share_m->getUsernameForShareList($arg->listId, $this->clients[$from->resourceId]->user_id);
 
-            foreach ($userIDs as $userId)
-            {
-                $user = DB::table('users')->select('visible_name')->where('id', $userId)->get();
-                var_dump($user[0]['visible_name']);
-            } 
-            */
-
-            $usernames = DB::table('user_lists as ul')
-            ->join('users as u', 'u.id', '=', 'ul.user_id')
-            ->where('ul.list_id', $listId)
-            ->where('u.id', '!=', $this->clients[$from->resourceId]->user_id)
-            ->select('u.visible_name')->get();
-            
-            //Format the response
-            $response = array();
-            foreach ($usernames as $user)
-            {
-                array_push($response, $user->visible_name);
-            }
-
-            //Send the response back
+            // Send the response back
             $from->send(json_encode(array(
                 'status' => 200,
                 'fire'   => array(
                     'name' => 'sharePopup:usersSharingList',
                     'args' => $response ))));
-            return;
         }
-
-        //Else send empty response
-        $from->send(json_encode(array(
-            'status' => 200,
-            'fire'   => array(
-                'name' => 'sharePopup:usersSharingList',
-                'args' =>  '' ))));
+        else // Else send empty response
+        {
+            $from->send(json_encode(array(
+                'status' => 200,
+                'fire'   => array(
+                    'name' => 'sharePopup:usersSharingList',
+                    'args' =>  '' ))));
+        }
+        return;
     }
 
     public function shareListWithUser(ConnectionInterface $from, $arg='')
     {
-        $args = (array) $arg;
-        
-        //Validate argument
-        if (isset($args) && 
-            isset($args['username']) && !empty($args['username']) &&
-            isset($args['listId']) && !empty($args['listId']))
+        // Validate argument
+        if (isset($arg) &&
+            isset($arg->username) && !empty($arg->username) &&
+            isset($arg->listId)   && !empty($arg->listId))
         {
-            //Check if user exists
-            $user = User::where('username', '=', $args['username'])->first();
-            $listId = $args['listId'];
+            // Check if user exists
+            $user = $this->share_m->getUser($arg->username);
+            $username = '';
 
-            if (!is_null($user) && $listId > 0)
+            if (!is_null($user) && $arg->listId > 0)
             {
-                //Check that user is not already sharing the list and
-                //Check that list exist
-                if (is_null(DB::table('user_lists')->where('list_id', $listId)->where('user_id', $user->id)->get()) &&
-                    DB::table('lists')->where('id', $listId)->count() == 1);
+                // Check that user is not already sharing the list and
+                // Check that list exist
+                if ( !$this->share_m->isUserSharingList($arg->listId, $user->id) &&
+                      $this->listItem_m->listExist($arg->listId) )
                 {
-                    //Share the list to the user
-                    DB::table('user_lists')->insert(
-                            array('user_id' => $user->id, 'list_id' => $listId)
-                        );
+                    // Share the list to the user
+                    $this->share_m->shareList($user->id, $arg->listId);
 
-                    //Send success response
-                    $from->send(json_encode(array(
+                    $username = $user->username;
+
+                    $list = ItemList::find($arg->listId)->toArray();
+
+                    $json = json_encode(array(
                         'status' => 200,
                         'fire'   => array(
-                            'name' => 'sharePopup:listSharedWithUser',
-                            'args' => $user->username ))));
-                    return;
+                            'name' => 'list:add',
+                            'args' => $list)));
+
+                    foreach ($this->clients as $client)
+                    {
+                        if ($client->user_id == $user->id)
+                        {
+                            $client->send($json);
+                        }
+                    }
                 }
             }
 
-            //Else send invalid username
             $from->send(json_encode(array(
                 'status' => 200,
                 'fire'   => array(
                     'name' => 'sharePopup:listSharedWithUser',
-                    'args' =>  '' ))));
+                    'args' =>  $username ))));
         }
         else
         {
             global $_ArgumentError;
             $from->send(json_encode($_ArgumentError));
         }
+        return;
     }
 }
 
