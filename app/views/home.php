@@ -19,6 +19,8 @@
         <div id="popup-container"></div>
     </div>
 
+    <div id="alert-box-holder"></div>
+
     <script type="text/template" id="share-list-popup-template">
         <h1>Share list</h1><div id="list-title"><%= listTitle %></div>
         <p id="description"><%= description %></p>
@@ -30,8 +32,6 @@
     </script>
 
     <div id="odotapp" class="container">
-        <div id="alert-box-holder">
-        </div>
 
         <!-- User Info -->
         <div id="user-info">

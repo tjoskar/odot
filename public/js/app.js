@@ -20,9 +20,10 @@ var app = {
     localStorage.lastViewedListId = listId;
   },
 
-  alert: function(msg, type)
+  alert: function(msg, type, timeout)
   {
-    var model = new App.Models.Alert({msg: msg, type: type});
+    //var t = timeout || 3000;
+    var model = new App.Models.Alert({msg: msg, type: type, timeout: timeout});
     new App.Views.Alert({model: model});
   }
 };

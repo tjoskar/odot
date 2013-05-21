@@ -15,12 +15,18 @@ App.Views.Alert = Backbone.View.extend({
   {
     $("#alert-box-holder").prepend( this.render().el ).show('slow');    // Display the alert dialog
 
-    var self = this;
-    this.timer = setTimeout(function() {
-      self.$el.fadeOut(1000, function() {
-        self.remove();                                                  // Remove the dialog after 3s
-      });
-    }, 3000);
+    d(this.model.get('timeout'));
+
+    if (this.model.get('timeout'))
+    {
+      var self = this;
+      this.timer = setTimeout(function() {
+        self.$el.fadeOut(1000, function() {
+          self.remove();                                                  // Remove the dialog
+        });
+      }, this.model.get('timeout'));
+    }
+
   },
 
   render: function()

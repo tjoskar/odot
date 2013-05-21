@@ -5,6 +5,7 @@
 App.Models.Alert = Backbone.Model.extend({
   defaults: {
     msg: '',
-    type: '' // alert (red), success (green) or '' (blue)
+    type: '', // alert (red), success (green) or '' (blue)
+    timeout: 3000
   }
 });
