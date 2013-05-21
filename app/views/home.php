@@ -21,7 +21,7 @@
 
     <script type="text/template" id="share-list-popup-template">
         <h1>Share list</h1><div id="list-title"><%= listTitle %></div>
-        <p id="title"><%= title %></p>
+        <p id="description"><%= description %></p>
         <p id="share-desc">Add user to share this list</p>
         <form class="add-user">
             <input class="add-user" placeholder="username">

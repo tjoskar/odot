@@ -4,43 +4,20 @@ App.Views.SharePopup = Backbone.View.extend(
     template: _.template($('#share-list-popup-template').html()),
 
     events : {
-        'submit'        : 'shareWithUser',
-        'keyup input'   : 'checkUsername'
+        'submit'        : 'shareWithUserClick',
     },
 
     initialize: function(listModel)
     {
+        //Register websocket callbacks
+        vent.on('sharePopup:usersSharingList', this.usersSharingList, this);
         vent.on('sharePopup:listSharedWithUser', this.listSharedWithUser, this);
 
         this.model = {};
         this.model.listTitle = listModel.get('title');
         this.model.listId = listModel.get('id');
-        this.model.title = '\"' + this.model.listTitle + '\" is currently shared with ';
-
-        this.model.users = [
-            'Oskar',
-            'Jonas',
-            'Johan'
-        ];
-
-        //Format the string to contain all users sharing this list
-        for (var i in this.model.users)
-        {
-            username = this.model.users[i];
-            if (i === 0)
-            {
-                this.model.title += username;
-            }
-            else if (i == this.model.users.length-1 )
-            {
-                this.model.title += ' and ' + username;
-            }
-            else
-            {
-                this.model.title += ', ' + username;
-            }
-        }
-        this.model.title += '.';
+        
+        this.getUsersSharingThisList();
 
         //Register a background click event to hide popup
         $('#fullscreen-popup-background').click(function() {
@@ -49,9 +26,6 @@ App.Views.SharePopup = Backbone.View.extend(
     },
     show: function()
     {
-        this.$el.empty();
-        this.$el.append( this.template( this.model ) );
-
         $('#odotapp').addClass('blur');
         $('#fullscreen-popup-background').removeClass('hide');
         $('#fullscreen-popup').removeClass('hide');
@@ -62,7 +36,56 @@ App.Views.SharePopup = Backbone.View.extend(
         $('#fullscreen-popup-background').addClass('hide');
         $('#fullscreen-popup').addClass('hide');
     },
-    shareWithUser: function(event)
+    getUsersSharingThisList: function()
+    {
+        //Find which users already sharing this list
+        var args = {
+            listId: this.model.listId
+        };
+
+        var data = {'object': 'user', 'method': 'getUsersSharingListId', 'args': args};
+        app.socketConn.send(JSON.stringify(data));
+    },
+    usersSharingList: function(response)
+    {
+        //Set the popup description
+        this.model.description = '\"' + this.model.listTitle + '\" is currently ';
+
+        this.model.users = response;
+
+        if (this.model.users != null && this.model.users.length > 0)
+        {
+            //Format the string to contain all users sharing this list
+            this.model.description += 'shared with ';
+
+            for (var i in this.model.users)
+            {
+                username = this.model.users[i];
+                if (i == 0)
+                {
+                    this.model.description += username;
+                }
+                else if (i == this.model.users.length-1 )
+                {
+                    this.model.description += ' and ' + username;
+                }
+                else
+                {
+                    this.model.description += ', ' + username;
+                }
+            }
+            this.model.description += '.';
+        } 
+        else
+        {
+            this.model.description += 'not shared with anyone.';
+        }
+
+        //Update the view
+        this.$el.empty();
+        this.$el.append( this.template( this.model ) );
+    },
+    shareWithUserClick: function(event)
     {
         event.preventDefault();
 
@@ -74,13 +97,18 @@ App.Views.SharePopup = Backbone.View.extend(
         var data = {'object': 'user', 'method': 'shareListWithUser', 'args': args};
         app.socketConn.send(JSON.stringify(data));
     },
-    checkUsername: function (event)
+    listSharedWithUser: function(response)
     {
-
-    },
-    listSharedWithUser: function(event)
-    {
-        console.log('listSharedWithUser called');
+        if (response != '')
+        {
+            app.alert('List \"' + this.model.listTitle + '\" is now shared with ' + response, 'success');
+            $('input.add-user').empty();
+            this.getUsersSharingThisList();
+        }
+        else
+        {
+            app.alert('Cannot share list to user', 'alert');
+        }
     }
 });
 

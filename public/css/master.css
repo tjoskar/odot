@@ -1807,7 +1807,7 @@ a {
   padding: 5px 10px 5px 10px;
   float: left;
 }
-#fullscreen-popup #popup-container p#title {
+#fullscreen-popup #popup-container p#description {
   font-family: Arial, Helvetica, sans-serif;
   word-wrap: break-word;
   padding-bottom: 20px;
