@@ -10,7 +10,7 @@ App.Views.AddListForm = Backbone.View.extend({
     "submit" : "addNewList"
   },
 
-  addNewList: function(e)                                                           // Called when user submit the form
+  addNewList: function(e)                                                   // Called when user submit the form
   {
     e.preventDefault();
     var inputField = $(this.el).find('input');
@@ -20,8 +20,8 @@ App.Views.AddListForm = Backbone.View.extend({
     if (newList.isValid())
     {
       newList.save().then(function() {
-        inputField.val('');                                                         // Clear input field
-        app.listsView.collection.add(newList);                                      // Add new list to collection
+        inputField.val('');                                                 // Clear input field
+        app.listsView.collection.add(newList);                              // Add new list to collection
       });
     }
     else

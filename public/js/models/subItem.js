@@ -28,7 +28,7 @@ App.Models.SubItem = Backbone.Model.extend({
   {
     if (method === 'create' || method === 'delete' || method === 'update')      // Only overwrite if there is a create, delete or update method
     {
-      var msg = {'method': method+'SubItem', 'args': model};                    // Create a custom message
+      var msg = {'object': 'subItem', 'method': method, 'args': model};                    // Create a custom message
       if (app.socketConn)
       {
         app.socketConn.send(JSON.stringify(msg));                               // And of we go

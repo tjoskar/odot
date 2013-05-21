@@ -2,12 +2,12 @@
 
 class ItemController extends BaseController {
 
-	private $Item_m;
+	private $item_m;
 
 	public function __construct()
     {
     	parent::__construct();
-        $this->Item_m = new ItemModel();
+        $this->item_m = new ItemModel();
     }
 
 	/**
@@ -26,7 +26,7 @@ class ItemController extends BaseController {
 			return Response::json(array('ststus' => 400));
 		}
 
-		$item = $this->Item_m->save($model, $this->_userID);
+		$item = $this->item_m->save($model, $this->_userID);
 
 		return $item;
 	}
@@ -71,7 +71,7 @@ class ItemController extends BaseController {
 			return Response::json(array('status' => 400));
 		}
 
-		$status = $this->Item_m->update($model, $this->_userID);
+		$status = $this->item_m->update($model, $this->_userID);
 
 		if ($status)
 		{
@@ -92,7 +92,7 @@ class ItemController extends BaseController {
 	 */
 	public function destroy($id)
 	{
-		$this->Item_m->delete((int) $id);
+		$this->item_m->delete((int) $id);
 	}
 
 }
