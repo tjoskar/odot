@@ -1,0 +1,16 @@
+/* TEAM */
+	Developer: Oskar Karlsson
+	Contact: oskar [at] odot.com
+	Twitter: @oskarkarlsson
+	From: Linkoping, Sweden
+
+	Developer: Jonas Bromo
+	Contact: jonas [at] odot.com
+	From: Linkoping, Sweden
+
+/* SITE */
+	Last update:2013/05/22
+	Language: English
+	Doctype: HTML5
+	Software: Sublime Text
+	Components: Laravel, Backbone, Bower, Grunt, Composer, PHPunit, Selenium, Codeception

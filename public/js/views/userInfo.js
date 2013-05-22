@@ -1,8 +1,10 @@
-
+/*=============================
+=            Views            =
+=============================*/
 
 App.Views.UserInfo = Backbone.View.extend({
     el: $('#user-info'),
-    
+
     events: {
         "click #settings" : "clickSettings",
         "click #logout" : "clickLogout"
@@ -25,16 +27,8 @@ App.Views.UserInfo = Backbone.View.extend({
             }
         });
     },
-    
+
     clickSettings: function(event) {
         console.log('Settings clicked');
-    },
-    /*
-    initialize: function() {
-
-    },
-
-    render: function() {
-
-    }*/
+    }
 });

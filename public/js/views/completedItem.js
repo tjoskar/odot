@@ -14,8 +14,8 @@ App.Views.CompletedItem = Backbone.View.extend({
 
   initialize: function()
   {
-    this.model.on("remove", this.removeView, this);                                   // Remove this view if the model removes
-    vent.on('item:update', this.updateItem, this);                    // This event is trigged by the websocket-server when an item should be updated
+    this.model.on("remove", this.removeView, this);                   // Remove this view if the model removes
+    vent.on('item:update', this.updateItem, this);                    // This event is trigged by the server when an item should be updated
   },
 
   render: function()
@@ -29,7 +29,7 @@ App.Views.CompletedItem = Backbone.View.extend({
     $(e.currentTarget).find('.icon-check-empty, .icon-check').toggleClass('hide');
   },
 
-  clickCheckbox: function(e)                                                          // Mark the item as uncompleted
+  clickCheckbox: function(e)                                          // Mark the item as uncompleted
   {
     this.stopListening();
     this.model.toogleCompleted();
@@ -46,14 +46,14 @@ App.Views.CompletedItem = Backbone.View.extend({
       if (this.model.get('completed') != model.completed)
       {
         this.stopListening();
-        vent.trigger('item:uncompleted', model);                       // Send an event to items.js
+        vent.trigger('item:uncompleted', model);                      // Send an event to items.js
         this.model.destroy({reportToServer: false});
         this.remove();
       }
     }
   },
 
-  removeView: function()                                                              // Called when the model is removed
+  removeView: function()                                              // Called when the model is removed
   {
     this.remove();
   }

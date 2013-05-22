@@ -5,12 +5,6 @@
 App.Views.SubItems = Backbone.View.extend({
   tagName: 'ul',
 
-  initialize: function()
-  {
-    // Wait for the call
-    //this.collection.on("add", this.addSubItem, this);
-  },
-
   render: function()
   {
     this.$el.empty();

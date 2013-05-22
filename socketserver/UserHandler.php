@@ -15,11 +15,17 @@ class UserHandler
 
     public function __construct(&$clients)
     {
-        $this->clients    = &$clients; // Save an reference
-        $this->share_m    = new ShareModel();
-        $this->listItem_m = new ListItemModel();
+        $this->clients    = &$clients;          // Save an reference
+        $this->share_m    = new ShareModel();   // Share model
+        $this->listItem_m = new ListItemModel();// List model
     }
 
+    /**
+     * Give a connection a user id
+     * @param ConnectionInterface $from
+     * @param int $arg
+     * @return void
+     */
     public function setUserID(ConnectionInterface $from, $arg = 0)
     {
         $id = (int) $arg;
@@ -34,12 +40,19 @@ class UserHandler
         }
         else
         {
+            // Bad request
             global $_ArgumentError;
             $from->send(json_encode($_ArgumentError));
         }
         return;
     }
 
+    /**
+     * Get the usernames of the users how share the list
+     * @param ConnectionInterface $from
+     * @param object $arg
+     * @return void
+     */
     public function getUsersSharingListId(ConnectionInterface $from, $arg='')
     {
         // Validate argument
@@ -65,6 +78,12 @@ class UserHandler
         return;
     }
 
+    /**
+     * Share a list with a user
+     * @param ConnectionInterface $from
+     * @param object $arg
+     * @return void
+     */
     public function shareListWithUser(ConnectionInterface $from, $arg='')
     {
         // Validate argument
@@ -94,8 +113,9 @@ class UserHandler
                         'status' => 200,
                         'fire'   => array(
                             'name' => 'list:add',
-                            'args' => $list)));
+                            'args' => $list )));
 
+                    // Inform the the user
                     foreach ($this->clients as $client)
                     {
                         if ($client->user_id == $user->id)
@@ -106,6 +126,7 @@ class UserHandler
                 }
             }
 
+            // Sand back a respond to the user
             $from->send(json_encode(array(
                 'status' => 200,
                 'fire'   => array(

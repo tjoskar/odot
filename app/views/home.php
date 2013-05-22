@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <title>ODOT</title>
+<link type="text/plain" rel="author" href="http://odot.dev/humans.txt" />
 <link href='http://fonts.googleapis.com/css?family=Snippet|Cagliostro' rel='stylesheet' type='text/css'>
 <?php echo Html::style('css/master.css'); ?>
 
@@ -147,42 +148,50 @@
 var user_id = <?php echo Auth::user()->id; ?>
 </script>
 
-<?php echo Html::script('js/libs/underscore.js') ?>
-<?php echo Html::script('js/libs/jquery-1.9.1.js') ?>
-<?php echo Html::script('js/libs/backbone.js') ?>
+<?php if (App::environment() == "global") { ?>
 
-<?php echo Html::script('js/libs/picker.js') ?>
-<?php echo Html::script('js/libs/picker.date.js') ?>
-<?php echo Html::script('js/libs/jquery.sortable.js') ?>
+    <?php echo Html::script('js/build/built.min.js') ?>
 
-<?php echo Html::script('js/app.js') ?>
+<?php } else { ?>
 
-<?php echo Html::script('js/models/list.js') ?>
-<?php echo Html::script('js/models/item.js') ?>
-<?php echo Html::script('js/models/subitem.js') ?>
+    <?php echo Html::script('js/libs/underscore.js') ?>
+    <?php echo Html::script('js/libs/jquery-1.9.1.js') ?>
+    <?php echo Html::script('js/libs/backbone.js') ?>
 
-<?php echo Html::script('js/models/alert.js') ?>
+    <?php echo Html::script('js/libs/picker.js') ?>
+    <?php echo Html::script('js/libs/picker.date.js') ?>
+    <?php echo Html::script('js/libs/jquery.sortable.js') ?>
 
-<?php echo Html::script('js/views/lists.js') ?>
-<?php echo Html::script('js/views/list.js') ?>
-<?php echo Html::script('js/views/items.js') ?>
-<?php echo Html::script('js/views/item.js') ?>
-<?php echo Html::script('js/views/subitems.js') ?>
-<?php echo Html::script('js/views/subitem.js') ?>
-<?php echo Html::script('js/views/completedItems.js') ?>
-<?php echo Html::script('js/views/completedItem.js') ?>
+    <?php echo Html::script('js/app.js') ?>
 
-<?php echo Html::script('js/views/addListForm.js') ?>
-<?php echo Html::script('js/views/addItemForm.js') ?>
-<?php echo Html::script('js/views/addSubItemForm.js') ?>
+    <?php echo Html::script('js/models/list.js') ?>
+    <?php echo Html::script('js/models/item.js') ?>
+    <?php echo Html::script('js/models/subitem.js') ?>
 
-<?php echo Html::script('js/views/alert.js') ?>
-<?php echo Html::script('js/views/userInfo.js') ?>
+    <?php echo Html::script('js/models/alert.js') ?>
 
-<?php echo Html::script('js/views/sharePopup.js') ?>
+    <?php echo Html::script('js/views/lists.js') ?>
+    <?php echo Html::script('js/views/list.js') ?>
+    <?php echo Html::script('js/views/items.js') ?>
+    <?php echo Html::script('js/views/item.js') ?>
+    <?php echo Html::script('js/views/subitems.js') ?>
+    <?php echo Html::script('js/views/subitem.js') ?>
+    <?php echo Html::script('js/views/completedItems.js') ?>
+    <?php echo Html::script('js/views/completedItem.js') ?>
 
-<?php echo Html::script('js/routes.js') ?>
-<?php echo Html::script('js/home.js') ?>
+    <?php echo Html::script('js/views/addListForm.js') ?>
+    <?php echo Html::script('js/views/addItemForm.js') ?>
+    <?php echo Html::script('js/views/addSubItemForm.js') ?>
+
+    <?php echo Html::script('js/views/alert.js') ?>
+    <?php echo Html::script('js/views/userInfo.js') ?>
+
+    <?php echo Html::script('js/views/sharePopup.js') ?>
+
+    <?php echo Html::script('js/routes.js') ?>
+    <?php echo Html::script('js/home.js') ?>
+
+<?php } ?>
 
 </body>
 </html>

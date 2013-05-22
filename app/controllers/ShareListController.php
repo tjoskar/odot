@@ -1,5 +1,12 @@
 <?php
 
+/**
+    TODO:
+    - Remove this class
+
+**/
+
+
 class ShareListController extends Controller {
 
     public function postIsvalidusername()

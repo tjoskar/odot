@@ -6,6 +6,7 @@ class ItemController extends BaseController {
 
 	public function __construct()
     {
+        // Check the user
     	parent::__construct();
         $this->item_m = new ItemModel();
     }

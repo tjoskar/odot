@@ -6,6 +6,7 @@ class ListController extends BaseController {
 
 	public function __construct()
     {
+        // Check the user
     	parent::__construct();
         $this->listItem_m = new ListItemModel();
     }
@@ -21,7 +22,7 @@ class ListController extends BaseController {
 	}
 
 	/**
-	 * Criate a new list.
+	 * Create a new list.
 	 *
 	 * @return JSON obj
 	 */
@@ -80,6 +81,7 @@ class ListController extends BaseController {
 		$id = (int) $id;
 
 		if ($id <= 0)
+            // Are the user drunk?
 			return Response::json($output);
 
 		$list = ItemList::find($id);
@@ -88,7 +90,7 @@ class ListController extends BaseController {
 			// The list do not exist
 			return Response::json($output);
 
-		// Get all (not sub) items associated with the current list
+		// Get all (not sub-) items associated with the current list
 		$items = $list->items()->get();
 
 		$output = $list->toArray();
@@ -132,7 +134,7 @@ class ListController extends BaseController {
 			return Response::json(array('ststus' => 400));
 		}
 
-		$list = $this->listItem_m->save($model, $this->_userID);
+		$status = $this->listItem_m->update($model, $this->_userID);
 
 		if ($status)
 		{

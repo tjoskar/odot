@@ -48,10 +48,10 @@ App.Models.Item = Backbone.Model.extend({
         return true;
       }
 
-      var msg = {'object': 'item', 'method': method, 'args': model};                     // Create a custom message
+      var msg = {'object': 'item', 'method': method, 'args': model};            // Create a custom message
       if (app.socketConn)
       {
-        app.socketConn.send(JSON.stringify(msg));                             // And of we go
+        app.socketConn.send(JSON.stringify(msg));                               // And of we go
         return true;
       }
     }

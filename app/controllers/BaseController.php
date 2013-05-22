@@ -4,6 +4,10 @@ class BaseController extends Controller {
 
 	protected $_userID;
 
+    /**
+     * Check if the user are login
+     * @return void
+     */
 	public function __construct()
 	{
 		if (Auth::check())
@@ -29,9 +33,16 @@ class BaseController extends Controller {
 		}
 	}
 
+
+    /**
+     * This function is calld when the user are trying to
+     * access a function that dont exist
+     * @param type $parameters
+     * @return void
+     */
 	public function missingMethod($parameters)
 	{
-    	return 'Vad syslar du med?';
+        App::abort(404, 'Cant find the requested methhod.');
 	}
 
 }

@@ -13,7 +13,7 @@ class SubitemController extends BaseController {
 	/**
 	 * Create a new subitem
 	 *
-	 * @return null
+	 * @return void
 	 */
 	public function store()
 	{
@@ -36,7 +36,7 @@ class SubitemController extends BaseController {
 	 * Update a subitem
 	 *
 	 * @param  int  $id
-	 * @return null
+	 * @return void
 	 */
 	public function update($id)
 	{

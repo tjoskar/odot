@@ -26,7 +26,7 @@ App.Views.AddListForm = Backbone.View.extend({
     }
     else
     {
-      app.alert('Please, insert a valit titel', 'alert');
+      app.alert('Please, insert a valid title', 'alert');
     }
   }
 

@@ -15,8 +15,6 @@ App.Views.AddItemForm = Backbone.View.extend({
   initialize: function() {
     vent.on('item:createFromForm', this.addItemFromForm, this);                                 // After an item has been created by the form and been saved in the database, the server responds by this event
     vent.on('item:create', this.addItem, this);                                                 // The server push out a new item
-    //vent.on('item:delete', this.deleteItem, this);
-    //vent.on('item:update', this.updateItem, this);
   },
 
   addNewItem: function(e)                                                                       // User submit the form
@@ -36,7 +34,7 @@ App.Views.AddItemForm = Backbone.View.extend({
     }
   },
 
-  addItemFromForm: function(args)                                                               // Called by the server when a new item has been created by this client
+  addItemFromForm: function(args)                                                               // Called by the server when a new item has been created by THIS client
   {
     this.inputField.val('');                                                                    // Clear input field
     this.newItem.set(args);                                                                     // Update the item ie. give the item an id
@@ -60,33 +58,5 @@ App.Views.AddItemForm = Backbone.View.extend({
       }
     }
   }
-
-  // deleteItem: function(model)
-  // {
-  //   var currentListId = getLastVisitedListId();
-  //   if (model.list_id === currentListId)
-  //   {
-  //     app.itemsView.collection.remove(model);
-  //   }
-  //   else
-  //   {
-  //     app.alert('A item has been removed');
-  //   }
-  // },
-
-  // updateItem: function(model)
-  // {
-  //   d('updateItem');
-  //   var currentListId = getLastVisitedListId();
-  //   if (model.list_id === currentListId)
-  //   {
-  //     var item = app.itemsView.collection.get(model.id);
-  //     item.set(model);
-  //   }
-  //   else
-  //   {
-  //     app.alert('A item has been removed');
-  //   }
-  // }
 
 });

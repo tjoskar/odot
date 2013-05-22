@@ -9,9 +9,9 @@ require 'errorMessages.php';
 
 class ItemHandler
 {
-    private $clients; //Reference to the the server clients
-    private $item_m;
-    private $listItem_m;
+    private $clients;    // Reference to the the server clients
+    private $item_m;     // Item model
+    private $listItem_m; // List model
 
     public function __construct(&$clients)
     {
@@ -20,12 +20,19 @@ class ItemHandler
         $this->listItem_m = new ListItemModel();
     }
 
+    /**
+     * Crate a item
+     * @param ConnectionInterface $from
+     * @param object $model
+     * @return void
+     */
     public function create(ConnectionInterface $from, $model='')
     {
         if (is_null($model)         || !is_object($model)      ||   // Are the model OK?
             !isset($model->title)   || empty($model->title)    ||   // Do we have a title?
             !isset($model->list_id) || $model->list_id <= 0)        // Do we have a list id?
         {
+            // Bad message from the client
             global $_JSONError;
             $from->send(json_encode($_JSONError));
             return;
@@ -40,6 +47,7 @@ class ItemHandler
             return;
         }
 
+        // Inform the user that everything went well
         $from->send(json_encode(array(
             'status' => 200,
             'fire'   => array(
@@ -48,6 +56,7 @@ class ItemHandler
 
         $owners = $this->listItem_m->getOwner((int)$model->list_id);
 
+        // Inform the other users (who also share the current list)
         if (count($owners) > 1)
         {
             $json = json_encode(array(
@@ -66,12 +75,19 @@ class ItemHandler
         }
     }
 
+    /**
+     * Remove a item
+     * @param ConnectionInterface $from
+     * @param object $model
+     * @return void
+     */
     public function delete(ConnectionInterface $from, $model='')
     {
         if (is_null($model)         || !is_object($model)    ||
             !isset($model->id)      || $model->id <= 0       ||
             !isset($model->list_id) || $model->list_id <= 0)
         {
+            // Bad message from the client
             global $_JSONError;
             $from->send(json_encode($_JSONError));
             return;
@@ -87,6 +103,7 @@ class ItemHandler
 
             $owners = $this->listItem_m->getOwner((int)$model->list_id);
 
+            // Inform the other users (who also share the current list)
             if (count($owners) > 1)
             {
                 foreach ($this->clients as $client)
@@ -100,6 +117,12 @@ class ItemHandler
         }
     }
 
+    /**
+     * Update a item
+     * @param ConnectionInterface $from
+     * @param object $model
+     * @return void
+     */
     public function update(ConnectionInterface $from, $model='')
     {
         if (is_null($model)           || !is_object($model)       ||
@@ -110,6 +133,7 @@ class ItemHandler
             !isset($model->order)     || $model->order < 0        ||
             !isset($model->due_date))
         {
+            // Bad message from the client
             global $_JSONError;
             $from->send(json_encode($_JSONError));
             return;
@@ -126,6 +150,7 @@ class ItemHandler
 
         $owner = $this->listItem_m->getOwner((int)$model->list_id);
 
+        // Inform the other users (who also share the current list)
         if (count($owner) > 1)
         {
             $json = json_encode(array(

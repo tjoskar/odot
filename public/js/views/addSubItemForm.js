@@ -14,9 +14,9 @@ App.Views.AddSubItemsForm = Backbone.View.extend({
 
   initialize: function()
   {
-    this.parent = this.model.parent;                                          // Stay connected to our parents
+    this.parent = this.model.parent;                                          // "Stay connected to our parents"
 
-    vent.on('subItem:createFromForm', this.createFromForm, this);             // After an subitem has been created by the form and been saved in the database, the server responds by this event
+    vent.on('subItem:createFromForm', this.createFromForm, this);             // After a subitem has been created by the form and been saved in the database, the server responds by this event
     vent.on('subItem:create', this.addItem, this);                            // The server push out a new subitem
   },
 
@@ -43,7 +43,7 @@ App.Views.AddSubItemsForm = Backbone.View.extend({
       }
       else
       {
-        app.alert('Please, insert a valit titel', 'alert');
+        app.alert('Please, insert a valid title', 'alert');
       }
     }
   },
@@ -62,7 +62,7 @@ App.Views.AddSubItemsForm = Backbone.View.extend({
 
   createFromForm: function(args)                                            // Called by the server when a new subitem has been created by this client
   {
-    if (args.item_id == this.parent.model.get('id'))                        // Check if the new subitem should be added our family (our parent is an item that contain subitems)?
+    if (args.item_id == this.parent.model.get('id'))                        // Check if the new subitem should be added to our family (our parent is an item that contain subitems)?
     {
       this.newSubitem.set(args);                                            // Update the new subitem ie. give the subitem an id
       this.parent.subItemsCollection.add(this.newSubitem);                  // Add it to the collection so we can render it

@@ -2,12 +2,10 @@
 
 class HomeController extends Controller {
 
-	/*
-	|--------------------------------------------------------------------------
-	| Home Controller
-	|--------------------------------------------------------------------------
-	*/
-
+    /**
+     * Start the ODOT app
+     * @return View
+     */
 	public function index()
 	{
 		if (Auth::check())

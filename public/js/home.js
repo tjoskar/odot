@@ -4,33 +4,35 @@
 =============================*/
 
 
-// Global functions
+// Event handler
 var vent = _.extend({}, Backbone.Events);
 
+// Alias for console.log
 var d = function(msg) {
   console.log(msg);
 };
 
-if ("WebSocket" in window) // Check if the browser has WebSocket support
+// Trying to establish a connection to the websocket server
+if ("WebSocket" in window)                                                  // Check if the browser has WebSocket support
 {
-	app.socketConn = new WebSocket('ws://localhost:8080');			// Establish a connection to the websocket server
+	app.socketConn = new WebSocket('ws://localhost:8080');                    // Establish a connection to the websocket server
 	app.socketConn.onopen = function(e)
 	{
 		console.log("Websocket connection established!");
 		var data = {'object': 'user', 'method': 'setUserID', 'args': user_id};
-		app.socketConn.send(JSON.stringify(data));					// Send our user id to the websocket server
+		app.socketConn.send(JSON.stringify(data));                              // Send our user id to the websocket server
 	};
 
-	app.socketConn.onmessage = function(e)
+	app.socketConn.onmessage = function(e)                                    // You got mail
 	{
 		var json = JSON.parse(e.data);
-		if (_.has(json, 'status') && json.status == 200)
+		if (_.has(json, 'status') && json.status == 200)                        // Is it good news or bad news
 		{
 			if (_.has(json, 'fire'))
 			{
 				if (_.has(json.fire, 'name') && _.has(json.fire, 'args'))
 				{
-					vent.trigger(json.fire.name, json.fire.args);
+					vent.trigger(json.fire.name, json.fire.args);                    // Fired up an event
 				}
 				else
 				{
@@ -42,7 +44,7 @@ if ("WebSocket" in window) // Check if the browser has WebSocket support
 		{
 			app.alert(json.error.name + ': ' + json.error.args, 'alert');
 		}
-		console.log(e.data);
+		console.log(e.data);                                                  // Log all message for debug
 	};
 }
 
@@ -50,10 +52,9 @@ if ("WebSocket" in window) // Check if the browser has WebSocket support
 app.router = new App.Router();
 new App.Views.AddListForm();
 new App.Views.AddItemForm();
-
 new App.Views.UserInfo();
 
-//Initialize the popup view
+// Initialize the popup view
 app.popup = new App.Views.SharePopup();
 
 // Fetch all lists

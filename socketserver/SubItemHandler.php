@@ -9,17 +9,23 @@ require 'errorMessages.php';
 
 class SubItemHandler
 {
-    private $clients; //Reference to the the server clients
-    private $subItem_m;
-    private $listItem_m;
+    private $clients;       // Reference to the the server clients
+    private $subItem_m;     // Subitem model
+    private $listItem_m;    // List model
 
     public function __construct(&$clients)
     {
-        $this->clients = &$clients;
+        $this->clients    = &$clients;
         $this->subItem_m  = new SubItemModel();
         $this->listItem_m = new ListItemModel();
     }
 
+    /**
+     * Create an subitem
+     * @param ConnectionInterface $from
+     * @param object $model
+     * @return void
+     */
     public function create(ConnectionInterface $from, $model='')
     {
         if (is_null($model)         || !is_object($model)      ||   // Are the model OK?
@@ -27,6 +33,7 @@ class SubItemHandler
             !isset($model->item_id) || $model->item_id <= 0    ||   // Do we have a item id?
             !isset($model->list_id) || $model->list_id <= 0)        // Do we have a list id?
         {
+            // Bad message from the client
             global $_JSONError;
             $from->send(json_encode($_JSONError));
             return;
@@ -41,6 +48,7 @@ class SubItemHandler
             return;
         }
 
+        // Inform the user that everything went well
         $from->send(json_encode(array(
             'status' => 200,
             'fire'   => array(
@@ -49,6 +57,7 @@ class SubItemHandler
 
         $owners = $this->listItem_m->getOwner((int)$model->list_id);
 
+        // Inform the other users (who also share the current list)
         if (count($owners) > 1)
         {
             $json = json_encode(array(
@@ -67,12 +76,19 @@ class SubItemHandler
         }
     }
 
+    /**
+     * Delete an subitem
+     * @param  ConnectionInterface $from
+     * @param  object $model
+     * @return void
+     */
     public function delete(ConnectionInterface $from, $model='')
     {
         if (is_null($model)         || !is_object($model)    ||
             !isset($model->id)      || $model->id <= 0       ||
             !isset($model->list_id) || $model->list_id <= 0)
         {
+            // Bad message from the client
             global $_JSONError;
             $from->send(json_encode($_JSONError));
             return;
@@ -82,6 +98,7 @@ class SubItemHandler
         {
             $owners = $this->listItem_m->getOwner((int)$model->list_id);
 
+            // Inform the other users (who also share the current list)
             if (count($owners) > 1)
             {
                 $json = json_encode(array(
@@ -101,6 +118,12 @@ class SubItemHandler
         }
     }
 
+    /**
+     * Update an subitem
+     * @param ConnectionInterface $from
+     * @param object $model
+     * @return void
+     */
     public function update(ConnectionInterface $from, $model='')
     {
         if (is_null($model)           || !is_object($model)       ||
@@ -111,6 +134,7 @@ class SubItemHandler
             !isset($model->title)     || empty($model->title)     ||
             !isset($model->order)     || $model->order < 0)
         {
+            // Bad message from the client
             global $_JSONError;
             $from->send(json_encode($_JSONError));
             return;
@@ -127,6 +151,7 @@ class SubItemHandler
 
         $owner = $this->listItem_m->getOwner((int)$model->list_id);
 
+        // Inform the other users (who also share the current list)
         if (count($owner) > 1)
         {
             $json = json_encode(array(
@@ -134,6 +159,7 @@ class SubItemHandler
                 'fire'   => array(
                     'name' => 'subItem:update',
                     'args' => $model)));
+
             foreach ($this->clients as $client)
             {
                 if (in_array($client->user_id, $owner) && $client->user_id != $from->user_id)

@@ -13,7 +13,7 @@ var app = {
   router: {},
   listsView: null,
   itemsView: null,
-  conn: false,
+  socketConn: false,
   popup: null,
 
   saveLastViewedListId: function (listId)
@@ -28,7 +28,6 @@ var app = {
 
   alert: function(msg, type, timeout)
   {
-    //var t = timeout || 3000;
     var model = new App.Models.Alert({msg: msg, type: type, timeout: timeout});
     new App.Views.Alert({model: model});
   }

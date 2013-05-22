@@ -35,11 +35,6 @@ module.exports = function(grunt) {
     },
 
     uglify: {
-      options: {
-        mangle: {
-          except: ['jQuery', 'Backbone', '_']
-        }
-      },
       my_target: {
         files: {
           'public/js/build/built.min.js': ['public/js/build/built.js']

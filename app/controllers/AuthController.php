@@ -1,7 +1,18 @@
 <?php
 
+/**
+
+    - COMMENT CODE
+
+**/
+
+
 class AuthController extends Controller {
 
+    /**
+     * Handler the login post data
+     * @return JSON object
+     */
 	public function postLogin()
     {
 		$userdata = array(

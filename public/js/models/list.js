@@ -30,7 +30,7 @@ App.Collections.List = Backbone.Collection.extend({
   model: App.Models.List,
   url: '/list',
 
-  comparator: function(model)                                                    // Sort list after 'order'-property
+  comparator: function(model)                                                   // Sort list after 'order'-property
   {
     return model.get('order');
   }
