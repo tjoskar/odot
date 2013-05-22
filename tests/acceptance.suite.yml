@@ -1,0 +1,29 @@
+# Codeception Test Suite Configuration
+
+# suite for acceptance tests.
+# perform tests in browser using the Selenium-like tools.
+# powered by Mink (http://mink.behat.org).
+# (tip: that's what your customer will see).
+# (tip: test your ajax and javascript by one of Mink drivers).
+
+# RUN `build` COMMAND AFTER ADDING/REMOVING MODULES.
+
+class_name: WebGuy
+modules:
+    enabled:
+        - Selenium2
+        - WebHelper
+        - Db
+    config:
+        Selenium2:
+            url: 'http://odot.dev'
+            browser: firefox
+            host: '127.0.0.1'
+            # delay: 1000
+        Db:
+            dsn: 'mysql:host=localhost;dbname=odot'
+            user: 'root'
+            password: 'root'
+            dump: 'tests/_data/odot_2013-05-22.sql'
+            populate: true
+            cleanup: false
