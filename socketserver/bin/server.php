@@ -19,6 +19,9 @@ class Request implements MessageComponentInterface
     public function __construct()
     {
         $this->clients = array();
+        $this->item = new ItemHandler($this->clients);
+        $this->subItem = new SubItemHandler($this->clients);
+        $this->user = new UserHandler($this->clients);
     }
 
     /**

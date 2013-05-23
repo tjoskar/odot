@@ -9,7 +9,6 @@ App.Views.Lists = Backbone.View.extend({
   {
     // Wait for the call
     this.collection.on("add", this.addList, this);
-    d('lyssna efter addListFromServer');
     vent.on('list:add', this.addListFromServer, this);
   },
 
