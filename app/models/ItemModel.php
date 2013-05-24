@@ -37,18 +37,14 @@ class ItemModel {
 
         if ($ownList == 1)
         {
-            $list = ItemList::find($model->list_id);
-            if (!is_null($list))
-            {
-                $item = new Item();
-                $item->title   = $model->title;
-                $item->list_id = $model->list_id;
-                $item->order   = $this->getNextOrderIndex((int) $model->list_id);
+            $item = new Item();
+            $item->title   = $model->title;
+            $item->list_id = $model->list_id;
+            $item->order   = $this->getNextOrderIndex((int) $model->list_id);
 
-                $item->save();
+            $item->save();
 
-                return $item;
-            }
+            return $item;
         }
 
         return NULL;
