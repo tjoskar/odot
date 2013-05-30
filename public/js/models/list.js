@@ -1,5 +1,5 @@
 /*============================================
-=            List Moel/Collection            =
+=            List Model/Collection            =
 ============================================*/
 
 App.Models.List = Backbone.Model.extend({

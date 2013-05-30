@@ -9,7 +9,7 @@ App.Views.SharePopup = Backbone.View.extend(
 
     initialize: function()
     {
-        this.undelegateEvents();
+        //this.undelegateEvents();
 
         // Register websocket callbacks
         vent.on('sharePopup:usersSharingList', this.usersSharingList, this);

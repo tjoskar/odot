@@ -15,7 +15,7 @@ $I->seeElement('input.add-item');
 $I->fillField('input.add-item', 'New Item');
 $I->click('.add-item-button');
 
-$I->wait('1000');
+$I->wait('2000');
 
 $I->see('New Item', 'h3');
 
