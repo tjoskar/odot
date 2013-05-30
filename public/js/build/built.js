@@ -1,5 +1,5 @@
 /*!
- * jQuery JavaScript Library v2.0.0
+ * jQuery JavaScript Library v2.0.1
  * http://jquery.com/
  *
  * Includes Sizzle.js
@@ -9,7 +9,7 @@
  * Released under the MIT license
  * http://jquery.org/license
  *
- * Date: 2013-04-18
+ * Date: 2013-05-24T16:44Z
  */
 (function( window, undefined ) {
 
@@ -46,7 +46,7 @@ var
 	// List of deleted data cache ids, so we can reuse them
 	core_deletedIds = [],
 
-	core_version = "2.0.0",
+	core_version = "2.0.1",
 
 	// Save a reference to some core methods
 	core_concat = core_deletedIds.concat,
@@ -72,7 +72,7 @@ var
 	// A simple way to check for HTML strings
 	// Prioritize #id over <tag> to avoid XSS via location.hash (#9521)
 	// Strict HTML recognition (#11290: must start with <)
-	rquickExpr = /^(?:(<[\w\W]+>)[^>]*|#([\w-]*))$/,
+	rquickExpr = /^(?:\s*(<[\w\W]+>)[^>]*|#([\w-]*))$/,
 
 	// Match a standalone tag
 	rsingleTag = /^<(\w+)\s*\/?>(?:<\/\1>|)$/,
@@ -865,18 +865,19 @@ function isArraylike( obj ) {
 // All jQuery objects should point back to these
 rootjQuery = jQuery(document);
 /*!
- * Sizzle CSS Selector Engine v1.9.2-pre
+ * Sizzle CSS Selector Engine v1.9.4-pre
  * http://sizzlejs.com/
  *
  * Copyright 2013 jQuery Foundation, Inc. and other contributors
  * Released under the MIT license
  * http://jquery.org/license
  *
- * Date: 2013-04-16
+ * Date: 2013-05-15
  */
 (function( window, undefined ) {
 
 var i,
+	support,
 	cachedruns,
 	Expr,
 	getText,
@@ -898,7 +899,6 @@ var i,
 	// Instance-specific data
 	expando = "sizzle" + -(new Date()),
 	preferredDoc = window.document,
-	support = {},
 	dirruns = 0,
 	done = 0,
 	classCache = createCache(),
@@ -911,7 +911,8 @@ var i,
 	strundefined = typeof undefined,
 	MAX_NEGATIVE = 1 << 31,
 
-	// Array methods
+	// Instance methods
+	hasOwn = ({}).hasOwnProperty,
 	arr = [],
 	pop = arr.pop,
 	push_native = arr.push,
@@ -976,7 +977,7 @@ var i,
 		"CHILD": new RegExp( "^:(only|first|last|nth|nth-last)-(child|of-type)(?:\\(" + whitespace +
 			"*(even|odd|(([+-]|)(\\d*)n|)" + whitespace + "*(?:([+-]|)" + whitespace +
 			"*(\\d+)|))" + whitespace + "*\\)|)", "i" ),
-		"boolean": new RegExp( "^(?:" + booleans + ")$", "i" ),
+		"bool": new RegExp( "^(?:" + booleans + ")$", "i" ),
 		// For use in libraries implementing .is()
 		// We use this for POS matching in `select`
 		"needsContext": new RegExp( "^" + whitespace + "*[>+~]|:(even|odd|eq|gt|lt|nth|first|last)(?:\\(" +
@@ -994,11 +995,13 @@ var i,
 	rescape = /'|\\/g,
 
 	// CSS escapes http://www.w3.org/TR/CSS21/syndata.html#escaped-characters
-	runescape = /\\([\da-fA-F]{1,6}[\x20\t\r\n\f]?|.)/g,
-	funescape = function( _, escaped ) {
+	runescape = new RegExp( "\\\\([\\da-f]{1,6}" + whitespace + "?|(" + whitespace + ")|.)", "ig" ),
+	funescape = function( _, escaped, escapedWhitespace ) {
 		var high = "0x" + escaped - 0x10000;
 		// NaN means non-codepoint
-		return high !== high ?
+		// Support: Firefox
+		// Workaround erroneous numeric interpretation of +"0x"
+		return high !== high || escapedWhitespace ?
 			escaped :
 			// BMP codepoint
 			high < 0 ?
@@ -1034,63 +1037,6 @@ try {
 			target.length = j - 1;
 		}
 	};
-}
-
-/**
- * For feature detection
- * @param {Function} fn The function to test for native support
- */
-function isNative( fn ) {
-	return rnative.test( fn + "" );
-}
-
-/**
- * Create key-value caches of limited size
- * @returns {Function(string, Object)} Returns the Object data after storing it on itself with
- *	property name the (space-suffixed) string and (if the cache is larger than Expr.cacheLength)
- *	deleting the oldest entry
- */
-function createCache() {
-	var cache,
-		keys = [];
-
-	return (cache = function( key, value ) {
-		// Use (key + " ") to avoid collision with native prototype properties (see Issue #157)
-		if ( keys.push( key += " " ) > Expr.cacheLength ) {
-			// Only keep the most recent entries
-			delete cache[ keys.shift() ];
-		}
-		return (cache[ key ] = value);
-	});
-}
-
-/**
- * Mark a function for special use by Sizzle
- * @param {Function} fn The function to mark
- */
-function markFunction( fn ) {
-	fn[ expando ] = true;
-	return fn;
-}
-
-/**
- * Support testing using an element
- * @param {Function} fn Passed the created div and expects a boolean result
- */
-function assert( fn ) {
-	var div = document.createElement("div");
-
-	try {
-		return !!fn( div );
-	} catch (e) {
-		return false;
-	} finally {
-		if ( div.parentNode ) {
-			div.parentNode.removeChild( div );
-		}
-		// release memory in IE
-		div = null;
-	}
 }
 
 function Sizzle( selector, context, results, seed ) {
@@ -1203,6 +1149,195 @@ function Sizzle( selector, context, results, seed ) {
 }
 
 /**
+ * For feature detection
+ * @param {Function} fn The function to test for native support
+ */
+function isNative( fn ) {
+	return rnative.test( fn + "" );
+}
+
+/**
+ * Create key-value caches of limited size
+ * @returns {Function(string, Object)} Returns the Object data after storing it on itself with
+ *	property name the (space-suffixed) string and (if the cache is larger than Expr.cacheLength)
+ *	deleting the oldest entry
+ */
+function createCache() {
+	var keys = [];
+
+	function cache( key, value ) {
+		// Use (key + " ") to avoid collision with native prototype properties (see Issue #157)
+		if ( keys.push( key += " " ) > Expr.cacheLength ) {
+			// Only keep the most recent entries
+			delete cache[ keys.shift() ];
+		}
+		return (cache[ key ] = value);
+	}
+	return cache;
+}
+
+/**
+ * Mark a function for special use by Sizzle
+ * @param {Function} fn The function to mark
+ */
+function markFunction( fn ) {
+	fn[ expando ] = true;
+	return fn;
+}
+
+/**
+ * Support testing using an element
+ * @param {Function} fn Passed the created div and expects a boolean result
+ */
+function assert( fn ) {
+	var div = document.createElement("div");
+
+	try {
+		return !!fn( div );
+	} catch (e) {
+		return false;
+	} finally {
+		// Remove from its parent by default
+		if ( div.parentNode ) {
+			div.parentNode.removeChild( div );
+		}
+		// release memory in IE
+		div = null;
+	}
+}
+
+/**
+ * Adds the same handler for all of the specified attrs
+ * @param {String} attrs Pipe-separated list of attributes
+ * @param {Function} handler The method that will be applied if the test fails
+ * @param {Boolean} test The result of a test. If true, null will be set as the handler in leiu of the specified handler
+ */
+function addHandle( attrs, handler, test ) {
+	attrs = attrs.split("|");
+	var current,
+		i = attrs.length,
+		setHandle = test ? null : handler;
+
+	while ( i-- ) {
+		// Don't override a user's handler
+		if ( !(current = Expr.attrHandle[ attrs[i] ]) || current === handler ) {
+			Expr.attrHandle[ attrs[i] ] = setHandle;
+		}
+	}
+}
+
+/**
+ * Fetches boolean attributes by node
+ * @param {Element} elem
+ * @param {String} name
+ */
+function boolHandler( elem, name ) {
+	// XML does not need to be checked as this will not be assigned for XML documents
+	var val = elem.getAttributeNode( name );
+	return val && val.specified ?
+		val.value :
+		elem[ name ] === true ? name.toLowerCase() : null;
+}
+
+/**
+ * Fetches attributes without interpolation
+ * http://msdn.microsoft.com/en-us/library/ms536429%28VS.85%29.aspx
+ * @param {Element} elem
+ * @param {String} name
+ */
+function interpolationHandler( elem, name ) {
+	// XML does not need to be checked as this will not be assigned for XML documents
+	return elem.getAttribute( name, name.toLowerCase() === "type" ? 1 : 2 );
+}
+
+/**
+ * Uses defaultValue to retrieve value in IE6/7
+ * @param {Element} elem
+ * @param {String} name
+ */
+function valueHandler( elem ) {
+	// Ignore the value *property* on inputs by using defaultValue
+	// Fallback to Sizzle.attr by returning undefined where appropriate
+	// XML does not need to be checked as this will not be assigned for XML documents
+	if ( elem.nodeName.toLowerCase() === "input" ) {
+		return elem.defaultValue;
+	}
+}
+
+/**
+ * Checks document order of two siblings
+ * @param {Element} a
+ * @param {Element} b
+ * @returns Returns -1 if a precedes b, 1 if a follows b
+ */
+function siblingCheck( a, b ) {
+	var cur = b && a,
+		diff = cur && a.nodeType === 1 && b.nodeType === 1 &&
+			( ~b.sourceIndex || MAX_NEGATIVE ) -
+			( ~a.sourceIndex || MAX_NEGATIVE );
+
+	// Use IE sourceIndex if available on both nodes
+	if ( diff ) {
+		return diff;
+	}
+
+	// Check if b follows a
+	if ( cur ) {
+		while ( (cur = cur.nextSibling) ) {
+			if ( cur === b ) {
+				return -1;
+			}
+		}
+	}
+
+	return a ? 1 : -1;
+}
+
+/**
+ * Returns a function to use in pseudos for input types
+ * @param {String} type
+ */
+function createInputPseudo( type ) {
+	return function( elem ) {
+		var name = elem.nodeName.toLowerCase();
+		return name === "input" && elem.type === type;
+	};
+}
+
+/**
+ * Returns a function to use in pseudos for buttons
+ * @param {String} type
+ */
+function createButtonPseudo( type ) {
+	return function( elem ) {
+		var name = elem.nodeName.toLowerCase();
+		return (name === "input" || name === "button") && elem.type === type;
+	};
+}
+
+/**
+ * Returns a function to use in pseudos for positionals
+ * @param {Function} fn
+ */
+function createPositionalPseudo( fn ) {
+	return markFunction(function( argument ) {
+		argument = +argument;
+		return markFunction(function( seed, matches ) {
+			var j,
+				matchIndexes = fn( [], seed.length, argument ),
+				i = matchIndexes.length;
+
+			// Match elements found at the specified indexes
+			while ( i-- ) {
+				if ( seed[ (j = matchIndexes[i]) ] ) {
+					seed[j] = !(matches[j] = seed[j]);
+				}
+			}
+		});
+	});
+}
+
+/**
  * Detect xml
  * @param {Element|Object} elem An element or a document
  */
@@ -1212,6 +1347,9 @@ isXML = Sizzle.isXML = function( elem ) {
 	var documentElement = elem && (elem.ownerDocument || elem).documentElement;
 	return documentElement ? documentElement.nodeName !== "HTML" : false;
 };
+
+// Expose support vars for convenience
+support = Sizzle.support = {};
 
 /**
  * Sets document-related variables once based on the current document
@@ -1233,17 +1371,45 @@ setDocument = Sizzle.setDocument = function( node ) {
 	// Support tests
 	documentIsHTML = !isXML( doc );
 
-	// Check if getElementsByTagName("*") returns only elements
-	support.getElementsByTagName = assert(function( div ) {
-		div.appendChild( doc.createComment("") );
-		return !div.getElementsByTagName("*").length;
-	});
+	/* Attributes
+	---------------------------------------------------------------------- */
 
 	// Support: IE<8
 	// Verify that getAttribute really returns attributes and not properties (excepting IE8 booleans)
 	support.attributes = assert(function( div ) {
+
+		// Support: IE<8
+		// Prevent attribute/property "interpolation"
+		div.innerHTML = "<a href='#'></a>";
+		addHandle( "type|href|height|width", interpolationHandler, div.firstChild.getAttribute("href") === "#" );
+
+		// Support: IE<9
+		// Use getAttributeNode to fetch booleans when getAttribute lies
+		addHandle( booleans, boolHandler, div.getAttribute("disabled") == null );
+
 		div.className = "i";
 		return !div.getAttribute("className");
+	});
+
+	// Support: IE<9
+	// Retrieving value should defer to defaultValue
+	support.input = assert(function( div ) {
+		div.innerHTML = "<input>";
+		div.firstChild.setAttribute( "value", "" );
+		return div.firstChild.getAttribute( "value" ) === "";
+	});
+
+	// IE6/7 still return empty string for value,
+	// but are actually retrieving the property
+	addHandle( "value", valueHandler, support.attributes && support.input );
+
+	/* getElement(s)By*
+	---------------------------------------------------------------------- */
+
+	// Check if getElementsByTagName("*") returns only elements
+	support.getElementsByTagName = assert(function( div ) {
+		div.appendChild( doc.createComment("") );
+		return !div.getElementsByTagName("*").length;
 	});
 
 	// Check if getElementsByClassName can be trusted
@@ -1258,19 +1424,9 @@ setDocument = Sizzle.setDocument = function( node ) {
 		return div.getElementsByClassName("i").length === 2;
 	});
 
-	// Support: Webkit<537.32 - Safari 6.0.3/Chrome 25 (fixed in Chrome 27)
-	// Detached nodes confoundingly follow *each other*
-	support.sortDetached = assert(function( div1 ) {
-		// Should return 1, but returns 4 (following)
-		return div1.compareDocumentPosition( document.createElement("div") ) & 1;
-	});
-
 	// Support: IE<10
 	// Check if getElementById returns elements by name
-	// Support: Windows 8 Native Apps
-	// Assigning innerHTML with "name" attributes throws uncatchable exceptions
-	// (http://msdn.microsoft.com/en-us/library/ie/hh465388.aspx)
-	// and the broken getElementById methods don't pick up programatically-set names,
+	// The broken getElementById methods don't pick up programatically-set names,
 	// so use a roundabout getElementsByName test
 	support.getById = assert(function( div ) {
 		docElem.appendChild( div ).id = expando;
@@ -1294,17 +1450,10 @@ setDocument = Sizzle.setDocument = function( node ) {
 			};
 		};
 	} else {
-		Expr.find["ID"] = function( id, context ) {
-			if ( typeof context.getElementById !== strundefined && documentIsHTML ) {
-				var m = context.getElementById( id );
+		// Support: IE6/7
+		// getElementById is not reliable as a find shortcut
+		delete Expr.find["ID"];
 
-				return m ?
-					m.id === id || typeof m.getAttributeNode !== strundefined && m.getAttributeNode("id").value === id ?
-						[m] :
-						undefined :
-					[];
-			}
-		};
 		Expr.filter["ID"] =  function( id ) {
 			var attrId = id.replace( runescape, funescape );
 			return function( elem ) {
@@ -1346,6 +1495,9 @@ setDocument = Sizzle.setDocument = function( node ) {
 			return context.getElementsByClassName( className );
 		}
 	};
+
+	/* QSA/matchesSelector
+	---------------------------------------------------------------------- */
 
 	// QSA and matchesSelector support
 
@@ -1391,7 +1543,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 			// Should not select anything
 			// Support: Windows 8 Native Apps
 			// The type attribute is restricted during .innerHTML assignment
-			var input = document.createElement("input");
+			var input = doc.createElement("input");
 			input.setAttribute( "type", "hidden" );
 			div.appendChild( input ).setAttribute( "t", "" );
 
@@ -1431,6 +1583,9 @@ setDocument = Sizzle.setDocument = function( node ) {
 	rbuggyQSA = rbuggyQSA.length && new RegExp( rbuggyQSA.join("|") );
 	rbuggyMatches = rbuggyMatches.length && new RegExp( rbuggyMatches.join("|") );
 
+	/* Contains
+	---------------------------------------------------------------------- */
+
 	// Element contains another
 	// Purposefully does not implement inclusive descendent
 	// As in, an element does not contain itself
@@ -1454,6 +1609,16 @@ setDocument = Sizzle.setDocument = function( node ) {
 			}
 			return false;
 		};
+
+	/* Sorting
+	---------------------------------------------------------------------- */
+
+	// Support: Webkit<537.32 - Safari 6.0.3/Chrome 25 (fixed in Chrome 27)
+	// Detached nodes confoundingly follow *each other*
+	support.sortDetached = assert(function( div1 ) {
+		// Should return 1, but returns 4 (following)
+		return div1.compareDocumentPosition( doc.createElement("div") ) & 1;
+	});
 
 	// Document order sorting
 	sortOrder = docElem.compareDocumentPosition ?
@@ -1545,7 +1710,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 			0;
 	};
 
-	return document;
+	return doc;
 };
 
 Sizzle.matches = function( expr, elements ) {
@@ -1561,10 +1726,9 @@ Sizzle.matchesSelector = function( elem, expr ) {
 	// Make sure that attribute selectors are quoted
 	expr = expr.replace( rattributeQuotes, "='$1']" );
 
-	// rbuggyQSA always contains :focus, so no need for an existence check
 	if ( support.matchesSelector && documentIsHTML &&
-		(!rbuggyMatches || !rbuggyMatches.test(expr)) &&
-		(!rbuggyQSA     || !rbuggyQSA.test(expr)) ) {
+		( !rbuggyMatches || !rbuggyMatches.test( expr ) ) &&
+		( !rbuggyQSA     || !rbuggyQSA.test( expr ) ) ) {
 
 		try {
 			var ret = matches.call( elem, expr );
@@ -1597,7 +1761,10 @@ Sizzle.attr = function( elem, name ) {
 	}
 
 	var fn = Expr.attrHandle[ name.toLowerCase() ],
-		val = fn && fn( elem, name, !documentIsHTML );
+		// Don't get fooled by Object.prototype properties (jQuery #13807)
+		val = ( fn && hasOwn.call( Expr.attrHandle, name.toLowerCase() ) ?
+			fn( elem, name, !documentIsHTML ) :
+			undefined );
 
 	return val === undefined ?
 		support.attributes || !documentIsHTML ?
@@ -1612,7 +1779,10 @@ Sizzle.error = function( msg ) {
 	throw new Error( "Syntax error, unrecognized expression: " + msg );
 };
 
-// Document sorting and removing duplicates
+/**
+ * Document sorting and removing duplicates
+ * @param {ArrayLike} results
+ */
 Sizzle.uniqueSort = function( results ) {
 	var elem,
 		duplicates = [],
@@ -1637,87 +1807,6 @@ Sizzle.uniqueSort = function( results ) {
 
 	return results;
 };
-
-/**
- * Checks document order of two siblings
- * @param {Element} a
- * @param {Element} b
- * @returns Returns -1 if a precedes b, 1 if a follows b
- */
-function siblingCheck( a, b ) {
-	var cur = b && a,
-		diff = cur && ( ~b.sourceIndex || MAX_NEGATIVE ) - ( ~a.sourceIndex || MAX_NEGATIVE );
-
-	// Use IE sourceIndex if available on both nodes
-	if ( diff ) {
-		return diff;
-	}
-
-	// Check if b follows a
-	if ( cur ) {
-		while ( (cur = cur.nextSibling) ) {
-			if ( cur === b ) {
-				return -1;
-			}
-		}
-	}
-
-	return a ? 1 : -1;
-}
-
-// Fetches boolean attributes by node
-function boolHandler( elem, name, isXML ) {
-	var val;
-	return isXML ?
-		undefined :
-		(val = elem.getAttributeNode( name )) && val.specified ?
-			val.value :
-			elem[ name ] === true ? name.toLowerCase() : null;
-}
-
-// Fetches attributes without interpolation
-// http://msdn.microsoft.com/en-us/library/ms536429%28VS.85%29.aspx
-function interpolationHandler( elem, name, isXML ) {
-	var val;
-	return isXML ?
-		undefined :
-		(val = elem.getAttribute( name, name.toLowerCase() === "type" ? 1 : 2 ));
-}
-
-// Returns a function to use in pseudos for input types
-function createInputPseudo( type ) {
-	return function( elem ) {
-		var name = elem.nodeName.toLowerCase();
-		return name === "input" && elem.type === type;
-	};
-}
-
-// Returns a function to use in pseudos for buttons
-function createButtonPseudo( type ) {
-	return function( elem ) {
-		var name = elem.nodeName.toLowerCase();
-		return (name === "input" || name === "button") && elem.type === type;
-	};
-}
-
-// Returns a function to use in pseudos for positionals
-function createPositionalPseudo( fn ) {
-	return markFunction(function( argument ) {
-		argument = +argument;
-		return markFunction(function( seed, matches ) {
-			var j,
-				matchIndexes = fn( [], seed.length, argument ),
-				i = matchIndexes.length;
-
-			// Match elements found at the specified indexes
-			while ( i-- ) {
-				if ( seed[ (j = matchIndexes[i]) ] ) {
-					seed[j] = !(matches[j] = seed[j]);
-				}
-			}
-		});
-	});
-}
 
 /**
  * Utility function for retrieving the text value of an array of DOM nodes
@@ -1829,7 +1918,7 @@ Expr = Sizzle.selectors = {
 			}
 
 			// Accept quoted arguments as-is
-			if ( match[4] ) {
+			if ( match[3] && match[4] !== undefined ) {
 				match[2] = match[4];
 
 			// Strip excess characters from unquoted arguments
@@ -2257,11 +2346,11 @@ function tokenize( selector, parseOnly ) {
 		// Combinators
 		if ( (match = rcombinators.exec( soFar )) ) {
 			matched = match.shift();
-			tokens.push( {
+			tokens.push({
 				value: matched,
 				// Cast descendant combinators to space
 				type: match[0].replace( rtrim, " " )
-			} );
+			});
 			soFar = soFar.slice( matched.length );
 		}
 
@@ -2270,11 +2359,11 @@ function tokenize( selector, parseOnly ) {
 			if ( (match = matchExpr[ type ].exec( soFar )) && (!preFilters[ type ] ||
 				(match = preFilters[ type ]( match ))) ) {
 				matched = match.shift();
-				tokens.push( {
+				tokens.push({
 					value: matched,
 					type: type,
 					matches: match
-				} );
+				});
 				soFar = soFar.slice( matched.length );
 			}
 		}
@@ -2521,7 +2610,10 @@ function matcherFromTokens( tokens ) {
 				}
 				return setMatcher(
 					i > 1 && elementMatcher( matchers ),
-					i > 1 && toSelector( tokens.slice( 0, i - 1 ) ).replace( rtrim, "$1" ),
+					i > 1 && toSelector(
+						// If the preceding token was a descendant combinator, insert an implicit any-element `*`
+						tokens.slice( 0, i - 1 ).concat({ value: tokens[ i - 2 ].type === " " ? "*" : "" })
+					).replace( rtrim, "$1" ),
 					matcher,
 					i < j && matcherFromTokens( tokens.slice( i, j ) ),
 					j < len && matcherFromTokens( (tokens = tokens.slice( j )) ),
@@ -2683,14 +2775,13 @@ function select( selector, context, results, seed ) {
 			// Take a shortcut and set the context if the root selector is an ID
 			tokens = match[0] = match[0].slice( 0 );
 			if ( tokens.length > 2 && (token = tokens[0]).type === "ID" &&
-					context.nodeType === 9 && documentIsHTML &&
+					support.getById && context.nodeType === 9 && documentIsHTML &&
 					Expr.relative[ tokens[1].type ] ) {
 
 				context = ( Expr.find["ID"]( token.matches[0].replace(runescape, funescape), context ) || [] )[0];
 				if ( !context ) {
 					return results;
 				}
-
 				selector = selector.slice( tokens.shift().value.length );
 			}
 
@@ -2757,31 +2848,6 @@ setDocument();
 // Always assume duplicates if they aren't passed to the comparison function
 [0, 0].sort( sortOrder );
 support.detectDuplicates = hasDuplicate;
-
-// Support: IE<8
-// Prevent attribute/property "interpolation"
-assert(function( div ) {
-	div.innerHTML = "<a href='#'></a>";
-	if ( div.firstChild.getAttribute("href") !== "#" ) {
-		var attrs = "type|href|height|width".split("|"),
-			i = attrs.length;
-		while ( i-- ) {
-			Expr.attrHandle[ attrs[i] ] = interpolationHandler;
-		}
-	}
-});
-
-// Support: IE<9
-// Use getAttributeNode to fetch booleans when getAttribute lies
-assert(function( div ) {
-	if ( div.getAttribute("disabled") != null ) {
-		var attrs = booleans.split("|"),
-			i = attrs.length;
-		while ( i-- ) {
-			Expr.attrHandle[ attrs[i] ] = boolHandler;
-		}
-	}
-});
 
 jQuery.find = Sizzle;
 jQuery.expr = Sizzle.selectors;
@@ -3336,13 +3402,9 @@ Data.prototype = {
 
 		// Handle: [ owner, { properties } ] args
 		} else {
-			// Support an expectation from the old data system where plain
-			// objects used to initialize would be set to the cache by
-			// reference, instead of having properties and values copied.
-			// Note, this will kill the connection between
-			// "this.cache[ unlock ]" and "cache"
+			// Fresh assignments by object are shallow copied
 			if ( jQuery.isEmptyObject( cache ) ) {
-				this.cache[ unlock ] = data;
+				jQuery.extend( this.cache[ unlock ], data );
 			// Otherwise, copy the properties one-by-one to the cache object
 			} else {
 				for ( prop in data ) {
@@ -3350,6 +3412,7 @@ Data.prototype = {
 				}
 			}
 		}
+		return cache;
 	},
 	get: function( owner, key ) {
 		// Either a valid cache is found, or will be created.
@@ -3391,7 +3454,7 @@ Data.prototype = {
 		return value !== undefined ? value : key;
 	},
 	remove: function( owner, key ) {
-		var i, name,
+		var i, name, camel,
 			unlock = this.key( owner ),
 			cache = this.cache[ unlock ];
 
@@ -3409,13 +3472,14 @@ Data.prototype = {
 				// This will only penalize the array argument path.
 				name = key.concat( key.map( jQuery.camelCase ) );
 			} else {
+				camel = jQuery.camelCase( key );
 				// Try the string as a key before any manipulation
 				if ( key in cache ) {
-					name = [ key ];
+					name = [ key, camel ];
 				} else {
 					// If a key with the spaces exists, use it.
 					// Otherwise, create an array by matching non-whitespace
-					name = jQuery.camelCase( key );
+					name = camel;
 					name = name in cache ?
 						[ name ] : ( name.match( core_rnotwhite ) || [] );
 				}
@@ -3433,7 +3497,9 @@ Data.prototype = {
 		);
 	},
 	discard: function( owner ) {
-		delete this.cache[ this.key( owner ) ];
+		if ( owner[ this.expando ] ) {
+			delete this.cache[ owner[ this.expando ] ];
+		}
 	}
 };
 
@@ -3486,7 +3552,7 @@ jQuery.fn.extend({
 						name = attrs[ i ].name;
 
 						if ( name.indexOf( "data-" ) === 0 ) {
-							name = jQuery.camelCase( name.substring(5) );
+							name = jQuery.camelCase( name.slice(5) );
 							dataAttr( elem, name, data[ name ] );
 						}
 					}
@@ -3742,7 +3808,7 @@ jQuery.fn.extend({
 	}
 });
 var nodeHook, boolHook,
-	rclass = /[\t\r\n]/g,
+	rclass = /[\t\r\n\f]/g,
 	rreturn = /\r/g,
 	rfocusable = /^(?:input|select|textarea|button)$/i;
 
@@ -3925,15 +3991,14 @@ jQuery.fn.extend({
 		isFunction = jQuery.isFunction( value );
 
 		return this.each(function( i ) {
-			var val,
-				self = jQuery(this);
+			var val;
 
 			if ( this.nodeType !== 1 ) {
 				return;
 			}
 
 			if ( isFunction ) {
-				val = value.call( this, i, self.val() );
+				val = value.call( this, i, jQuery( this ).val() );
 			} else {
 				val = value;
 			}
@@ -4048,7 +4113,7 @@ jQuery.extend({
 		if ( nType !== 1 || !jQuery.isXMLDoc( elem ) ) {
 			name = name.toLowerCase();
 			hooks = jQuery.attrHooks[ name ] ||
-				( jQuery.expr.match.boolean.test( name ) ? boolHook : nodeHook );
+				( jQuery.expr.match.bool.test( name ) ? boolHook : nodeHook );
 		}
 
 		if ( value !== undefined ) {
@@ -4087,7 +4152,7 @@ jQuery.extend({
 				propName = jQuery.propFix[ name ] || name;
 
 				// Boolean attributes get special treatment (#10870)
-				if ( jQuery.expr.match.boolean.test( name ) ) {
+				if ( jQuery.expr.match.bool.test( name ) ) {
 					// Set corresponding property to false
 					elem[ propName ] = false;
 				}
@@ -4171,7 +4236,7 @@ boolHook = {
 		return name;
 	}
 };
-jQuery.each( jQuery.expr.match.boolean.source.match( /\w+/g ), function( i, name ) {
+jQuery.each( jQuery.expr.match.bool.source.match( /\w+/g ), function( i, name ) {
 	var getter = jQuery.expr.attrHandle[ name ] || jQuery.find.attr;
 
 	jQuery.expr.attrHandle[ name ] = function( elem, name, isXML ) {
@@ -4752,6 +4817,12 @@ jQuery.event = {
 			event[ prop ] = originalEvent[ prop ];
 		}
 
+		// Support: Cordova 2.5 (WebKit) (#13255)
+		// All events should have a target; Cordova deviceready doesn't
+		if ( !event.target ) {
+			event.target = document;
+		}
+
 		// Support: Safari 6.0+, Chrome < 28
 		// Target should not be a text node (#504, #13143)
 		if ( event.target.nodeType === 3 ) {
@@ -5063,6 +5134,7 @@ jQuery.fn.extend({
 	}
 });
 var isSimple = /^.[^:#\[\.,]*$/,
+	rparentsprev = /^(?:parents|prev(?:Until|All))/,
 	rneedsContext = jQuery.expr.match.needsContext,
 	// methods guaranteed to produce a unique set when starting from a unique set
 	guaranteedUnique = {
@@ -5074,13 +5146,14 @@ var isSimple = /^.[^:#\[\.,]*$/,
 
 jQuery.fn.extend({
 	find: function( selector ) {
-		var self, matched, i,
-			l = this.length;
+		var i,
+			ret = [],
+			self = this,
+			len = self.length;
 
 		if ( typeof selector !== "string" ) {
-			self = this;
 			return this.pushStack( jQuery( selector ).filter(function() {
-				for ( i = 0; i < l; i++ ) {
+				for ( i = 0; i < len; i++ ) {
 					if ( jQuery.contains( self[ i ], this ) ) {
 						return true;
 					}
@@ -5088,15 +5161,14 @@ jQuery.fn.extend({
 			}) );
 		}
 
-		matched = [];
-		for ( i = 0; i < l; i++ ) {
-			jQuery.find( selector, this[ i ], matched );
+		for ( i = 0; i < len; i++ ) {
+			jQuery.find( selector, self[ i ], ret );
 		}
 
 		// Needed because $( selector, context ) becomes $( context ).find( selector )
-		matched = this.pushStack( l > 1 ? jQuery.unique( matched ) : matched );
-		matched.selector = ( this.selector ? this.selector + " " : "" ) + selector;
-		return matched;
+		ret = this.pushStack( len > 1 ? jQuery.unique( ret ) : ret );
+		ret.selector = this.selector ? this.selector + " " + selector : selector;
+		return ret;
 	},
 
 	has: function( target ) {
@@ -5122,14 +5194,16 @@ jQuery.fn.extend({
 	},
 
 	is: function( selector ) {
-		return !!selector && (
-			typeof selector === "string" ?
-				// If this is a positional/relative selector, check membership in the returned set
-				// so $("p:first").is("p:last") won't return true for a doc with two "p".
-				rneedsContext.test( selector ) ?
-					jQuery( selector, this.context ).index( this[ 0 ] ) >= 0 :
-					jQuery.filter( selector, this ).length > 0 :
-				this.filter( selector ).length > 0 );
+		return !!winnow(
+			this,
+
+			// If this is a positional/relative selector, check membership in the returned set
+			// so $("p:first").is("p:last") won't return true for a doc with two "p".
+			typeof selector === "string" && rneedsContext.test( selector ) ?
+				jQuery( selector ) :
+				selector || [],
+			false
+		).length;
 	},
 
 	closest: function( selectors, context ) {
@@ -5262,8 +5336,8 @@ jQuery.each({
 				jQuery.unique( matched );
 			}
 
-			// Reverse order for parents* and prev*
-			if ( name[ 0 ] === "p" ) {
+			// Reverse order for parents* and prev-derivatives
+			if ( rparentsprev.test( name ) ) {
 				matched.reverse();
 			}
 		}
@@ -5362,6 +5436,7 @@ var rxhtmlTag = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>
 		option: [ 1, "<select multiple='multiple'>", "</select>" ],
 
 		thead: [ 1, "<table>", "</table>" ],
+		col: [ 2, "<table><colgroup>", "</colgroup></table>" ],
 		tr: [ 2, "<table><tbody>", "</tbody></table>" ],
 		td: [ 3, "<table><tbody><tr>", "</tr></tbody></table>" ],
 
@@ -5371,7 +5446,7 @@ var rxhtmlTag = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>
 // Support: IE 9
 wrapMap.optgroup = wrapMap.option;
 
-wrapMap.tbody = wrapMap.tfoot = wrapMap.colgroup = wrapMap.caption = wrapMap.col = wrapMap.thead;
+wrapMap.tbody = wrapMap.tfoot = wrapMap.colgroup = wrapMap.caption = wrapMap.thead;
 wrapMap.th = wrapMap.td;
 
 jQuery.fn.extend({
@@ -5519,6 +5594,10 @@ jQuery.fn.extend({
 				parent = args[ i++ ];
 
 			if ( parent ) {
+				// Don't use the snapshot next if it has moved (#13810)
+				if ( next && next.parentNode !== parent ) {
+					next = this.nextSibling;
+				}
 				jQuery( this ).remove();
 				parent.insertBefore( elem, next );
 			}
@@ -5774,35 +5853,35 @@ jQuery.extend({
 	},
 
 	cleanData: function( elems ) {
-		var data, elem, type,
-			l = elems.length,
-			i = 0,
-			special = jQuery.event.special;
+		var data, elem, events, type, key, j,
+			special = jQuery.event.special,
+			i = 0;
 
-		for ( ; i < l; i++ ) {
-			elem = elems[ i ];
+		for ( ; (elem = elems[ i ]) !== undefined; i++ ) {
+			if ( Data.accepts( elem ) ) {
+				key = elem[ data_priv.expando ];
 
-			if ( jQuery.acceptData( elem ) ) {
+				if ( key && (data = data_priv.cache[ key ]) ) {
+					events = Object.keys( data.events || {} );
+					if ( events.length ) {
+						for ( j = 0; (type = events[j]) !== undefined; j++ ) {
+							if ( special[ type ] ) {
+								jQuery.event.remove( elem, type );
 
-				data = data_priv.access( elem );
-
-				if ( data ) {
-					for ( type in data.events ) {
-						if ( special[ type ] ) {
-							jQuery.event.remove( elem, type );
-
-						// This is a shortcut to avoid jQuery.event.remove's overhead
-						} else {
-							jQuery.removeEvent( elem, type, data.handle );
+							// This is a shortcut to avoid jQuery.event.remove's overhead
+							} else {
+								jQuery.removeEvent( elem, type, data.handle );
+							}
 						}
+					}
+					if ( data_priv.cache[ key ] ) {
+						// Discard any remaining `private` data
+						delete data_priv.cache[ key ];
 					}
 				}
 			}
-			// Discard any remaining `private` and `user` data
-			// One day we'll replace the dual arrays with a WeakMap and this won't be an issue.
-			// (Splices the data objects out of the internal cache arrays)
-			data_user.discard( elem );
-			data_priv.discard( elem );
+			// Discard any remaining `user` data
+			delete data_user.cache[ elem[ data_user.expando ] ];
 		}
 	},
 
@@ -5810,10 +5889,10 @@ jQuery.extend({
 		return jQuery.ajax({
 			url: url,
 			type: "GET",
-			dataType: "text",
+			dataType: "script",
 			async: false,
 			global: false,
-			success: jQuery.globalEval
+			"throws": true
 		});
 	}
 });
@@ -5868,10 +5947,8 @@ function cloneCopyEvent( src, dest ) {
 	// 1. Copy private data: events, handlers, etc.
 	if ( data_priv.hasData( src ) ) {
 		pdataOld = data_priv.access( src );
-		pdataCur = jQuery.extend( {}, pdataOld );
+		pdataCur = data_priv.set( dest, pdataOld );
 		events = pdataOld.events;
-
-		data_priv.set( dest, pdataCur );
 
 		if ( events ) {
 			delete pdataCur.handle;
@@ -6153,7 +6230,7 @@ jQuery.extend({
 		}
 	},
 
-	// Exclude the following css properties to add px
+	// Don't automatically add "px" to these possibly-unitless properties
 	cssNumber: {
 		"columnCount": true,
 		"fillOpacity": true,
@@ -7294,7 +7371,7 @@ jQuery.extend({
 				}
 
 				// if no content
-				if ( status === 204 ) {
+				if ( status === 204 || s.type === "HEAD" ) {
 					statusText = "nocontent";
 
 				// if not modified
@@ -7788,44 +7865,51 @@ var fxNow, timerId,
 	animationPrefilters = [ defaultPrefilter ],
 	tweeners = {
 		"*": [function( prop, value ) {
-			var end, unit,
-				tween = this.createTween( prop, value ),
-				parts = rfxnum.exec( value ),
+			var tween = this.createTween( prop, value ),
 				target = tween.cur(),
-				start = +target || 0,
+				parts = rfxnum.exec( value ),
+				unit = parts && parts[ 3 ] || ( jQuery.cssNumber[ prop ] ? "" : "px" ),
+
+				// Starting value computation is required for potential unit mismatches
+				start = ( jQuery.cssNumber[ prop ] || unit !== "px" && +target ) &&
+					rfxnum.exec( jQuery.css( tween.elem, prop ) ),
 				scale = 1,
 				maxIterations = 20;
 
-			if ( parts ) {
-				end = +parts[2];
-				unit = parts[3] || ( jQuery.cssNumber[ prop ] ? "" : "px" );
+			if ( start && start[ 3 ] !== unit ) {
+				// Trust units reported by jQuery.css
+				unit = unit || start[ 3 ];
 
-				// We need to compute starting value
-				if ( unit !== "px" && start ) {
-					// Iteratively approximate from a nonzero starting point
-					// Prefer the current property, because this process will be trivial if it uses the same units
-					// Fallback to end or a simple constant
-					start = jQuery.css( tween.elem, prop, true ) || end || 1;
+				// Make sure we update the tween properties later on
+				parts = parts || [];
 
-					do {
-						// If previous iteration zeroed out, double until we get *something*
-						// Use a string for doubling factor so we don't accidentally see scale as unchanged below
-						scale = scale || ".5";
+				// Iteratively approximate from a nonzero starting point
+				start = +target || 1;
 
-						// Adjust and apply
-						start = start / scale;
-						jQuery.style( tween.elem, prop, start + unit );
+				do {
+					// If previous iteration zeroed out, double until we get *something*
+					// Use a string for doubling factor so we don't accidentally see scale as unchanged below
+					scale = scale || ".5";
 
-					// Update scale, tolerating zero or NaN from tween.cur()
-					// And breaking the loop if scale is unchanged or perfect, or if we've just had enough
-					} while ( scale !== (scale = tween.cur() / target) && scale !== 1 && --maxIterations );
-				}
+					// Adjust and apply
+					start = start / scale;
+					jQuery.style( tween.elem, prop, start + unit );
 
-				tween.unit = unit;
-				tween.start = start;
-				// If a +=/-= token was provided, we're doing a relative animation
-				tween.end = parts[1] ? start + ( parts[1] + 1 ) * end : end;
+				// Update scale, tolerating zero or NaN from tween.cur()
+				// And breaking the loop if scale is unchanged or perfect, or if we've just had enough
+				} while ( scale !== (scale = tween.cur() / target) && scale !== 1 && --maxIterations );
 			}
+
+			// Update tween properties
+			if ( parts ) {
+				tween.unit = unit;
+				tween.start = +start || +target || 0;
+				// If a +=/-= token was provided, we're doing a relative animation
+				tween.end = parts[ 1 ] ?
+					start + ( parts[ 1 ] + 1 ) * parts[ 2 ] :
+					+parts[ 2 ];
+			}
+
 			return tween;
 		}]
 	};
@@ -7838,19 +7922,18 @@ function createFxNow() {
 	return ( fxNow = jQuery.now() );
 }
 
-function createTweens( animation, props ) {
-	jQuery.each( props, function( prop, value ) {
-		var collection = ( tweeners[ prop ] || [] ).concat( tweeners[ "*" ] ),
-			index = 0,
-			length = collection.length;
-		for ( ; index < length; index++ ) {
-			if ( collection[ index ].call( animation, prop, value ) ) {
+function createTween( value, prop, animation ) {
+	var tween,
+		collection = ( tweeners[ prop ] || [] ).concat( tweeners[ "*" ] ),
+		index = 0,
+		length = collection.length;
+	for ( ; index < length; index++ ) {
+		if ( (tween = collection[ index ].call( animation, prop, value )) ) {
 
-				// we're done with this property
-				return;
-			}
+			// we're done with this property
+			return tween;
 		}
-	});
+	}
 }
 
 function Animation( elem, properties, options ) {
@@ -7936,7 +8019,7 @@ function Animation( elem, properties, options ) {
 		}
 	}
 
-	createTweens( animation, props );
+	jQuery.map( props, createTween, animation );
 
 	if ( jQuery.isFunction( animation.opts.start ) ) {
 		animation.opts.start.call( elem, animation );
@@ -8026,12 +8109,12 @@ jQuery.Animation = jQuery.extend( Animation, {
 
 function defaultPrefilter( elem, props, opts ) {
 	/* jshint validthis: true */
-	var index, prop, value, length, dataShow, toggle, tween, hooks, oldfire,
+	var prop, value, toggle, tween, hooks, oldfire,
 		anim = this,
-		style = elem.style,
 		orig = {},
-		handled = [],
-		hidden = elem.nodeType && isHidden( elem );
+		style = elem.style,
+		hidden = elem.nodeType && isHidden( elem ),
+		dataShow = data_priv.get( elem, "fxshow" );
 
 	// handle queue: false promises
 	if ( !opts.queue ) {
@@ -8087,30 +8170,31 @@ function defaultPrefilter( elem, props, opts ) {
 
 
 	// show/hide pass
-	dataShow = data_priv.get( elem, "fxshow" );
-	for ( index in props ) {
-		value = props[ index ];
+	for ( prop in props ) {
+		value = props[ prop ];
 		if ( rfxtypes.exec( value ) ) {
-			delete props[ index ];
+			delete props[ prop ];
 			toggle = toggle || value === "toggle";
 			if ( value === ( hidden ? "hide" : "show" ) ) {
 
 				// If there is dataShow left over from a stopped hide or show and we are going to proceed with show, we should pretend to be hidden
-				if( value === "show" && dataShow !== undefined && dataShow[ index ] !== undefined ) {
+				if ( value === "show" && dataShow && dataShow[ prop ] !== undefined ) {
 					hidden = true;
 				} else {
 					continue;
 				}
 			}
-			handled.push( index );
+			orig[ prop ] = dataShow && dataShow[ prop ] || jQuery.style( elem, prop );
 		}
 	}
 
-	length = handled.length;
-	if ( length ) {
-		dataShow = data_priv.get( elem, "fxshow" ) || data_priv.access( elem, "fxshow", {} );
-		if ( "hidden" in dataShow ) {
-			hidden = dataShow.hidden;
+	if ( !jQuery.isEmptyObject( orig ) ) {
+		if ( dataShow ) {
+			if ( "hidden" in dataShow ) {
+				hidden = dataShow.hidden;
+			}
+		} else {
+			dataShow = data_priv.access( elem, "fxshow", {} );
 		}
 
 		// store state if its toggle - enables .stop().toggle() to "reverse"
@@ -8132,10 +8216,8 @@ function defaultPrefilter( elem, props, opts ) {
 				jQuery.style( elem, prop, orig[ prop ] );
 			}
 		});
-		for ( index = 0 ; index < length ; index++ ) {
-			prop = handled[ index ];
-			tween = anim.createTween( prop, hidden ? dataShow[ prop ] : 0 );
-			orig[ prop ] = dataShow[ prop ] || jQuery.style( elem, prop );
+		for ( prop in orig ) {
+			tween = createTween( hidden ? dataShow[ prop ] : 0, prop, anim );
 
 			if ( !( prop in dataShow ) ) {
 				dataShow[ prop ] = tween.start;
@@ -8727,7 +8809,7 @@ jQuery.fn.size = function() {
 jQuery.fn.andSelf = jQuery.fn.addBack;
 
 // })();
-if ( typeof module === "object" && typeof module.exports === "object" ) {
+if ( typeof module === "object" && module && typeof module.exports === "object" ) {
 	// Expose jQuery as module.exports in loaders that implement the Node
 	// module pattern (including browserify). Do not create the global, since
 	// the user will be storing it themselves locally, and globals are frowned
@@ -13334,7 +13416,7 @@ var app = {
   router: {},
   listsView: null,
   itemsView: null,
-  conn: false,
+  socketConn: false,
   popup: null,
 
   saveLastViewedListId: function (listId)
@@ -13349,7 +13431,6 @@ var app = {
 
   alert: function(msg, type, timeout)
   {
-    //var t = timeout || 3000;
     var model = new App.Models.Alert({msg: msg, type: type, timeout: timeout});
     new App.Views.Alert({model: model});
   }
@@ -13361,8 +13442,8 @@ var app = {
 App.Models.Alert = Backbone.Model.extend({
   defaults: {
     msg: '',
-    type: '', // alert (red), success (green) or '' (blue)
-    timeout: 3000
+    type: '',       // Can either be alert (red), sucess (green) or '' (blue)
+    timeout: 3000   // Default timeout
   }
 });
 ;/*=============================================
@@ -13415,10 +13496,10 @@ App.Models.Item = Backbone.Model.extend({
         return true;
       }
 
-      var msg = {'object': 'item', 'method': method, 'args': model};                     // Create a custom message
+      var msg = {'object': 'item', 'method': method, 'args': model};            // Create a custom message
       if (app.socketConn)
       {
-        app.socketConn.send(JSON.stringify(msg));                             // And of we go
+        app.socketConn.send(JSON.stringify(msg));                               // And of we go
         return true;
       }
     }
@@ -13473,11 +13554,12 @@ App.Collections.List = Backbone.Collection.extend({
   model: App.Models.List,
   url: '/list',
 
-  comparator: function(model)                                                    // Sort list after 'order'-property
+  comparator: function(model)                                                   // Sort list after 'order'-property
   {
     return model.get('order');
   }
-});;/*================================================
+});
+;/*================================================
 =            Subitem Model/Collection            =
 ================================================*/
 
@@ -13507,7 +13589,7 @@ App.Models.SubItem = Backbone.Model.extend({
   {
     if (method === 'create' || method === 'delete' || method === 'update')      // Only overwrite if there is a create, delete or update method
     {
-      var msg = {'object': 'subItem', 'method': method, 'args': model};                    // Create a custom message
+      var msg = {'object': 'subItem', 'method': method, 'args': model};         // Create a custom message
       if (app.socketConn)
       {
         app.socketConn.send(JSON.stringify(msg));                               // And of we go
@@ -13539,8 +13621,6 @@ App.Views.AddItemForm = Backbone.View.extend({
   initialize: function() {
     vent.on('item:createFromForm', this.addItemFromForm, this);                                 // After an item has been created by the form and been saved in the database, the server responds by this event
     vent.on('item:create', this.addItem, this);                                                 // The server push out a new item
-    //vent.on('item:delete', this.deleteItem, this);
-    //vent.on('item:update', this.updateItem, this);
   },
 
   addNewItem: function(e)                                                                       // User submit the form
@@ -13560,7 +13640,7 @@ App.Views.AddItemForm = Backbone.View.extend({
     }
   },
 
-  addItemFromForm: function(args)                                                               // Called by the server when a new item has been created by this client
+  addItemFromForm: function(args)                                                               // Called by the server when a new item has been created by THIS client
   {
     this.inputField.val('');                                                                    // Clear input field
     this.newItem.set(args);                                                                     // Update the item ie. give the item an id
@@ -13584,34 +13664,6 @@ App.Views.AddItemForm = Backbone.View.extend({
       }
     }
   }
-
-  // deleteItem: function(model)
-  // {
-  //   var currentListId = getLastVisitedListId();
-  //   if (model.list_id === currentListId)
-  //   {
-  //     app.itemsView.collection.remove(model);
-  //   }
-  //   else
-  //   {
-  //     app.alert('A item has been removed');
-  //   }
-  // },
-
-  // updateItem: function(model)
-  // {
-  //   d('updateItem');
-  //   var currentListId = getLastVisitedListId();
-  //   if (model.list_id === currentListId)
-  //   {
-  //     var item = app.itemsView.collection.get(model.id);
-  //     item.set(model);
-  //   }
-  //   else
-  //   {
-  //     app.alert('A item has been removed');
-  //   }
-  // }
 
 });
 ;/*=============================
@@ -13642,7 +13694,7 @@ App.Views.AddListForm = Backbone.View.extend({
     }
     else
     {
-      app.alert('Please, insert a valit titel', 'alert');
+      app.alert('Please, insert a valid title', 'alert');
     }
   }
 
@@ -13663,9 +13715,9 @@ App.Views.AddSubItemsForm = Backbone.View.extend({
 
   initialize: function()
   {
-    this.parent = this.model.parent;                                          // Stay connected to our parents
+    this.parent = this.model.parent;                                          // "Stay connected to our parents"
 
-    vent.on('subItem:createFromForm', this.createFromForm, this);             // After an subitem has been created by the form and been saved in the database, the server responds by this event
+    vent.on('subItem:createFromForm', this.createFromForm, this);             // After a subitem has been created by the form and been saved in the database, the server responds by this event
     vent.on('subItem:create', this.addItem, this);                            // The server push out a new subitem
   },
 
@@ -13692,7 +13744,7 @@ App.Views.AddSubItemsForm = Backbone.View.extend({
       }
       else
       {
-        app.alert('Please, insert a valit titel', 'alert');
+        app.alert('Please, insert a valid title', 'alert');
       }
     }
   },
@@ -13711,7 +13763,7 @@ App.Views.AddSubItemsForm = Backbone.View.extend({
 
   createFromForm: function(args)                                            // Called by the server when a new subitem has been created by this client
   {
-    if (args.item_id == this.parent.model.get('id'))                        // Check if the new subitem should be added our family (our parent is an item that contain subitems)?
+    if (args.item_id == this.parent.model.get('id'))                        // Check if the new subitem should be added to our family (our parent is an item that contain subitems)?
     {
       this.newSubitem.set(args);                                            // Update the new subitem ie. give the subitem an id
       this.parent.subItemsCollection.add(this.newSubitem);                  // Add it to the collection so we can render it
@@ -13727,7 +13779,8 @@ App.Views.AddSubItemsForm = Backbone.View.extend({
       this.parent.subItemsView.render();                                    // And re-Render the subitems
     }
   }
-});;/*=============================
+});
+;/*=============================
 =            Views            =
 =============================*/
 
@@ -13744,12 +13797,12 @@ App.Views.Alert = Backbone.View.extend({
   {
     $("#alert-box-holder").prepend( this.render().el ).show('slow');    // Display the alert dialog
 
-    if (this.model.get('timeout'))
-    {
+    if (this.model.get('timeout'))                                      // Remove the dialog after this.model.timeout
+    {                                                                   // if this.model.timeout has a valid value
       var self = this;
       this.timer = setTimeout(function() {
         self.$el.fadeOut(1000, function() {
-          self.remove();                                                  // Remove the dialog
+          self.remove();
         });
       }, this.model.get('timeout'));
     }
@@ -13790,8 +13843,8 @@ App.Views.CompletedItem = Backbone.View.extend({
 
   initialize: function()
   {
-    this.model.on("remove", this.removeView, this);                                   // Remove this view if the model removes
-    vent.on('item:update', this.updateItem, this);                    // This event is trigged by the websocket-server when an item should be updated
+    this.model.on("remove", this.removeView, this);                   // Remove this view if the model removes
+    vent.on('item:update', this.updateItem, this);                    // This event is trigged by the server when an item should be updated
   },
 
   render: function()
@@ -13805,7 +13858,7 @@ App.Views.CompletedItem = Backbone.View.extend({
     $(e.currentTarget).find('.icon-check-empty, .icon-check').toggleClass('hide');
   },
 
-  clickCheckbox: function(e)                                                          // Mark the item as uncompleted
+  clickCheckbox: function(e)                                          // Mark the item as uncompleted
   {
     this.stopListening();
     this.model.toogleCompleted();
@@ -13822,14 +13875,14 @@ App.Views.CompletedItem = Backbone.View.extend({
       if (this.model.get('completed') != model.completed)
       {
         this.stopListening();
-        vent.trigger('item:uncompleted', model);                       // Send an event to items.js
+        vent.trigger('item:uncompleted', model);                      // Send an event to items.js
         this.model.destroy({reportToServer: false});
         this.remove();
       }
     }
   },
 
-  removeView: function()                                                              // Called when the model is removed
+  removeView: function()                                              // Called when the model is removed
   {
     this.remove();
   }
@@ -13844,7 +13897,6 @@ App.Views.CompletedItems = Backbone.View.extend({
   initialize: function ()
   {
     vent.on('item:completed', this.addItem, this);                    // An item has markt as completed in items.js
-    //vent.on('item:update', this.updateItem, this);                    // This event is trigged by the websocket-server when an item should be updated
   },
 
   render: function()
@@ -13858,14 +13910,7 @@ App.Views.CompletedItems = Backbone.View.extend({
     return this;
   },
 
-  // addItem: function(item)                                             // Add an item to the view
-  // {
-  //   var itemModel = new App.Models.Item(item);
-  //   var itemView = new App.Views.CompletedItem({ model: itemModel });
-  //   this.$el.append( itemView.render().$el );
-  // },
-
-  addItem: function(item)                                                           // Add a new item to the view
+  addItem: function(item)                                             // Add a new item to the view
   {
     var itemModel = new App.Models.Item(item);
     var collection_length = this.collection.length;
@@ -13877,21 +13922,6 @@ App.Views.CompletedItems = Backbone.View.extend({
       this.$el.append( itemView.render().$el );
     }
   },
-
-  // updateItem: function(model)
-  // {
-  //   item = this.collection.get(model.id);
-  //   if (!_.isUndefined(item))
-  //   {
-  //     if (item.get('completed') != model.completed)
-  //     {
-  //       var cp = item.clone();
-  //       cp.set(model);
-  //       vent.trigger('item:uncompleted', cp);                       // Send an event to items.js
-  //       item.destroy({reportToServer: false});                        // The item should only be removed from this view, not from the server DB
-  //     }
-  //   }
-  // },
 
   showAllItems: function()                                            // Show them all
   {
@@ -13908,7 +13938,7 @@ App.Views.Item = Backbone.View.extend({
   template: _.template($('#item-template').html()),
 
   clicks: 0,
-  _clickDelay: 200,
+  clickDelay: 200,
   timer: null,
   subItemsCollection: null,
   subItemsView: null,
@@ -13934,25 +13964,24 @@ App.Views.Item = Backbone.View.extend({
     this.addSubItemForm = new App.Views.AddSubItemsForm({ model: {parent: this} });
 
     // Add sub items
-    var subItems = this.model.getSubItems();                                       // Get all sub items from the model
-    this.subItemsCollection = new App.Collections.SubItem();                       // Create a collection for the subitems
-    for(var key in subItems)                                                       // And loop through them
+    var subItems = this.model.getSubItems();                                        // Get all sub items from the model
+    this.subItemsCollection = new App.Collections.SubItem();                        // Create a collection for the subitems
+    for(var key in subItems)                                                        // And loop through them
     {
-      var subItemModel = new App.Models.SubItem(subItems[key]);                    // Create a new model
-      this.subItemsCollection.add(subItemModel);                                   // And add it to the subitem-collection
+      var subItemModel = new App.Models.SubItem(subItems[key]);                     // Create a new model
+      this.subItemsCollection.add(subItemModel);                                    // And add it to the subitem-collection
     }
 
     // Create the subitem view
     this.subItemsView = new App.Views.SubItems({ collection: this.subItemsCollection });
 
-    this.model.on("change:title", this.renderItem, this);                          // Listen for "title change". If the title change, re-render it
-    this.model.on("remove", this.removeView, this);                                // If the model disappear, remove the view
-    //vent.on('item:update', this.updateItem, this);
-    vent.on('item:delete', this.socketDeleteItem, this);                           // Server trigger this event
-    vent.on('item:update', this.updateItem, this);                                  // This event is trigged by the websocket-server when an item should be updated
+    this.model.on("change:title", this.renderItem, this);                           // Listen for "title change". If the title change, re-render it
+    this.model.on("remove", this.removeView, this);                                 // If the model disappear, remove the view
+    vent.on('item:delete', this.socketDeleteItem, this);                            // Server trigger this event
+    vent.on('item:update', this.updateItem, this);                                  // This event is trigged by the server when an item should be updated
   },
 
-  render: function()
+  render: function()                                                                // Render the whole object (item, subitem and a form for adding subitems)
   {
     this.renderItem();
     this.renderSubItems();
@@ -13960,16 +13989,16 @@ App.Views.Item = Backbone.View.extend({
     return this;
   },
 
-  renderItem: function()
+  renderItem: function()                                                            // Just render the "head" item
   {
     this.$el.html( this.template( this.model.toJSON() ));
 
-    var dateinput = this.$el.find('.datepicker').pickadate();
+    var dateinput = this.$el.find('.datepicker').pickadate();                       // Add the possibility to add a due date
     this.datepicker = dateinput.pickadate('picker');
-    this.datepicker.set('min', true);
+    this.datepicker.set('min', true);                                               // The user can not be choose a date in the past
   },
 
-  renderSubItems: function()
+  renderSubItems: function()                                                        // Finaly, render the subitems
   {
     var subItemHTML = this.$el.find('.sub-items');
     subItemHTML.prepend( this.subItemsView.render().el );
@@ -13997,148 +14026,126 @@ App.Views.Item = Backbone.View.extend({
 
   },
 
-  itemClick: function()                                                               // The user clicks at an item
+  itemClick: function()                                                             // The user clicks at an item
   {
     this.clicks++;
     var that = this;
 
     if (this.clicks == 1)
     {
-      this.timer = setTimeout(function() {                                            // Wait to see if the user only click once
-        that.clicks = 0;                                                              // Reset the number of clicks
-        that.showSubitems(true);                                                      // And show the subitems
-      }, this._clickDelay);
+      this.timer = setTimeout(function() {                                          // Wait to see if the user only click once
+        that.clicks = 0;                                                            // In that case, reset the number of clicks
+        that.showSubitems(true);                                                    // And show the subitems
+      }, this.clickDelay);
     }
     else
     {
-      clearTimeout(this.timer);                                                       // We dont need to wait any more, it is a double click
-      this.clicks = 0;                                                                // Reset the number of clicks
-      this.startEdit();                                                               // And show the edit-mode
+      clearTimeout(this.timer);                                                     // We dont need to wait any more, it is a double click
+      this.clicks = 0;                                                              // Reset the number of clicks
+      this.startEdit();                                                             // And show the edit-mode
     }
   },
 
-  startEdit: function()                                                               // Start edit mode
+  startEdit: function()                                                             // Start edit mode
   {
-      this.$inputs = this.$el.find('input');                                          // Get all inputs
-      this.$inputs.removeClass('hide');                                               // Show all inputs
-      this.$el.find('h3, p').hide();                                                  // Hide the actual text
-      this.$el.find('.item-checkbox-holder').hide();                                  // Hide all checkboxs
+      this.$inputs = this.$el.find('input');                                        // Get all inputs
+      this.$inputs.removeClass('hide');                                             // Show all inputs
+      this.$el.find('h3, p').hide();                                                // Hide the actual text
+      this.$el.find('.item-checkbox-holder').hide();                                // Hide all checkboxs
       this.$el.find('.subitem-checkbox-holder').hide();
-      this.addSubItemForm.newInput();                                                 // Add form for a new subitem
-      this.showSubitems(false);                                                       // Show subitems
-      this.$inputs.first().focus();                                                   // Set cursor at the first input field
+      this.addSubItemForm.newInput();                                               // Add form for a new subitem
+      this.showSubitems(false);                                                     // Show subitems
+      this.$inputs.first().focus();                                                 // Set cursor at the first input field
   },
 
-  stopEdit: function()                                                                // Quit edit mode
+  stopEdit: function()                                                              // Quit edit mode
   {
-      this.addSubItemForm.stopEdit();                                                 // Tell the child-view that we are done with editing
-      this.updateCollection();                                                        // Update the collection with the new data
-      this.$el.find('h3, p').show();                                                  // Show the actual text again
-      this.$el.find('.item-checkbox-holder').show();                                  // Show all checkboxs again
+      this.addSubItemForm.stopEdit();                                               // Tell the child-view that we are done with editing
+      this.updateCollection();                                                      // Update the collection with the new data
+      this.$el.find('h3, p').show();                                                // Show the actual text again
+      this.$el.find('.item-checkbox-holder').show();                                // Show all checkboxs again
       this.$el.find('.subitem-checkbox-holder').show();
-      this.$inputs.addClass('hide');                                                  // And hide the input field again
-      this.renderSubItems();                                                          // Rerender the subitems
+      this.$inputs.addClass('hide');                                                // And hide the input field again
+      this.renderSubItems();                                                        // Rerender the subitems
   },
 
-  updateCollection: function()                                                        // Update collection
+  updateCollection: function()                                                      // Update collection
   {
-    var input = this.$el.find('input.itemEdit');                                      // Get input field for the "head" item
-    var newTitle = input.val().trim();                                                // And the inserted value
+    var input = this.$el.find('input.itemEdit');                                    // Get input field for the "head" item
+    var newTitle = input.val().trim();                                              // And the inserted value
 
-    if (newTitle && this.model.get('title') != newTitle)                              // Has the title changed
+    if (newTitle && this.model.get('title') != newTitle)                            // Has the title changed
     {
-      this.model.save({title: newTitle});                                             // Okay then, lets save it (local and server db)
+      this.model.save({title: newTitle});                                           // Okay then, lets save it (local and server db)
     }
 
     // Update subitem
-    var inputs = this.$el.find('input.subItemEdit');                                  // Find all subitems input
+    var inputs = this.$el.find('input.subItemEdit');                                // Find all subitems input
     var that = this;
-    inputs.each(function() {                                                          // And loop through them
+    inputs.each(function() {                                                        // And loop through them
       var id       = $(this).data('id');
       var model    = that.subItemsCollection.get(id);
       var newTitle = $(this).val().trim();
 
-      if (newTitle && model.get('title') != newTitle)                                 // Has the title change
+      if (newTitle && model.get('title') != newTitle)                               // Has the title change
       {
-        model.save({title: newTitle});                                                // In that case, save it (local and in server db)
+        model.save({title: newTitle});                                              // In that case, save it (local and in server db)
       }
     });
   },
 
-  showSubitems: function(toggle)                                                      // Allways show subitems if toogle = false
-  {                                                                                   // otherwise, toggle appearance
+  showSubitems: function(toggle)                                                    // Allways show subitems if toogle = false
+  {                                                                                 // otherwise, toggle appearance
     if (toggle)
       this.$el.find('.sub-items').slideToggle("slow");
     else
       $(this.el).find('.sub-items').slideDown("slow");
   },
 
-  hideSubitems: function()                                                            // Hide subitems
+  hideSubitems: function()                                                          // Hide subitems
   {
     $(this.el).find('.sub-items').slideUp("slow");
   },
 
-  mouseEnter: function(e)                                                             // Show buttons when the user enter the object
+  mouseEnter: function(e)                                                           // Show buttons when the user enter the object
   {
     this.$el.find('.item-button-holder').removeClass('hide');
   },
-  mouseLeave: function(e)                                                             // And hide them when the user's cursor is leaving
+
+  mouseLeave: function(e)                                                           // And hide them when the user's cursor is leaving
   {
     this.$el.find('.item-button-holder').addClass('hide');
   },
 
-  hoverCheckbox: function(e)                                                          // Toggel check-box-status when user is hover over it
+  hoverCheckbox: function(e)                                                        // Toggel check-box-status when user is hover over it
   {
     $(e.currentTarget).find('.icon-check-empty, .icon-check').toggleClass('hide');
   },
 
-  clickCheckbox: function(e)                                                          // Called when user mark a item as completed
+  clickCheckbox: function(e)                                                        // Called when user mark a item as completed
   {
-    this.stopListening();
-    this.model.toogleCompleted();                                                     // Toggel completed-status ie. mark item as completed
-    this.model.save();                                                                // Send a send event to the (websocketserver-) server
-    vent.trigger('item:completed', this.model.toJSON());                                       // Send event to completedItems.js that will add this item (inc. subitems) to the 'compleated'-list
+    this.stopListening();                                                           // Stop listeing
+    this.model.toogleCompleted();                                                   // Toggel completed-status ie. mark item as completed
+    this.model.save();                                                              // Send a send event to the server
+    vent.trigger('item:completed', this.model.toJSON());                            // Send event to completedItems.js that will add this item (inc. subitems) to the 'compleated'-list
     this.remove();
-    this.model.destroy({reportToServer: false});                                      // Remove this item BUT we can not remove it from the server, therefore we are silent
+    this.model.destroy({reportToServer: false});                                    // Remove this item BUT we can not remove it from the server, therefore we are silent
   },
 
-  socketDeleteItem: function(model)                                                   // Called by the socketserver
+  socketDeleteItem: function(model)                                                 // Called by the socketserver
   {
     if (model.id == this.model.get('id'))
     {
-      this.model.destroy({reportToServer: false});                                    // The client must not send a new destroy call to the webbserver
-      //this.remove();
+      this.model.destroy({reportToServer: false});                                  // The client must not send a new destroy call to the webbserver
     }
   },
 
-  // updateItem: function(model)                                                       // Called by the server
-  // {
-  //   item = this.collection.get(model.id);                                           // Check if we own the item to be updated
-  //   if (!_.isUndefined(item))
-  //   {
-  //     if (item.get('completed') != model.completed)                                 // Has it been marked as completed?
-  //     {
-  //       var cp = item.clone();
-  //       cp.set(model);                                                            // Update the item
-  //       vent.trigger('item:completed', cp);                                       // Tell complettedItems.js that the item now is completed
-  //       item.destroy({reportToServer: false});                                      // Remove the item, and do it quiet
-  //     }
-  //     else
-  //     {
-  //       item.set(model);                                                            // We keep the item but we update it, sort the collection and re-Render the list
-  //       this.collection.sort();
-  //       this.render();
-  //     }
-  //   }
-  // },
-
-  deleteItem: function()                                                              // Called when user clicks on trash-icon
+  deleteItem: function()                                                            // Called when user clicks on trash-icon
   {
     this.model.destroy();
-    //this.remove();
   },
 
-  setDate: function(e)
+  setDate: function(e)                                                              // The user want to set a due date for the item
   {
     var self = this;
     this.datepicker.on('set', function() {
@@ -14150,27 +14157,27 @@ App.Views.Item = Backbone.View.extend({
     e.stopPropagation();
   },
 
-  removeView: function()                                                              // Called when the model is removed
+  removeView: function()                                                            // Called when the model is removed
   {
     this.remove();
   },
 
-  updateItem: function(model)
-  {
-    if (model.id == this.model.get('id'))
+  updateItem: function(model)                                                       // The server says that we should update the item
+  {                                                                                 // so, lets do it.
+    if (model.id == this.model.get('id'))                                           // Are the server talking about us?
     {
-      if (this.model.get('completed') != model.completed)
+      if (this.model.get('completed') != model.completed)                           // Should we move the item to the completed-list
       {
-        this.stopListening();
-        vent.trigger('item:completed', model);
-        this.model.destroy({reportToServer: false});
-        this.remove();
+        this.stopListening();                                                       // Okey, then. Stop listening on event
+        vent.trigger('item:completed', model);                                      // Firer of an event to the completed-list
+        this.model.destroy({reportToServer: false});                                // Remove the item, but dont tell anyone
+        this.remove();                                                              // Remove the view
       }
       else
       {
-        this.model.set(model);
-        app.itemsView.collection.sort();
-        app.itemsView.render();
+        this.model.set(model);                                                      // Just update the item
+        app.itemsView.collection.sort();                                            // Sort the collection
+        app.itemsView.render();                                                     // And render it
       }
     }
   }
@@ -14185,9 +14192,7 @@ App.Views.Items = Backbone.View.extend({
   initialize: function ()
   {
     this.collection.on("add", this.addItem, this);                                  // When a model is added to the collection, add the model to this view as well
-    //this.collection.on("remove", this.removeItem, this);
-    vent.on('item:uncompleted', this.uncompletedItem, this);                                // Listen after an item to be uncompleted
-    //vent.on('item:update', this.updateItem, this);                                  // This event is trigged by the websocket-server when an item should be updated
+    vent.on('item:uncompleted', this.uncompletedItem, this);                        // Listen after an item to be uncompleted
   },
 
   render: function()
@@ -14226,35 +14231,13 @@ App.Views.Items = Backbone.View.extend({
     var itemView = new App.Views.Item({ model: item });
     this.$el.append( itemView.render().$el );
 
-    // Lets make it sortable
-    this.$el.sortable();
+    this.$el.sortable();                                                            // Lets make it sortable
   },
 
   uncompletedItem: function(item) {
     var itemModel = new App.Models.Item(item);
     this.collection.add(itemModel);
   },
-
-  // updateItem: function(model)                                                       // Called by the server
-  // {
-  //   item = this.collection.get(model.id);                                           // Check if we own the item to be updated
-  //   if (!_.isUndefined(item))
-  //   {
-  //     if (item.get('completed') != model.completed)                                 // Has it been marked as completed?
-  //     {
-  //       var cp = item.clone();
-  //       cp.set(model);                                                            // Update the item
-  //       vent.trigger('item:completed', cp);                                       // Tell complettedItems.js that the item now is completed
-  //       item.destroy({reportToServer: false});                                      // Remove the item, and do it quiet
-  //     }
-  //     else
-  //     {
-  //       item.set(model);                                                            // We keep the item but we update it, sort the collection and re-Render the list
-  //       this.collection.sort();
-  //       this.render();
-  //     }
-  //   }
-  // },
 
   showAllItems: function()                                                          // Show them all
   {
@@ -14381,7 +14364,6 @@ App.Views.Lists = Backbone.View.extend({
   {
     // Wait for the call
     this.collection.on("add", this.addList, this);
-    d('lyssna efter addListFromServer');
     vent.on('list:add', this.addListFromServer, this);
   },
 
@@ -14634,12 +14616,6 @@ App.Views.SubItem = Backbone.View.extend({
 App.Views.SubItems = Backbone.View.extend({
   tagName: 'ul',
 
-  initialize: function()
-  {
-    // Wait for the call
-    //this.collection.on("add", this.addSubItem, this);
-  },
-
   render: function()
   {
     this.$el.empty();
@@ -14656,11 +14632,14 @@ App.Views.SubItems = Backbone.View.extend({
     var subItemView = new App.Views.SubItem({ model: model });
     this.$el.append( subItemView.render().$el );
   }
-});;
+});
+;/*=============================
+=            Views            =
+=============================*/
 
 App.Views.UserInfo = Backbone.View.extend({
     el: $('#user-info'),
-    
+
     events: {
         "click #settings" : "clickSettings",
         "click #logout" : "clickLogout"
@@ -14683,19 +14662,12 @@ App.Views.UserInfo = Backbone.View.extend({
             }
         });
     },
-    
+
     clickSettings: function(event) {
         console.log('Settings clicked');
-    },
-    /*
-    initialize: function() {
-
-    },
-
-    render: function() {
-
-    }*/
-});;/*===============================
+    }
+});
+;/*===============================
 =            Routes             =
 ===============================*/
 
@@ -14774,33 +14746,35 @@ function getLastVisitedListId()
 =============================*/
 
 
-// Global functions
+// Event handler
 var vent = _.extend({}, Backbone.Events);
 
+// Alias for console.log
 var d = function(msg) {
   console.log(msg);
 };
 
-if ("WebSocket" in window) // Check if the browser has WebSocket support
+// Trying to establish a connection to the websocket server
+if ("WebSocket" in window)                                                  // Check if the browser has WebSocket support
 {
-	app.socketConn = new WebSocket('ws://localhost:8080');			// Establish a connection to the websocket server
+	app.socketConn = new WebSocket('ws://localhost:8080');                    // Establish a connection to the websocket server
 	app.socketConn.onopen = function(e)
 	{
 		console.log("Websocket connection established!");
 		var data = {'object': 'user', 'method': 'setUserID', 'args': user_id};
-		app.socketConn.send(JSON.stringify(data));					// Send our user id to the websocket server
+		app.socketConn.send(JSON.stringify(data));                              // Send our user id to the websocket server
 	};
 
-	app.socketConn.onmessage = function(e)
+	app.socketConn.onmessage = function(e)                                    // You got mail
 	{
 		var json = JSON.parse(e.data);
-		if (_.has(json, 'status') && json.status == 200)
+		if (_.has(json, 'status') && json.status == 200)                        // Is it good news or bad news
 		{
 			if (_.has(json, 'fire'))
 			{
 				if (_.has(json.fire, 'name') && _.has(json.fire, 'args'))
 				{
-					vent.trigger(json.fire.name, json.fire.args);
+					vent.trigger(json.fire.name, json.fire.args);                    // Fired up an event
 				}
 				else
 				{
@@ -14812,7 +14786,7 @@ if ("WebSocket" in window) // Check if the browser has WebSocket support
 		{
 			app.alert(json.error.name + ': ' + json.error.args, 'alert');
 		}
-		console.log(e.data);
+		console.log(e.data);                                                  // Log all message for debug
 	};
 }
 
@@ -14820,10 +14794,9 @@ if ("WebSocket" in window) // Check if the browser has WebSocket support
 app.router = new App.Router();
 new App.Views.AddListForm();
 new App.Views.AddItemForm();
-
 new App.Views.UserInfo();
 
-//Initialize the popup view
+// Initialize the popup view
 app.popup = new App.Views.SharePopup();
 
 // Fetch all lists

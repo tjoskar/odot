@@ -60,7 +60,6 @@ class AuthController extends Controller {
 
     public function postRegister()
     {
-        // if (Request::ajax())
         $username = Input::get('username', '');
         $password = Input::get('password', '');
 
