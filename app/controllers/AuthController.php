@@ -1,16 +1,9 @@
 <?php
 
-/**
-
-    - COMMENT CODE
-
-**/
-
-
 class AuthController extends Controller {
 
     /**
-     * Handler the login post data
+     * Login post data
      * @return JSON object
      */
 	public function postLogin()
@@ -30,6 +23,10 @@ class AuthController extends Controller {
         return json_encode(array('result' => 'Failed'));
     }
 
+    /**
+     * Login using facebook post request 
+     * @return JSON object
+     */
     public function postLoginfacebook()
     {
         $username = Input::get('username', '');
@@ -52,12 +49,20 @@ class AuthController extends Controller {
         return json_encode(array('result' => 'Success'));
     }
 
+    /**
+     * Logout get request
+     * @return JSON object
+     */
 	public function getLogout()
     {
 		Auth::logout();
     	return json_encode(array('result' => 'Success'));
 	}
 
+    /**
+     * Register new user post request
+     * @return JSON object
+     */
     public function postRegister()
     {
         $username = Input::get('username', '');

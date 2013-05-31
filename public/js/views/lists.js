@@ -46,6 +46,7 @@ App.Views.Lists = Backbone.View.extend({
     this.$el.sortable();
   },
 
+  // Add a list, triggered from socket server
   addListFromServer: function(model)
   {
     var listModel = new App.Models.List(model);

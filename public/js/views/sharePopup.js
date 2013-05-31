@@ -26,8 +26,10 @@ App.Views.SharePopup = Backbone.View.extend(
     {
         this.model = model;
 
+        // Retrieve the usernames of users sharing this list
         this.getUsersSharingThisList();
 
+        //Blur and dim the page in the background
         $('#odotapp').addClass('blur');
         $('#fullscreen-popup-background').removeClass('hide');
         $('#fullscreen-popup').removeClass('hide');
@@ -35,6 +37,7 @@ App.Views.SharePopup = Backbone.View.extend(
 
     hide: function()
     {
+        //Hide the popup and remove blur and dim
         $('#odotapp').removeClass('blur');
         $('#fullscreen-popup-background').addClass('hide');
         $('#fullscreen-popup').addClass('hide');
@@ -63,7 +66,7 @@ App.Views.SharePopup = Backbone.View.extend(
 
         if (this.model.users != null && this.model.users.length > 0)
         {
-            // Format the string to contain all users sharing this list
+            // Format the string to contain readable text of all users sharing this list
             this.model.description += 'shared with ';
 
             for (var i in this.model.users)
@@ -103,12 +106,14 @@ App.Views.SharePopup = Backbone.View.extend(
             listId: this.model.listId
         };
 
+        //Send websocket request to share this list with the user
         var data = {'object': 'user', 'method': 'shareListWithUser', 'args': args};
         app.socketConn.send(JSON.stringify(data));
     },
 
     listSharedWithUser: function(response)
     {
+        //Websocket triggered event when list was shared with user
         if (response != '')
         {
             app.alert('List \"' + this.model.listTitle + '\" is now shared with ' + response, 'success');

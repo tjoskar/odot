@@ -50,28 +50,6 @@ class ListController extends BaseController {
 
 	/**
 	 * Get list with id $id
-	 *
-	 *  {
-	 * 	  id,
-	 *    title,
-	 * 	  ...,
-	 *    item {
-	 *      :id {
-	 *        id,
-	 *        title,
-	 *        ...
-	 *        sub_items [
-	 *          {
-	 *            id,
-	 *            title,
-	 *            ...
-	 *          },
-	 *          ...
-	 *        ]
-	 *      }
-	 *    }
-	 *  }
-	 *
 	 * @param int $id
 	 * @return JSON obj
 	 */

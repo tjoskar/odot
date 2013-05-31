@@ -13,6 +13,12 @@ class SubItemModel {
         $this->_table->userList = 'user_lists';
     }
 
+    /**
+     * Returns a number that is the highest order
+     * Used for sorting to make place a new item last
+     * @param int $item_id
+     * @return int order
+     */
     public function getNextOrderIndex($item_id)
     {
         if (is_int($item_id))
@@ -25,6 +31,12 @@ class SubItemModel {
         }
     }
 
+    /**
+     * Save an sub item model
+     * @param stdClass $model
+     * @param int $user_id
+     * @return SubItem subItem
+     */
     public function save(stdClass $model, $user_id)
     {
         if (!isset($model->title)   || empty($model->title)    ||
@@ -58,6 +70,12 @@ class SubItemModel {
         }
     }
 
+    /**
+     * Update an sub item model
+     * @param stdClass $model
+     * @param int $user_id
+     * @return bool success
+     */
     public function update(stdClass $model, $user_id)
     {
         if (!isset($model->id)        || $model->id <= 0          ||
@@ -92,6 +110,11 @@ class SubItemModel {
         return FALSE;
     }
 
+    /**
+     * Delete an sub item model
+     * @param int $id
+     * @return bool success
+     */
     public function delete($id)
     {
         $subItem = SubItem::find($id);

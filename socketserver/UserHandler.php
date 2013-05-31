@@ -115,18 +115,19 @@ class UserHandler
                             'name' => 'list:add',
                             'args' => $list )));
 
-                    // Inform the the user
+                    // Inform the the user that is now sharing the list
                     foreach ($this->clients as $client)
                     {
                         if ($client->user_id == $user->id)
                         {
                             $client->send($json);
+                            break;
                         }
                     }
                 }
             }
 
-            // Sand back a respond to the user
+            // Send back a response to the user
             $from->send(json_encode(array(
                 'status' => 200,
                 'fire'   => array(

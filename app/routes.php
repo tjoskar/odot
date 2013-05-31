@@ -15,15 +15,10 @@
 Route::get('/', 'HomeController@index');
 
 Route::controller('auth', 'AuthController');
-//Route::controller('share', 'ShareListController');
 
 Route::resource('item', 'ItemController');
 Route::resource('list', 'ListController');
 Route::resource('subitem', 'SubItemController');
-
-
-// For debug
-Route::controller('test', 'TestController');
 
 DB::listen(function($sql, $bindings, $time)
 {

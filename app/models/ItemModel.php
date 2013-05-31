@@ -13,6 +13,12 @@ class ItemModel {
         $this->_table->userList = 'user_lists';
     }
 
+    /**
+     * Returns a number that is the highest order
+     * Used for sorting to make place a new item last
+     * @param int $list_id
+     * @return int
+     */
     public function getNextOrderIndex($list_id)
     {
         if (is_int($list_id))
@@ -25,6 +31,12 @@ class ItemModel {
         }
     }
 
+    /**
+     * Save an list model
+     * @param stdClass $model
+     * @param int $list_id
+     * @return int
+     */
     public function save(stdClass $model, $user_id)
     {
         if (!isset($model->title)   || empty($model->title)    ||   // Do we have a title?
@@ -50,6 +62,12 @@ class ItemModel {
         return NULL;
     }
 
+    /**
+     * Update an list model
+     * @param stdClass $model
+     * @param int $user_id
+     * @return bool success
+     */
     public function update(stdClass $model, $user_id)
     {
         if (!isset($model->id)        || $model->id <= 0          ||
@@ -82,6 +100,11 @@ class ItemModel {
         return FALSE;
     }
 
+    /**
+     * Delete an list model
+     * @param int $id
+     * @return bool success
+     */
     public function delete($id)
     {
         $item = Item::find($id);

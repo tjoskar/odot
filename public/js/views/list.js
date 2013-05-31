@@ -36,23 +36,23 @@ App.Views.List = Backbone.View.extend({
 
   mouseEnter: function(e)
   {
-    this.$el.find('.list-button-holder').removeClass('hide');
+    this.$el.find('.list-button-holder').removeClass('hide');                                     // Make the buttons visible
   },
 
   mouseLeave: function(e)
   {
-    this.$el.find('.list-button-holder').addClass('hide');
+    this.$el.find('.list-button-holder').addClass('hide');                                        // Make the buttons invisible
   },
 
   clickShare: function(e)
   {
-    app.popup.show({listTitle: this.model.get('title'), listId: this.model.get('id')});
+    app.popup.show({listTitle: this.model.get('title'), listId: this.model.get('id')});           // Show the sharing popup
   },
 
   clickDelete: function(e)
   {
     var self = this;
-    this.model.destroy({success: function(model, response) {
+    this.model.destroy({success: function(model, response) {                                      // Delete the list
       app.removeLastViewedListId();
       app.router.navigate('', {trigger: true});
       self.remove();

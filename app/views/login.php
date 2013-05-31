@@ -51,6 +51,9 @@
 </script>
 
 <script>
+/*=============================================
+=                  Login View                 =
+=============================================*/
 var AuthView = Backbone.View.extend({
 
     el: $("#odotlogin"),
@@ -66,15 +69,14 @@ var AuthView = Backbone.View.extend({
     submitLogin: function(event) {
         event.preventDefault();
 
-        //$('.alert-error').hide(); // Hide any errors on a new submit
-        //var url = '../api/login';
-        console.log('Loggin in... ');
+        //console.log('Loggin in... ');
         var formValues = {
             username: $('.auth-user').val(),
             password: $('.auth-pass').val()
         };
-        console.log(formValues);
+        //console.log(formValues);
 
+        //Send login request using post
         $.ajax({
             url: 'auth/login',
             type: 'post',
@@ -119,8 +121,9 @@ var AuthView = Backbone.View.extend({
             username: user,
             password: p0
         };
-        console.log(formValues);
+        //console.log(formValues);
 
+        //Send register user request 
         $.ajax({
             url: 'auth/register',
             type: 'post',
