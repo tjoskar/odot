@@ -35,6 +35,14 @@ We are using phpunit and Codeception (whith Selenium) for unit- and acceptance t
 - [Codeception](http://codeception.com/) - PHP testing framework (We are only using this for acceptance testning)
 - [Selenium](http://seleniumhq.org) - Browser automation
 
+## Screencast
+Link:
+In the screencast we didn't have time to show the features:
+- Rearranging lists and items
+- Unit testing using PHPunit
+- GUI testing using Codeception and Selenium
+- Task automation using Grunt (concatenate and ugllify all js files and run all unit tests)
+
 
 ## License
 ODOT is open-sourced software licensed under the MIT License.
