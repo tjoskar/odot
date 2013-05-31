@@ -1,6 +1,9 @@
 <?php
+
+// Ensure that we can add an item
+
 $I = new WebGuy($scenario);
-$I->wantTo('ensure that we can add and remove an item');
+$I->wantTo('ensure that we can add an item');
 $I->amOnPage('/');
 $I->see('ODOT');
 

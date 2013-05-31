@@ -1,4 +1,7 @@
 <?php
+
+// Ensure that login works
+
 $I = new WebGuy($scenario);
 $I->wantTo('ensure that login works');
 $I->amOnPage('/');

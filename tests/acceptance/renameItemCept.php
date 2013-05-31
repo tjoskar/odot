@@ -1,5 +1,7 @@
 <?php
 
+// Ensure that we can rename an item
+
 $I = new WebGuy($scenario);
 $I->wantTo('ensure that we can rename an item');
 $I->amOnPage('/');
