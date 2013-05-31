@@ -23,17 +23,17 @@ We are using phpunit and Codeception (whith Selenium) for unit- and acceptance t
 
 ## Software
 
-- [Laravel4](http://laravel.com/)
-- [Ratchet](http://socketo.me/)
-- [Backbone](http://backbonejs.org)
-- [Underscore](http://underscorejs.org/)
-- [jQuery](http://jquery.com/)
-- [Bower](http://jquery.com/)
-- [Grunt](http://jquery.com/)
-- [Composer](http://jquery.com/)
-- [PHPunit](http://jquery.com/)
-- [Codeception](http://jquery.com/)
-- [Selenium](http://seleniumhq.org)
+- [Laravel4](http://laravel.com/) - Backend framework
+- [Ratchet](http://socketo.me/) - PHP library for websocket
+- [Backbone](http://backbonejs.org) - Frontend framework
+- [Underscore](http://underscorejs.org/) - Template manager. Required by backend
+- [jQuery](http://jquery.com/) - Required by backend
+- [Bower](https://github.com/bower/bower) - JavaScript package manager
+- [Grunt](http://gruntjs.com/) - JavaScript Task Runner
+- [Composer](http://getcomposer.org/) - PHP package manager
+- [PHPunit]https://github.com/sebastianbergmann/phpunit/) - Unittester for PHP
+- [Codeception](http://codeception.com/) - PHP testing framework (We are only using this for acceptance testning)
+- [Selenium](http://seleniumhq.org) - Browser automation
 
 
 ## License
