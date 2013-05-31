@@ -31,7 +31,7 @@ We are using phpunit and Codeception (whith Selenium) for unit- and acceptance t
 - [Bower](https://github.com/bower/bower) - JavaScript package manager
 - [Grunt](http://gruntjs.com/) - JavaScript Task Runner
 - [Composer](http://getcomposer.org/) - PHP package manager
-- [PHPunit]https://github.com/sebastianbergmann/phpunit/) - Unittester for PHP
+- [PHPunit](https://github.com/sebastianbergmann/phpunit/) - Unittester for PHP
 - [Codeception](http://codeception.com/) - PHP testing framework (We are only using this for acceptance testning)
 - [Selenium](http://seleniumhq.org) - Browser automation
 
