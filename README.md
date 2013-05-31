@@ -36,7 +36,7 @@ We are using phpunit and Codeception (whith Selenium) for unit- and acceptance t
 - [Selenium](http://seleniumhq.org) - Browser automation
 
 ## Screencast
-Link:
+Link: https://vimeo.com/67402626
 In the screencast we didn't have time to show the features:
 - Rearranging lists and items
 - Unit testing using PHPunit
