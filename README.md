@@ -4,7 +4,7 @@ ODOT
 Functional specification:
 --------------------------------------
 
-Our project an to-do list. The purpose of the site is to allow a user to keep track of and manage to-do items.
+Our project is a web based to-do list. The purpose of the site is to allow user to keep track of and manage to-do items.
 The site allow users to do the following:
 - Creating to-do lists.
 - Creating to-do items inside a to-do list.
@@ -31,7 +31,7 @@ We are using phpunit and Codeception (whith Selenium) for unit- and acceptance t
 - [Bower](https://github.com/bower/bower) - JavaScript package manager
 - [Grunt](http://gruntjs.com/) - JavaScript Task Runner
 - [Composer](http://getcomposer.org/) - PHP package manager
-- [PHPunit](https://github.com/sebastianbergmann/phpunit/) - Unittester for PHP
+- [PHPunit](https://github.com/sebastianbergmann/phpunit/) - Unit-tester for PHP
 - [Codeception](http://codeception.com/) - PHP testing framework (We are only using this for acceptance testning)
 - [Selenium](http://seleniumhq.org) - Browser automation
 
