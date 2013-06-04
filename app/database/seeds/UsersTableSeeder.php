@@ -27,7 +27,7 @@ class UsersTableSeeder extends Seeder {
                 'created_at'   => new DateTime,
                 'updated_at'   => new DateTime,
                 'visible_name' => 'Jonas Bromö',
-                'facebook_id'  => '100000048721511'),
+                'facebook_id'  => ''),
             array( // ID 4
                 'username'     => 'JohnDoe',
                 'password'     => Hash::make('joh'),
