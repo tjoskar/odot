@@ -26,22 +26,14 @@ We are using phpunit and Codeception (whith Selenium) for unit- and acceptance t
 - [Laravel4](http://laravel.com/) - Backend framework
 - [Ratchet](http://socketo.me/) - PHP library for websocket
 - [Backbone](http://backbonejs.org) - Frontend framework
-- [Underscore](http://underscorejs.org/) - Template manager. Required by backend
-- [jQuery](http://jquery.com/) - Required by backend
+- [Underscore](http://underscorejs.org/) - Template manager. Required by Backbone
+- [jQuery](http://jquery.com/) - Required by Backbone
 - [Bower](https://github.com/bower/bower) - JavaScript package manager
 - [Grunt](http://gruntjs.com/) - JavaScript Task Runner
 - [Composer](http://getcomposer.org/) - PHP package manager
 - [PHPunit](https://github.com/sebastianbergmann/phpunit/) - Unit-tester for PHP
 - [Codeception](http://codeception.com/) - PHP testing framework (We are only using this for acceptance testning)
 - [Selenium](http://seleniumhq.org) - Browser automation
-
-## Screencast
-Link: https://vimeo.com/67402626
-In the screencast we didn't have time to show the features:
-- Rearranging lists and items
-- Unit testing using PHPunit
-- GUI testing using Codeception and Selenium
-- Task automation using Grunt (concatenate and ugllify all js files and run all unit tests)
 
 
 ## License
